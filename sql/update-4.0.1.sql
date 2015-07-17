@@ -1,0 +1,12 @@
+ALTER TABLE glpi_plugin_positions_positions ADD `width` int(11) NOT NULL DEFAULT '25';
+ALTER TABLE glpi_plugin_positions_positions ADD `height` int(11) NOT NULL DEFAULT '30';
+ALTER TABLE glpi_plugin_positions_positions ADD `tooltip` varchar(255) DEFAULT NULL;
+ALTER TABLE glpi_plugin_positions_positions ADD `color` varchar(255) DEFAULT NULL;
+ALTER TABLE glpi_plugin_positions_positions ADD `outline` varchar(255) DEFAULT NULL;
+ALTER TABLE glpi_plugin_positions_positions ADD `outlineWidth` int(11) NOT NULL DEFAULT '1';
+ALTER TABLE glpi_plugin_positions_positions ADD `shape` varchar(255) DEFAULT NULL;
+ALTER TABLE glpi_plugin_positions_positions ADD `hideLabel` tinyint(1) NOT NULL DEFAULT '0';
+ALTER TABLE glpi_plugin_positions_positions ADD `hideTooltip` tinyint(1) NOT NULL DEFAULT '0';
+ALTER TABLE glpi_plugin_positions_positions ADD `rotate` int(11) NOT NULL DEFAULT '0';
+ALTER TABLE glpi_plugin_positions_positions ADD `pattern` varchar(255) DEFAULT NULL;
+ALTER TABLE glpi_plugin_positions_positions ADD `labelSize` int(11) NOT NULL DEFAULT '1';

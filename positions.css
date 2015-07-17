@@ -1,0 +1,287 @@
+<?php
+/*
+ * @version $Id: HEADER 15930 2013-02-07 09:47:55Z tsmr $
+ -------------------------------------------------------------------------
+ Positions plugin for GLPI
+ Copyright (C) 2003-2011 by the Positions Development Team.
+
+ https://forge.indepnet.net/projects/positions
+ -------------------------------------------------------------------------
+
+ LICENSE
+		
+ This file is part of Positions.
+
+ Positions is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+ Positions is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Positions. If not, see <http://www.gnu.org/licenses/>.
+ --------------------------------------------------------------------------
+ */
+  
+.x-window-mc {  
+  background-color: #EAEEF1;
+}
+
+.x-window-tc,  
+.x-window-bc {  
+   background-image: url("../../lib/extjs/resources/images/default/window/top-bottom.png");  
+}
+
+.x-window-ml,  
+.x-window-mr  {  
+   background-image: url("../../lib/extjs/resources/images/default/window/left-right.png");  
+}
+
+.x-window-tl,  
+.x-window-bl {  
+   background-image: url("../../lib/extjs/resources/images/default/window/left-corners.png");  
+}
+
+.x-window-tr,  
+.x-window-br {  
+   background-image: url("../../lib/extjs/resources/images/default/window/right-corners.png");  
+}
+
+.x-panel-ghost {  
+   background-color: #e6e6e6;  
+}
+
+.x-panel-ghost ul {  
+   border-color: #afafaf;  
+}
+
+.x-panel-ghost .x-window-tl {  
+   border-bottom-color: #afafaf;  
+}
+
+.plugin_positions_tab_cadre_fixe {
+   margin: 0 auto 10px auto;
+	background-color: #ffffff;
+	z-index:1;
+	text-align: left;
+	font-size: 11px;
+	/*border: 1px solid #7BAEE1;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	-moz-box-shadow: 0px 0px 5px #8FBBE7;*/
+   width:1300px;
+}
+
+.plugin_positions_tab_cadre_fixe tr, .plugin_positions_tab_cadre_fixe td {
+    border-width: 1px;
+    padding: 1px;
+    /*border-style: groove;*/
+    border-color: #FFF;
+    -moz-border-radius: 0px 0px 0px 0px;
+}
+/*
+.plugin_positions_tab_cadre_fixe td {
+	color: #022F5C;	
+}*/
+
+.plugin_positions_tab_cadre_fixe img {
+	vertical-align: middle;	
+}
+
+
+.plugin_positions_tab_cadre_fixe th {
+   font-size: 12px;
+	font-weight: bold;
+	text-align: center;
+	/*background: #AFD0F8; */
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	padding: 3px;
+}
+
+#Carte {
+   margin: 0 auto; 
+   position: relative;
+   z-index:1;
+}
+
+.pics {
+   height: 35px;
+   cursor:pointer;
+}
+
+.ui-draggable {
+   float: left;
+   width: 35px;
+   height: 35px;
+   font-size: 0.8em;
+   cursor:pointer;
+   position: absolute;
+}
+
+.ui-draggable .miniclose {
+	background-image:url(pics/miniclose.png);
+	position:absolute;
+	right:-10px;
+	top:-10px;
+	cursor:pointer;
+	height:15px;
+	width:15px;
+	z-index:3000;
+}
+
+.ui-draggable .miniconfig {
+	background-image:url(pics/miniconfig.png);
+	position:absolute;
+	left:-10px;
+	top:-8px;
+	cursor:pointer;
+	height:14px;
+	width:14px;
+	z-index:3000;
+}
+
+.ui-draggable-readonly {
+   float: left;
+   width: 35px;
+   height: 35px;
+   font-size: 0.8em;
+   position: absolute;
+}
+/*
+.ui-draggable-dragging { 
+   background: #2EFE2E; 
+}*/
+
+/* the overlayed element */
+.simple_overlay {
+	
+	/* must be initially hidden */
+	display:none;
+	
+	/* place overlay on top of other elements */
+	z-index:10000;
+	
+	/* styling */
+	background-color:#CCC;
+	
+	width:500px;	
+	/*min-height:300px;*/
+	border:1px solid #666;
+	
+	/* CSS3 styling for latest browsers */
+	-moz-box-shadow:0 0 90px 5px #000;
+	-webkit-box-shadow: 0 0 90px #000;	
+}
+
+/* close button positioned on upper right corner */
+.simple_overlay .close {
+	background-image:url(pics/close.png);
+	position:absolute;
+	right:-15px;
+	top:-15px;
+	cursor:pointer;
+	height:35px;
+	width:35px;
+}
+
+/* config button positioned on bottom right corner */
+.simple_overlay .config {
+	background-image:url(pics/config.png);
+	position:absolute;
+	right:-12px;
+	bottom:-10px;
+	cursor:pointer;
+	height:28px;
+	width:28px;
+}
+
+/* styling for elements inside overlay */
+.details {
+   /*position:absolute;*/
+   float: right;
+   top:15px;
+   right:0px;
+   font-size:11px;
+   color:#fff;
+   margin-top: 20px;
+   margin-bottom: 0px;
+   /*width:230px;*/
+}
+
+.call {
+   /*position:absolute;*/
+   /*top:auto;*/
+   right:15px;
+   font-size:11px;
+   bottom:5px;
+   font-weight: bold;
+   float: right;
+   margin-top: 0px;
+   margin-bottom: 5px;
+   /*width:230px;*/
+}
+
+.details h3 {
+   color:#2D545E;
+   font-size:12px;
+   margin:0 0 -10px 0;
+}
+
+.call h3 {
+   color:#2D545E;
+   font-size:12px;
+}
+
+.info {
+   width: 75px;
+   height: 35px;
+   font-size: 1em;
+   position: absolute;
+}
+
+.info h3 {
+   color:#2D545E;
+   font-size:10px;
+   margin:0 0 -10px 0;
+   border:1px solid #CCC;
+}
+
+.title {
+   color:#000000;
+   font-size:12px;
+   margin:0 0 -10px 0;
+}
+
+#imageitemPreview {
+   max-width:90px;
+   max-height:90px; 
+}
+
+/*.globe {
+	background-image:url(pics/sm_globe.png);
+	height:17px;
+	width:17px;
+}*/
+
+/*used ?*/
+
+area:hover {
+   cursor: pointer;
+}
+
+div.x-window-ml object {
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+div.call img {
+    margin-left: 0px;
+    margin-top: 0px;
+}
