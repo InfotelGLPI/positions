@@ -91,7 +91,7 @@ function plugin_version_positions() {
       'version' => '4.1.0',
       'license' => 'GPLv2+',
       'author'  => "<a href='http://infotel.com/services/expertise-technique/glpi/'>Infotel</a>",
-      'homepage'=>'https://forge.indepnet.net/projects/positions',
+      'homepage'=>'https://github.com/InfotelGLPI/positions',
       'minGlpiVersion' => '0.90',
    );
 
