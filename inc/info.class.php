@@ -78,11 +78,6 @@ class PluginPositionsInfo extends CommonDBTM {
       $tab[4]['datatype']           = 'itemtypename';
       $tab[4]['forcegroupby']       = true;
 
-      $tab[5]['table']              = $this->getTable();
-      $tab[5]['field']              = 'display_on_map';
-      $tab[5]['name']               = __('Display in the detail of the object', 'positions');
-      $tab[5]['datatype']           = 'bool';
-
       $tab[86]['table']             = $this->getTable();
       $tab[86]['field']             = 'is_recursive';
       $tab[86]['name']              = __('Child entities');
