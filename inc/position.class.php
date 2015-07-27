@@ -73,7 +73,7 @@ class PluginPositionsPosition extends CommonDBTM {
 
       $type = get_class($item);
       $temp->deleteByCriteria(array('itemtype' => $type,
-         'items_id' => $item->getField('id')), 1);
+                                    'items_id' => $item->getField('id')), 1);
       return true;
    }
 
@@ -256,7 +256,11 @@ class PluginPositionsPosition extends CommonDBTM {
 
          } else if ($item->getType() == "Location") {
 
-            return __('Document', 'Documents', 2);
+            if ($_SESSION['glpishow_count_on_tabs']) {
+               return self::createTabEntry(Document::getTypeName(Session::getPluralNumber()),
+                                                  Document_Item::countForItem($item));
+            }
+            return Document::getTypeName(Session::getPluralNumber());
 
          } else if (in_array($item->getType(), self::getTypes(true))
              && Session::haveRight('plugin_positions', READ)) {
