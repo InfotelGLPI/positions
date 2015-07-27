@@ -265,14 +265,25 @@ class PluginPositionsPosition extends CommonDBTM {
          } else if (in_array($item->getType(), self::getTypes(true))
              && Session::haveRight('plugin_positions', READ)) {
 
-            return self::getTypeName();
+            if ($_SESSION['glpishow_count_on_tabs']) {
+               return self::createTabEntry(self::getTypeName(Session::getPluralNumber()),
+                                                  self::countForItem($item));
+            }
+            return self::getTypeName(Session::getPluralNumber());
          }
       }
 
       return '';
 
    }
+   
+   static function countForItem(CommonDBTM $item) {
 
+      return countElementsInTable('glpi_plugin_positions_positions',
+                                  "`itemtype`='".$item->getType()."'
+                                   AND `items_id` = '".$item->getID()."'");
+   }
+   
    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
 
       $self = new self();
