@@ -3,137 +3,137 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Rafael Fontenelle <rffontenelle@gmail.com>, 2013
+# Le Rohellec Benoit <blerohellec@hotmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Project - positions plugin\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-03-13 18:15+0100\n"
-"PO-Revision-Date: 2013-11-20 11:25+0000\n"
-"Last-Translator: Rafael Fontenelle <rffontenelle@gmail.com>\n"
-"Language-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/GLPI_positions/language/pt_BR/)\n"
+"PO-Revision-Date: 2015-06-09 12:17+0000\n"
+"Last-Translator: Le Rohellec Benoit <blerohellec@hotmail.com>\n"
+"Language-Team: Spanish (Spain) (http://www.transifex.com/projects/p/GLPI_positions/language/es_ES/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: pt_BR\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: es_ES\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: hook.php:164 setup.php:110 inc/position.class.php:54
 msgid "Cartography"
 msgid_plural "Cartographies"
-msgstr[0] "Cartografia"
-msgstr[1] "Cartografias"
+msgstr[0] "Cartografía"
+msgstr[1] "Cartografías"
 
 #: hook.php:297 inc/position.class.php:998 inc/position.class.php:1875
 msgid "Create coordinates"
-msgstr "Criar coordenadas"
+msgstr "Crear coordenadas"
 
 #: hook.php:298
 msgid "Delete coordinates"
-msgstr "Excluir coordenadas"
+msgstr "Suprimir coordenadas"
 
 #: setup.php:55 setup.php:56 setup.php:69 setup.php:70
 msgid "Map view"
-msgstr "Ver mapa"
+msgstr "Ver mapas"
 
 #: setup.php:123
 msgid "This plugin requires GLPI >= 0.84"
-msgstr "Este plug-in requer GLPI >= 0.84"
+msgstr "Este plugin requiere GLPI >= 0.84"
 
 #: ajax/dropdownValue.php:152
 msgid "All types"
-msgstr "Todos tipos"
+msgstr "Todos los tipos"
 
 #: front/config.form.php:45
 msgid "Please activate the plugin"
-msgstr "Por favor, ative o plug-in"
+msgstr "Se ruega activar el plugin"
 
 #: front/geoloc.php:107
 msgid "The selected object is not located on a map"
-msgstr "O objeto selecionado não está localidade em um mapa"
+msgstr "El objeto seleccionado no esta ubicado en un mapa"
 
 #: front/imageitem.form.php:45
 msgid "No picture uploaded"
-msgstr "Nenhuma imagem enviada"
+msgstr ""
 
 #: front/map.php:53 inc/position.class.php:932 inc/position.class.php:1898
 msgid "No location selected"
-msgstr "Nenhuma localização selecionada"
+msgstr "Ninguna ubicación seleccionada"
 
 #: inc/imageitem.class.php:209
 msgid "Add pictures to use with plugin"
-msgstr "Adicione imagens para usar com o plug-in"
+msgstr "Añadir imagenes par el uso del plugin"
 
 #: inc/imageitem.class.php:217 inc/imageitem.class.php:218
 msgid "Select pictures to upload (gif, jpg, png)"
-msgstr "Selecione imagens para enviar (gif, jpg, png)"
+msgstr "Selecciona imagenes para el upload (gif, jpg, png)"
 
 #: inc/imageitem.class.php:222 inc/imageitem.class.php:224
 msgid "upload pictures to the server"
-msgstr "enviar imagens para o servidor"
+msgstr "upload imagenes al servidor"
 
 #: inc/imageitem.class.php:223 inc/imageitem.class.php:229
 msgid "Then"
-msgstr "Então"
+msgstr "Luego"
 
 #: inc/imageitem.class.php:228 inc/imageitem.class.php:230
 msgid "refresh this form"
-msgstr "renovar este formulário"
+msgstr "actualiza la pantalla"
 
 #: inc/imageitem.class.php:236
 msgid "Associate images with types of equipment"
-msgstr "Imagens associadas com tipos de equipamentos"
+msgstr "Asociar imagenes con tipos de equipo"
 
 #: inc/imageitem.class.php:243
 msgid "Types of materials should be created so that the association can exist"
-msgstr "Tipos de materiais deveriam ser criados de forma que a associação possa existir"
+msgstr "Los tipos de equipo tienen que existir para poder hacer la asociación"
 
 #: inc/imageitem.class.php:271
 msgid "List of associations"
-msgstr "Lista de associações"
+msgstr "Lista de asociaciones"
 
 #: inc/imageitem.class.php:274 inc/imageitem.class.php:278
 #: inc/info.class.php:83 inc/info.class.php:170
 msgid "Equipment"
-msgstr "Equipamento"
+msgstr "Equipo"
 
 #: inc/imageitem.class.php:275 inc/imageitem.class.php:279
 msgid "Equipment type"
-msgstr "Tipo de equipamento"
+msgstr "Tipo de equipo"
 
 #: inc/imageitem.class.php:276 inc/imageitem.class.php:280
 msgid "Picture"
-msgstr "Imagem"
+msgstr "Imagen"
 
 #: inc/imageitem.class.php:309
 msgid "No associated picture"
-msgstr "Nenhuma imagem associada"
+msgstr "Ninguna imagen asociada"
 
 #: inc/info.class.php:44
 msgid "Display of equipment"
 msgid_plural "Display of equipments"
-msgstr[0] "Exibição de equipamento"
-msgstr[1] "Exibição de equipamentos"
+msgstr[0] "Visualización de un equipo"
+msgstr[1] "Visualizaciones de equipos"
 
 #: inc/info.class.php:76 inc/info.class.php:162
 msgid "Displayed fields"
-msgstr "Campos exibidos"
+msgstr "Campos visualizados"
 
 #: inc/info.class.php:90
 msgid "Display in the detail of the object"
-msgstr "Exibição em detalhes do objeto"
+msgstr "Visualización en el detalle del objeto"
 
 #: inc/info.class.php:554 inc/info.class.php:570
 msgid "Direct link"
-msgstr "Link direto"
+msgstr "Enlace directo"
 
 #: inc/position.class.php:119
 msgid "No equipment associated"
-msgstr "Nenhum equipamento associado"
+msgstr "Ningún equipo asociado"
 
 #: inc/position.class.php:128 inc/position.class.php:649
 msgid "This item is already bound to a location"
-msgstr "Este item já está vinculado a uma localização"
+msgstr "Este objeto ya tiene coordenadas"
 
 #: inc/position.class.php:176 inc/position.class.php:677
 #: inc/position.class.php:1605
@@ -147,77 +147,77 @@ msgstr "Coordenada y"
 
 #: inc/position.class.php:288
 msgid "Select an area and click on OK"
-msgstr "Selecione uma área e clique em OK"
+msgstr "Seleccionar una área y pinchar OK"
 
 #: inc/position.class.php:356
 msgid "Creation of sub-areas on the map"
-msgstr "Criação de sub-áreas no mapa"
+msgstr "Creación de sub-áreas en el mapa"
 
 #: inc/position.class.php:363
 msgid "Choose an existing location"
-msgstr "Escolha uma localização existente"
+msgstr "Elegir una ubicación existente"
 
 #: inc/position.class.php:391
 msgid "No sub-area found"
-msgstr "Nenhuma sub-área encontrada"
+msgstr "Ninguna sub-área encontrada"
 
 #: inc/position.class.php:401
 msgid "Create a new location"
-msgstr "Criar uma nova localização"
+msgstr "Crear una nueva ubicación"
 
 #: inc/position.class.php:427
 msgid "Add and continue"
-msgstr "Adicionar e continuar"
+msgstr "Añadir y continuar"
 
 #: inc/position.class.php:735 inc/position.class.php:883
 msgid "Change the coordinates"
-msgstr "Alterar as coordenadas"
+msgstr "Actualizar coordenadas"
 
 #: inc/position.class.php:889
 msgid "Add a sub-area"
-msgstr "Adicionar uma sub-área"
+msgstr "Añadir una sub-área"
 
 #: inc/position.class.php:921 inc/position.class.php:975
 msgid "No location has a configured map"
-msgstr "Nenhuma localização possui um mapa configurado"
+msgstr "Ninguna ubicación tiene un mapa configurado"
 
 #: inc/position.class.php:926
 msgid "The object location does not match a map"
-msgstr "A localização do objeto não corresponde a um mapa"
+msgstr "La ubicación del objeto no corresponde a ningún mapa"
 
 #: inc/position.class.php:970
 msgid "See the map"
-msgstr "Ver o mapa"
+msgstr "Ver el mapa"
 
 #: inc/position.class.php:1440 inc/position.class.php:1939
 msgid "Configuring the display materials"
-msgstr "Configuração de materiais de exibição"
+msgstr "Configuración de la visualización de equipos"
 
 #: inc/position.class.php:1601
 msgid "Associated coordinate"
-msgstr "Coordenada associada"
+msgstr "Coordenadas asociadas"
 
 #: inc/position.class.php:1933
 msgid "Association : picture / types of equipment"
-msgstr "Associação : imagem / tipos de equipamento"
+msgstr "Asociación : imagen / tipos de equipos"
 
 #: inc/position.class.php:1974
 msgid "Please download a newer version of canvasXpress at"
-msgstr "Por favor, baixe uma nova versão de canvasXpress em"
+msgstr "Se ruega descargar una nueva versión de canvasXpress en"
 
 #: inc/position.class.php:1975
 msgid ""
 "You are using an older version that do not support all the functionality of "
 "this panel"
-msgstr "Você está usando uma versão antiga que não tem suporte a todas as funcionalidades deste painel"
+msgstr "Esta utilizando una versión antigua que no soporte todas las funcionalidades de este panel"
 
 #: inc/position.class.php:1976
 msgid "Delete selected objects"
-msgstr "Excluir objetos selecionados"
+msgstr "Suprimir los objetos seleccionados"
 
 #: inc/position.class.php:1977
 msgid "Informations about"
-msgstr "Informações sobre"
+msgstr "Informaciones acerca"
 
 #: inc/position.class.php:1981
 msgid "Hide"
@@ -225,121 +225,121 @@ msgstr "Ocultar"
 
 #: inc/position.class.php:1982
 msgid "informations about selected items"
-msgstr "Informações sobre itens selecionados"
+msgstr ""
 
 #: inc/position.class.php:1983
 msgid "All hidden objects"
-msgstr "Todos objetos ocultos"
+msgstr "Todos los objetos ocultos"
 
 #: inc/position.class.php:1984
 msgid "See all hidden objects"
-msgstr "Ver todos os objetos ocultos"
+msgstr "Ver todos los objetos ocultos"
 
 #: inc/position.class.php:1985
 msgid "cancel last change"
-msgstr "cancelar a última alteração"
+msgstr "Cancelar la última acción"
 
 #: inc/position.class.php:1986
 msgid "Replay the last change"
-msgstr "Refazer a última alteração"
+msgstr "Repetir la última acción"
 
 #: inc/position.class.php:1987
 msgid "Save as a new network"
-msgstr "Salvar como uma nova rede"
+msgstr ""
 
 #: inc/position.class.php:1989
 msgid "Save the network now"
-msgstr "Salvar como a rede agora"
+msgstr ""
 
 #: inc/position.class.php:1990
 msgid "Simple search"
-msgstr "Pesquisa simples"
+msgstr "Búsqueda simple"
 
 #: inc/position.class.php:1991
 msgid "Import JSON data"
-msgstr "Importar dados JSON"
+msgstr "Importar datos JSON"
 
 #: inc/position.class.php:1992
 msgid "Export JSON data"
-msgstr "Exportar dados JSON"
+msgstr "Exportar datos JSON"
 
 #: inc/position.class.php:1993
 msgid "Import JSON movie"
-msgstr "Importar filme JSON"
+msgstr ""
 
 #: inc/position.class.php:1994
 msgid "Export JSON movie"
-msgstr "Exportar filme JSON"
+msgstr ""
 
 #: inc/position.class.php:1995
 msgid "Force save the entire network"
-msgstr "Forçar o salvamento de toda a rede"
+msgstr ""
 
 #: inc/position.class.php:1996
 msgid "Advanced test"
-msgstr "Teste avançado"
+msgstr ""
 
 #: inc/position.class.php:1997
 msgid "Refresh the graph"
-msgstr "Renovar o gráfico"
+msgstr "Actualiza el gráfico"
 
 #: inc/position.class.php:1998
 msgid "See as a picture"
-msgstr "Ver como uma imagem"
+msgstr "Ver como una imagen"
 
 #: inc/position.class.php:2002 inc/position.class.php:2003
 msgid "Color"
 msgid_plural "Colors"
-msgstr[0] "Cor"
-msgstr[1] "Cores"
+msgstr[0] "Color"
+msgstr[1] "Colores"
 
 #: inc/position.class.php:2004
 msgid "Scale Factor"
-msgstr "Fator de escala"
+msgstr ""
 
 #: inc/position.class.php:2005
 msgid "Boxed"
-msgstr "Caixa"
+msgstr ""
 
 #: inc/position.class.php:2006
 msgid "Transpose"
-msgstr "Transport"
+msgstr ""
 
 #: inc/position.class.php:2007
 msgid "Search on objects"
-msgstr "Pesquisar em objetos"
+msgstr "Búsqueda entre objetos"
 
 #: inc/position.class.php:2009
 msgid "Advanced Options"
-msgstr "Opções avançadas"
+msgstr "Opciones avanzadas"
 
 #: inc/position.class.php:2010
 msgid "Search key"
-msgstr "Chave de pesquisa"
+msgstr "Criterio de búsqueda"
 
 #: inc/position.class.php:2011
 msgid "Regex accepted"
-msgstr "Expressão regular aceita"
+msgstr "Regex aceptado"
 
 #: inc/position.class.php:2012
 msgid "One line by object"
-msgstr "Uma linha por objeto"
+msgstr "Una línea per objeto"
 
 #: inc/position.class.php:2013
 msgid "Stop highlighting"
-msgstr "Parar de destacar"
+msgstr "Detener el destacado"
 
 #: inc/position.class.php:2014
 msgid "Highlight object"
-msgstr "Destacar objeto"
+msgstr "Destacar el objeto"
 
 #: inc/position.class.php:2015
 msgid "Edit selected object"
-msgstr "Editar objeto selecionado"
+msgstr "Actualizar el objeto seleccionado"
 
 #: inc/position.class.php:2016
 msgid "Selected object"
-msgstr "Objeto selecionado"
+msgstr "Objeto seleccionado"
 
 #: inc/position.class.php:2017
 msgid "This object"
@@ -347,67 +347,67 @@ msgstr "Este objeto"
 
 #: inc/position.class.php:2018
 msgid "Selected objects and all the"
-msgstr "Objetos selecionados e todos "
+msgstr "Selecciona objetos y todos"
 
 #: inc/position.class.php:2019
 msgid "This object and all its"
-msgstr "Este objeto e todos seus"
+msgstr "Este objeto y todos sus "
 
 #: inc/position.class.php:2020
 msgid "Do you want to delete"
-msgstr "Você deseja excluir"
+msgstr "Quiere suprimir"
 
 #: inc/position.class.php:2021
 msgid "Links will be deleted"
-msgstr "Vínculos serão excluídos"
+msgstr "Enlaces van a ser suprimidos"
 
 #: inc/position.class.php:2022
 msgid "Tooltip"
-msgstr "Dica de ferramenta"
+msgstr "Tooltip"
 
 #: inc/position.class.php:2023
 msgid "Object type"
-msgstr "Tipo de objeto"
+msgstr "Tipo del objeto"
 
 #: inc/position.class.php:2024
 msgid "Required selection"
-msgstr "Seleção exigida"
+msgstr ""
 
 #: inc/position.class.php:2025
 msgid "Image path"
-msgstr "Caminho da imagem"
+msgstr "Ruta del imagen"
 
 #: inc/position.class.php:2026
 msgid "The object is fixed"
-msgstr "O objeto está fixo"
+msgstr "El objeto es fijo"
 
 #: inc/position.class.php:2029
 msgid "Object editor"
-msgstr "Editor de objeto"
+msgstr "Editor de objetos"
 
 #: inc/position.class.php:2030
 msgid "Object id"
-msgstr "ID do objeto"
+msgstr "Id del objeto"
 
 #: inc/position.class.php:2032
 msgid "Pattern"
-msgstr "Padrão"
+msgstr ""
 
 #: inc/position.class.php:2033
 msgid "Edge"
-msgstr "Borda"
+msgstr ""
 
 #: inc/position.class.php:2034
 msgid "Edit objects"
-msgstr "Editar objetos"
+msgstr ""
 
 #: inc/position.class.php:2037
 msgid "Axes"
-msgstr "Eixos"
+msgstr "Ejes"
 
 #: inc/position.class.php:2039
 msgid "Legend"
-msgstr "Legenda"
+msgstr "Leyenda"
 
 #: inc/position.class.php:2040
 msgid "Indicators"
@@ -415,59 +415,59 @@ msgstr "Indicadores"
 
 #: inc/position.class.php:2041
 msgid "Decorations"
-msgstr "Decorações"
+msgstr ""
 
 #: inc/position.class.php:2042
 msgid "Data"
-msgstr "Dados"
+msgstr "Datos"
 
 #: inc/position.class.php:2043
 msgid "Font weight"
-msgstr "Peso da fonte"
+msgstr "Grosor del fuente"
 
 #: inc/position.class.php:2044
 msgid "Properties"
-msgstr "Propriedades"
+msgstr "Propiedades"
 
 #: inc/position.class.php:2045
 msgid "Transform"
-msgstr "Transformar"
+msgstr ""
 
 #: inc/position.class.php:2046
 msgid "Ticks"
-msgstr "Tiques"
+msgstr ""
 
 #: inc/position.class.php:2047
 msgid "Font"
-msgstr "Fonte"
+msgstr "Fuente"
 
 #: inc/position.class.php:2048
 msgid "Layout"
-msgstr "Layout"
+msgstr ""
 
 #: inc/position.class.php:2049
 msgid "Orientation"
-msgstr "Orientação"
+msgstr "Orientación"
 
 #: inc/position.class.php:2050
 msgid "Overlays"
-msgstr "Sobreposições"
+msgstr ""
 
 #: inc/position.class.php:2051
 msgid "Background"
-msgstr "Plano de fundo"
+msgstr "Segundo plano"
 
 #: inc/position.class.php:2052
 msgid "Gradient"
-msgstr "Gradiente"
+msgstr ""
 
 #: inc/position.class.php:2053
 msgid "Solid"
-msgstr "Sólido"
+msgstr ""
 
 #: inc/position.class.php:2055
 msgid "Width"
-msgstr "Largura"
+msgstr "Anchura"
 
 #: inc/position.class.php:2056
 msgid "Height"
@@ -479,4 +479,4 @@ msgstr "Texto"
 
 #: inc/profile.class.php:37 inc/profile.class.php:139
 msgid "Rights management"
-msgstr "Gerenciamento de permissões"
+msgstr "Gestión de permisos"

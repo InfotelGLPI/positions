@@ -3,13 +3,13 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Kaya Zeren <kayazeren@gmail.com>, 2013
+# Kaya Zeren <kayazeren@gmail.com>, 2013,2015
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Project - positions plugin\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-03-13 18:15+0100\n"
-"PO-Revision-Date: 2013-11-20 11:25+0000\n"
+"PO-Revision-Date: 2015-07-31 07:41+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>\n"
 "Language-Team: Turkish (Turkey) (http://www.transifex.com/projects/p/GLPI_positions/language/tr_TR/)\n"
 "MIME-Version: 1.0\n"
@@ -37,7 +37,7 @@ msgstr "Harita görünümü"
 
 #: setup.php:123
 msgid "This plugin requires GLPI >= 0.84"
-msgstr "Bu uyumlu ek GLPI 0.84 ve üzerindeki sürümlerle çalışır"
+msgstr "Bu uygulama eki GLPI 0.84 ve üzerindeki sürümlerle çalışır"
 
 #: ajax/dropdownValue.php:152
 msgid "All types"
@@ -45,7 +45,7 @@ msgstr "Tüm tipler"
 
 #: front/config.form.php:45
 msgid "Please activate the plugin"
-msgstr "Lütfen uyumlu eki etkinleştirin"
+msgstr "Lütfen uygulama ekini etkinleştirin"
 
 #: front/geoloc.php:107
 msgid "The selected object is not located on a map"
@@ -61,7 +61,7 @@ msgstr "Konum seçilmemiş"
 
 #: inc/imageitem.class.php:209
 msgid "Add pictures to use with plugin"
-msgstr "Uyumlu ek ile kullanılacak görselleri yükleyin"
+msgstr "Uygulama eki ile kullanılacak görselleri yükleyin"
 
 #: inc/imageitem.class.php:217 inc/imageitem.class.php:218
 msgid "Select pictures to upload (gif, jpg, png)"
