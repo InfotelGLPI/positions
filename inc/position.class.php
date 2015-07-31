@@ -1013,7 +1013,7 @@ class PluginPositionsPosition extends CommonDBTM {
       }
       $condition = "";
       if (!empty($locations)) {
-         $condition = "`id` IN (" . implode(',', $locations) . ")";
+         $condition = "`glpi_locations`.`id` IN (" . implode(',', $locations) . ")";
 
          Dropdown::show('Location', array('value'     => $locations_id,
                                           'entity'    => $_SESSION["glpiactiveentities"],
