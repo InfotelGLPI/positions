@@ -88,19 +88,19 @@ function plugin_version_positions() {
 
    return array (
       'name' => _n('Cartography','Cartographies', 1, 'positions'),
-      'version' => '4.2.0',
+      'version' => '4.1.0',
       'license' => 'GPLv2+',
       'author'  => "<a href='http://infotel.com/services/expertise-technique/glpi/'>Infotel</a>",
       'homepage'=>'https://github.com/InfotelGLPI/positions',
-      'minGlpiVersion' => '0.90',
+      'minGlpiVersion' => '0.85',
    );
 
 }
 
 // Optional : check prerequisites before install : may print errors or add to message after redirect
 function plugin_positions_check_prerequisites() {
-   if (version_compare(GLPI_VERSION,'0.90','lt') || version_compare(GLPI_VERSION,'0.91','ge')) {
-      _e('This plugin requires GLPI >= 0.90', 'positions');
+   if (version_compare(GLPI_VERSION,'0.85','lt') || version_compare(GLPI_VERSION,'0.86','ge')) {
+      _e('This plugin requires GLPI >= 0.85', 'positions');
       return false;
    }
    return true;
