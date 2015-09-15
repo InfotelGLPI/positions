@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+   <name>Cartographie</name>
+   <key>positions</key>
+   <state>stable</state>
+   <logo></logo>
+   <description>
+      <short>
+         <fr><![CDATA[Cartographie. Ce plugin permet d’ajouter des coordonnées à des matériels / ressources humaines et ainsi de les positionner sur des cartes]]></fr>
+         <en><![CDATA[Cartography. This plugin allows you to add coordinates to any asset / human resources and so the place it on maps.]]></en>
+      </short>
+      <long>
+         <fr><![CDATA[Ce plugin permet d’ajouter des coordonnées à des matériels / ressources humaines et ainsi de les positionner sur des cartes.<br />Fonctionnalités :<br />-Zoom de la carte<br />-Recherche d’éléments de la carte<br />-Déplacement d’éléments en masse<br />-Personnalisation des informations à visualiser<br />-Gestion d’icônes liés aux types de matériel<br />-Gestion des bureaux (sous-lieux)<br />-ClickAndCall : En cliquant sur le numéro de téléphone, un appel se lancera directement sur le téléphone IP<br />-Utilisable avec le plugin Ressources humaines]]></fr>
+         <en><![CDATA[This plugin allows you to add coordinates to any asset / human resources and so the place it on maps..<br />Features :<br />-Zoom on map<br />-Asset seach on map<br />-Massive move of assets<br />-Customizing of information to see<br />-Management of icons related to asset types<br />-Management offices (sub-site)<br />-ClickAndCall : By clicking on the phone number, a call will run directly on the IP phone<br />-Can be used with Human ressources plugin]]></en>
+      </long>
+   </description>
+   <homepage>https://github.com/InfotelGLPI/positions</homepage>
+   <download>https://github.com/InfotelGLPI/positions/releases</download>
+   <authors>
+      <author>Xavier Caillaud / Infotel</author>
+   </authors>
+   <versions>
+      <version>
+          <num>4.1.0</num>
+          <compatibility>0.90</compatibility>
+      </version>
+      <version>
+          <num>4.0.0</num>
+          <compatibility>0.84</compatibility>
+      </version>
+      <version>
+          <num>3.0.0</num>
+          <compatibility>0.83.3</compatibility>
+      </version>
+   </versions>
+   <langs>
+      <lang>en_GB</lang>
+      <lang>fr_FR</lang>
+      <lang>de_DE</lang>
+      <lang>es_ES</lang>
+      <lang>pt_BR</lang>
+      <lang>ro_RO</lang>
+      <lang>tr_TR</lang>
+   </langs>
+   <license><![CDATA[GPL v2+]]></license>
+      <tags>
+         <fr>
+            <tag>Architecture</tag>
+            <tag>Cartographie</tag>
+            <tag>Réseau</tag>
+         </fr>
+         <en>
+            <tag>Architecture</tag>
+            <tag>Map</tag>
+            <tag>Network</tag>
+         </en>
+   </tags>
+</root>
