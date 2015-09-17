@@ -8,47 +8,36 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Project - positions plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-13 18:15+0100\n"
-"PO-Revision-Date: 2015-07-29 22:55+0000\n"
-"Last-Translator: Andreas Reichel\n"
-"Language-Team: German (Germany) (http://www.transifex.com/projects/p/GLPI_positions/language/de_DE/)\n"
+"POT-Creation-Date: 2015-09-17 12:02+0200\n"
+"PO-Revision-Date: 2015-09-17 10:02+0000\n"
+"Last-Translator: Xavier CAILLAUD <tsmr@thetsmr.fr>\n"
+"Language-Team: German (Germany) (http://www.transifex.com/tsmr/GLPI_positions/language/de_DE/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: de_DE\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: hook.php:164 setup.php:110 inc/position.class.php:54
+#: hook.php:202 setup.php:90 inc/menu.class.php:34 inc/position.class.php:56
+#: inc/profile.class.php:136 inc/profile.class.php:144
 msgid "Cartography"
 msgid_plural "Cartographies"
 msgstr[0] "Kartographie"
 msgstr[1] "Kartographie"
 
-#: hook.php:297 inc/position.class.php:998 inc/position.class.php:1875
-msgid "Create coordinates"
-msgstr "Koordinaten erstellen"
+#: setup.php:103
+msgid "This plugin requires GLPI >= 0.90"
+msgstr ""
 
-#: hook.php:298
-msgid "Delete coordinates"
-msgstr "Koordinaten löschen"
-
-#: setup.php:55 setup.php:56 setup.php:69 setup.php:70
-msgid "Map view"
-msgstr "Zur Karte wechseln"
-
-#: setup.php:123
-msgid "This plugin requires GLPI >= 0.84"
-msgstr "Dieses Plugin erfordert GLPI >= 0.84"
-
-#: ajax/dropdownValue.php:152
+#: ajax/dropdownValue.php:148
 msgid "All types"
 msgstr "Alle Typen"
 
-#: front/config.form.php:45
+#: front/config.form.php:42
 msgid "Please activate the plugin"
 msgstr "Bitte Plugin aktivieren"
 
-#: front/geoloc.php:107
+#: front/geoloc.php:109
 msgid "The selected object is not located on a map"
 msgstr "Dem ausgewählten Objekt ist keine Position in der Karte zugeordnet"
 
@@ -56,427 +45,434 @@ msgstr "Dem ausgewählten Objekt ist keine Position in der Karte zugeordnet"
 msgid "No picture uploaded"
 msgstr "Kein Bild hochgeladen"
 
-#: front/map.php:53 inc/position.class.php:932 inc/position.class.php:1898
+#: front/map.php:54 inc/position.class.php:985 inc/position.class.php:1908
 msgid "No location selected"
 msgstr "Kein Standort ausgewählt"
 
-#: inc/imageitem.class.php:209
+#: inc/imageitem.class.php:189
 msgid "Add pictures to use with plugin"
 msgstr "Bild hinzufügen um es mit dem Plugin nutzen zu können"
 
-#: inc/imageitem.class.php:217 inc/imageitem.class.php:218
+#: inc/imageitem.class.php:197 inc/imageitem.class.php:198
 msgid "Select pictures to upload (gif, jpg, png)"
 msgstr "Bild auswählen (gif, jpg, png)"
 
-#: inc/imageitem.class.php:222 inc/imageitem.class.php:224
+#: inc/imageitem.class.php:202 inc/imageitem.class.php:204
 msgid "upload pictures to the server"
 msgstr "Bild zum Server übertragen"
 
-#: inc/imageitem.class.php:223 inc/imageitem.class.php:229
+#: inc/imageitem.class.php:203 inc/imageitem.class.php:209
 msgid "Then"
 msgstr "Danach"
 
-#: inc/imageitem.class.php:228 inc/imageitem.class.php:230
+#: inc/imageitem.class.php:208 inc/imageitem.class.php:210
 msgid "refresh this form"
 msgstr "Formular aktualisieren"
 
-#: inc/imageitem.class.php:236
+#: inc/imageitem.class.php:216
 msgid "Associate images with types of equipment"
 msgstr "Bild mit Inventartyp verknüpfen"
 
-#: inc/imageitem.class.php:243
+#: inc/imageitem.class.php:223
 msgid "Types of materials should be created so that the association can exist"
 msgstr "Inventartyp muss erstellt sein um es zu verknüpfen"
 
-#: inc/imageitem.class.php:271
+#: inc/imageitem.class.php:251
 msgid "List of associations"
 msgstr "Liste der zugewiesenen Inventartypen"
 
-#: inc/imageitem.class.php:274 inc/imageitem.class.php:278
-#: inc/info.class.php:83 inc/info.class.php:170
+#: inc/imageitem.class.php:254 inc/imageitem.class.php:258
+#: inc/info.class.php:76 inc/info.class.php:152
 msgid "Equipment"
 msgstr "Inventar"
 
-#: inc/imageitem.class.php:275 inc/imageitem.class.php:279
+#: inc/imageitem.class.php:255 inc/imageitem.class.php:259
 msgid "Equipment type"
 msgstr "Inventartyp"
 
-#: inc/imageitem.class.php:276 inc/imageitem.class.php:280
+#: inc/imageitem.class.php:256 inc/imageitem.class.php:260
 msgid "Picture"
 msgstr "Bild"
 
-#: inc/imageitem.class.php:309
+#: inc/imageitem.class.php:292
 msgid "No associated picture"
 msgstr "Kein Bild zugewiesen"
 
-#: inc/info.class.php:44
+#: inc/info.class.php:45
 msgid "Display of equipment"
 msgid_plural "Display of equipments"
 msgstr[0] "Inventar anzeigen"
 msgstr[1] "Inventare anzeigen"
 
-#: inc/info.class.php:76 inc/info.class.php:162
+#: inc/info.class.php:69 inc/info.class.php:144
 msgid "Displayed fields"
 msgstr "Felder anzeigen"
 
-#: inc/info.class.php:90
-msgid "Display in the detail of the object"
-msgstr "Detail des Objektes anzeigen"
-
-#: inc/info.class.php:554 inc/info.class.php:570
+#: inc/info.class.php:535 inc/info.class.php:551
 msgid "Direct link"
 msgstr "Direkter Link"
 
-#: inc/position.class.php:119
+#: inc/menu.class.php:50 inc/menu.class.php:51 inc/menu.class.php:60
+#: inc/menu.class.php:61
+msgid "Map view"
+msgstr "Zur Karte wechseln"
+
+#: inc/position.class.php:137
 msgid "No equipment associated"
 msgstr "Kein Inventar zugewiesen"
 
-#: inc/position.class.php:128 inc/position.class.php:649
-msgid "This item is already bound to a location"
-msgstr "Dieses Element ist bereits einer Lokation zugewiesen"
-
-#: inc/position.class.php:176 inc/position.class.php:677
-#: inc/position.class.php:1605
+#: inc/position.class.php:203 inc/position.class.php:735
+#: inc/position.class.php:1615
 msgid "Coordinate x"
 msgstr "Koordinate x"
 
-#: inc/position.class.php:180 inc/position.class.php:712
-#: inc/position.class.php:1606
+#: inc/position.class.php:207 inc/position.class.php:770
+#: inc/position.class.php:1616
 msgid "Coordinate y"
 msgstr "Koordinate y"
 
-#: inc/position.class.php:288
-msgid "Select an area and click on OK"
-msgstr "Bereich auswählen und OK klicken"
-
-#: inc/position.class.php:356
-msgid "Creation of sub-areas on the map"
-msgstr "Neuen Teilbereich auf der Karte erstellen"
-
-#: inc/position.class.php:363
-msgid "Choose an existing location"
-msgstr "Existierenden Standort auswählen"
-
-#: inc/position.class.php:391
-msgid "No sub-area found"
-msgstr "Kein Teilbereich gefunden"
-
-#: inc/position.class.php:401
-msgid "Create a new location"
-msgstr "Neuen Standort erstellen"
-
-#: inc/position.class.php:427
-msgid "Add and continue"
-msgstr "Hinzufügen und fortsetzen"
-
-#: inc/position.class.php:735 inc/position.class.php:883
-msgid "Change the coordinates"
-msgstr "Koordinaten ändern"
-
-#: inc/position.class.php:889
-msgid "Add a sub-area"
-msgstr "Teilbereich hinzufügen"
-
-#: inc/position.class.php:921 inc/position.class.php:975
-msgid "No location has a configured map"
-msgstr "Es ist für keinen Standort eine Karte konfiguriert"
-
-#: inc/position.class.php:926
-msgid "The object location does not match a map"
-msgstr "Der Standort des Elements stimmt nicht mit der Karte überein"
-
-#: inc/position.class.php:970
+#: inc/position.class.php:255 inc/position.class.php:1024
 msgid "See the map"
 msgstr "Karte anzeigen"
 
-#: inc/position.class.php:1440 inc/position.class.php:1939
+#: inc/position.class.php:338
+msgid "Select an area and click on OK"
+msgstr "Bereich auswählen und OK klicken"
+
+#: inc/position.class.php:406
+msgid "Creation of sub-areas on the map"
+msgstr "Neuen Teilbereich auf der Karte erstellen"
+
+#: inc/position.class.php:413
+msgid "Choose an existing location"
+msgstr "Existierenden Standort auswählen"
+
+#: inc/position.class.php:441
+msgid "No sub-area found"
+msgstr "Kein Teilbereich gefunden"
+
+#: inc/position.class.php:451
+msgid "Create a new location"
+msgstr "Neuen Standort erstellen"
+
+#: inc/position.class.php:477
+msgid "Add and continue"
+msgstr "Hinzufügen und fortsetzen"
+
+#: inc/position.class.php:661 inc/position.class.php:717
+msgid "This item is already bound to a location"
+msgstr "Dieses Element ist bereits einer Lokation zugewiesen"
+
+#: inc/position.class.php:792 inc/position.class.php:937
+msgid "Change the coordinates"
+msgstr "Koordinaten ändern"
+
+#: inc/position.class.php:942
+msgid "Add a sub-area"
+msgstr "Teilbereich hinzufügen"
+
+#: inc/position.class.php:974 inc/position.class.php:1029
+msgid "No location has a configured map"
+msgstr "Es ist für keinen Standort eine Karte konfiguriert"
+
+#: inc/position.class.php:979
+msgid "The object location does not match a map"
+msgstr "Der Standort des Elements stimmt nicht mit der Karte überein"
+
+#: inc/position.class.php:1052 inc/position.class.php:1885
+msgid "Create coordinates"
+msgstr "Koordinaten erstellen"
+
+#: inc/position.class.php:1083
+msgid "Limited view"
+msgstr ""
+
+#: inc/position.class.php:1449 inc/position.class.php:1949
 msgid "Configuring the display materials"
 msgstr "Dargestellte Informationen Konfigurieren"
 
-#: inc/position.class.php:1601
+#: inc/position.class.php:1611
 msgid "Associated coordinate"
 msgstr "Koordinaten zuweisen"
 
-#: inc/position.class.php:1933
+#: inc/position.class.php:1943
 msgid "Association : picture / types of equipment"
 msgstr "Den Inventartypen Symbole zuweisen"
 
-#: inc/position.class.php:1974
+#: inc/position.class.php:1984
 msgid "Please download a newer version of canvasXpress at"
 msgstr "Bitte neuere Version von canvasXpress herunterladen"
 
-#: inc/position.class.php:1975
+#: inc/position.class.php:1985
 msgid ""
 "You are using an older version that do not support all the functionality of "
 "this panel"
 msgstr "Sie verwenden eine ältere Version, welche nicht den vollen Funktionsumfang unterstützt"
 
-#: inc/position.class.php:1976
+#: inc/position.class.php:1986
 msgid "Delete selected objects"
 msgstr "Ausgewähltes Element löschen"
 
-#: inc/position.class.php:1977
+#: inc/position.class.php:1987
 msgid "Informations about"
 msgstr "Informationen über"
 
-#: inc/position.class.php:1981
+#: inc/position.class.php:1991
 msgid "Hide"
 msgstr "Ausblenden"
 
-#: inc/position.class.php:1982
+#: inc/position.class.php:1992
 msgid "informations about selected items"
 msgstr "Informationen über das ausgewählte Element"
 
-#: inc/position.class.php:1983
+#: inc/position.class.php:1993
 msgid "All hidden objects"
 msgstr "Alle ausgeblendete Objekte"
 
-#: inc/position.class.php:1984
+#: inc/position.class.php:1994
 msgid "See all hidden objects"
 msgstr "Zeige alle ausgeblendete Objekte"
 
-#: inc/position.class.php:1985
+#: inc/position.class.php:1995
 msgid "cancel last change"
 msgstr "Letzte Änderung ignorieren"
 
-#: inc/position.class.php:1986
+#: inc/position.class.php:1996
 msgid "Replay the last change"
 msgstr "Letzt Änderung wiederholen"
 
-#: inc/position.class.php:1987
+#: inc/position.class.php:1997
 msgid "Save as a new network"
 msgstr "Speichern als neues Netzwerk"
 
-#: inc/position.class.php:1989
+#: inc/position.class.php:1999
 msgid "Save the network now"
 msgstr "Netzwerk speichern"
 
-#: inc/position.class.php:1990
+#: inc/position.class.php:2000
 msgid "Simple search"
 msgstr "Einfache suche"
 
-#: inc/position.class.php:1991
+#: inc/position.class.php:2001
 msgid "Import JSON data"
 msgstr "Importieren der JSON Daten"
 
-#: inc/position.class.php:1992
+#: inc/position.class.php:2002
 msgid "Export JSON data"
 msgstr "Exportieren der JSON Daten"
 
-#: inc/position.class.php:1993
+#: inc/position.class.php:2003
 msgid "Import JSON movie"
 msgstr "Importieren des JSON Videos"
 
-#: inc/position.class.php:1994
+#: inc/position.class.php:2004
 msgid "Export JSON movie"
 msgstr "Exportieren des JSON Videos"
 
-#: inc/position.class.php:1995
+#: inc/position.class.php:2005
 msgid "Force save the entire network"
 msgstr ""
 
-#: inc/position.class.php:1996
+#: inc/position.class.php:2006
 msgid "Advanced test"
 msgstr "Erweiterter Test"
 
-#: inc/position.class.php:1997
+#: inc/position.class.php:2007
 msgid "Refresh the graph"
 msgstr "Grafik aktualisieren"
 
-#: inc/position.class.php:1998
+#: inc/position.class.php:2008
 msgid "See as a picture"
 msgstr "Anzeigen als Bild"
 
-#: inc/position.class.php:2002 inc/position.class.php:2003
+#: inc/position.class.php:2012 inc/position.class.php:2013
 msgid "Color"
 msgid_plural "Colors"
 msgstr[0] "Farben"
 msgstr[1] "Farben"
 
-#: inc/position.class.php:2004
+#: inc/position.class.php:2014
 msgid "Scale Factor"
 msgstr "Skalierungsfaktor"
 
-#: inc/position.class.php:2005
+#: inc/position.class.php:2015
 msgid "Boxed"
 msgstr ""
 
-#: inc/position.class.php:2006
+#: inc/position.class.php:2016
 msgid "Transpose"
 msgstr ""
 
-#: inc/position.class.php:2007
+#: inc/position.class.php:2017
 msgid "Search on objects"
 msgstr ""
 
-#: inc/position.class.php:2009
+#: inc/position.class.php:2019
 msgid "Advanced Options"
 msgstr "Erweiterte Optionen"
 
-#: inc/position.class.php:2010
+#: inc/position.class.php:2020
 msgid "Search key"
 msgstr "Suchwort"
 
-#: inc/position.class.php:2011
+#: inc/position.class.php:2021
 msgid "Regex accepted"
 msgstr ""
 
-#: inc/position.class.php:2012
+#: inc/position.class.php:2022
 msgid "One line by object"
 msgstr "Eine zeile pro Objekt"
 
-#: inc/position.class.php:2013
+#: inc/position.class.php:2023
 msgid "Stop highlighting"
 msgstr "Hervorheben beenden"
 
-#: inc/position.class.php:2014
+#: inc/position.class.php:2024
 msgid "Highlight object"
 msgstr "Objekt hervorheben"
 
-#: inc/position.class.php:2015
+#: inc/position.class.php:2025
 msgid "Edit selected object"
 msgstr "Bearbeiten des ausgewählten Objektes"
 
-#: inc/position.class.php:2016
+#: inc/position.class.php:2026
 msgid "Selected object"
 msgstr "Objekt auswählen"
 
-#: inc/position.class.php:2017
+#: inc/position.class.php:2027
 msgid "This object"
 msgstr "Dieses Objekt"
 
-#: inc/position.class.php:2018
+#: inc/position.class.php:2028
 msgid "Selected objects and all the"
 msgstr "Objekt auswählen und alle"
 
-#: inc/position.class.php:2019
+#: inc/position.class.php:2029
 msgid "This object and all its"
 msgstr "Dieses Objekt und alle"
 
-#: inc/position.class.php:2020
+#: inc/position.class.php:2030
 msgid "Do you want to delete"
 msgstr "Wirklich löschen"
 
-#: inc/position.class.php:2021
+#: inc/position.class.php:2031
 msgid "Links will be deleted"
 msgstr "Verknüpfung wird gelöscht"
 
-#: inc/position.class.php:2022
+#: inc/position.class.php:2032
 msgid "Tooltip"
 msgstr ""
 
-#: inc/position.class.php:2023
+#: inc/position.class.php:2033
 msgid "Object type"
 msgstr "Objekt Typ"
 
-#: inc/position.class.php:2024
+#: inc/position.class.php:2034
 msgid "Required selection"
 msgstr "Auswahl erforderlich"
 
-#: inc/position.class.php:2025
+#: inc/position.class.php:2035
 msgid "Image path"
 msgstr "Image Pfad"
 
-#: inc/position.class.php:2026
+#: inc/position.class.php:2036
 msgid "The object is fixed"
 msgstr "Dieses Objekt ist fixiert"
 
-#: inc/position.class.php:2029
+#: inc/position.class.php:2039
 msgid "Object editor"
 msgstr "Objekt Editor"
 
-#: inc/position.class.php:2030
+#: inc/position.class.php:2040
 msgid "Object id"
 msgstr "Objekt ID"
 
-#: inc/position.class.php:2032
+#: inc/position.class.php:2042
 msgid "Pattern"
 msgstr ""
 
-#: inc/position.class.php:2033
+#: inc/position.class.php:2043
 msgid "Edge"
 msgstr "Rand"
 
-#: inc/position.class.php:2034
-msgid "Edit objects"
-msgstr "Objekt bearbeiten"
+#: inc/position.class.php:2044 inc/position.class.php:2045
+msgid "Object"
+msgid_plural "Objects"
+msgstr[0] ""
+msgstr[1] ""
 
-#: inc/position.class.php:2037
+#: inc/position.class.php:2047
 msgid "Axes"
 msgstr "Achse"
 
-#: inc/position.class.php:2039
+#: inc/position.class.php:2049
 msgid "Legend"
 msgstr "Legende"
 
-#: inc/position.class.php:2040
+#: inc/position.class.php:2050
 msgid "Indicators"
 msgstr ""
 
-#: inc/position.class.php:2041
+#: inc/position.class.php:2051
 msgid "Decorations"
 msgstr ""
 
-#: inc/position.class.php:2042
+#: inc/position.class.php:2052
 msgid "Data"
 msgstr "Daten"
 
-#: inc/position.class.php:2043
+#: inc/position.class.php:2053
 msgid "Font weight"
 msgstr "Schriftstärke"
 
-#: inc/position.class.php:2044
+#: inc/position.class.php:2054
 msgid "Properties"
 msgstr "Eigenschaften"
 
-#: inc/position.class.php:2045
+#: inc/position.class.php:2055
 msgid "Transform"
 msgstr "Verformen"
 
-#: inc/position.class.php:2046
+#: inc/position.class.php:2056
 msgid "Ticks"
 msgstr ""
 
-#: inc/position.class.php:2047
+#: inc/position.class.php:2057
 msgid "Font"
 msgstr "Schriftart"
 
-#: inc/position.class.php:2048
+#: inc/position.class.php:2058
 msgid "Layout"
 msgstr ""
 
-#: inc/position.class.php:2049
+#: inc/position.class.php:2059
 msgid "Orientation"
 msgstr ""
 
-#: inc/position.class.php:2050
+#: inc/position.class.php:2060
 msgid "Overlays"
 msgstr ""
 
-#: inc/position.class.php:2051
+#: inc/position.class.php:2061
 msgid "Background"
 msgstr "Hintergrund"
 
-#: inc/position.class.php:2052
+#: inc/position.class.php:2062
 msgid "Gradient"
 msgstr ""
 
-#: inc/position.class.php:2053
+#: inc/position.class.php:2063
 msgid "Solid"
 msgstr ""
 
-#: inc/position.class.php:2055
+#: inc/position.class.php:2065
 msgid "Width"
 msgstr "Breite"
 
-#: inc/position.class.php:2056
+#: inc/position.class.php:2066
 msgid "Height"
 msgstr "Höhe"
 
-#: inc/position.class.php:2057
+#: inc/position.class.php:2067
 msgid "Text"
 msgstr ""
-
-#: inc/profile.class.php:37 inc/profile.class.php:139
-msgid "Rights management"
-msgstr "Rechte Verwaltung"

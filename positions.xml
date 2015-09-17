@@ -10,14 +10,15 @@
          <en><![CDATA[Cartography. This plugin allows you to add coordinates to any asset / human resources and so the place it on maps.]]></en>
       </short>
       <long>
-         <fr><![CDATA[Ce plugin permet d’ajouter des coordonnées à des matériels / ressources humaines et ainsi de les positionner sur des cartes.<br />Fonctionnalités :<br />-Zoom de la carte<br />-Recherche d’éléments de la carte<br />-Déplacement d’éléments en masse<br />-Personnalisation des informations à visualiser<br />-Gestion d’icônes liés aux types de matériel<br />-Gestion des bureaux (sous-lieux)<br />-ClickAndCall : En cliquant sur le numéro de téléphone, un appel se lancera directement sur le téléphone IP<br />-Utilisable avec le plugin Ressources humaines]]></fr>
-         <en><![CDATA[This plugin allows you to add coordinates to any asset / human resources and so the place it on maps..<br />Features :<br />-Zoom on map<br />-Asset seach on map<br />-Massive move of assets<br />-Customizing of information to see<br />-Management of icons related to asset types<br />-Management offices (sub-site)<br />-ClickAndCall : By clicking on the phone number, a call will run directly on the IP phone<br />-Can be used with Human ressources plugin]]></en>
+         <fr><![CDATA[Ce plugin permet d’ajouter des coordonnées à des matériels / ressources humaines et ainsi de les positionner sur des cartes.<br />Fonctionnalités :<br />- Zoom de la carte<br />- Recherche d’éléments de la carte<br />- Déplacement d’éléments en masse<br />- Personnalisation des informations à visualiser<br />- Gestion d’icônes liés aux types de matériel<br />- Gestion des bureaux (sous-lieux)<br />- ClickAndCall : En cliquant sur le numéro de téléphone, un appel se lancera directement sur le téléphone IP<br />- Utilisable avec le plugin Ressources humaines]]></fr>
+         <en><![CDATA[This plugin allows you to add coordinates to any asset / human resources and so the place it on maps..<br />Features :<br />- Zoom on map<br />- Asset seach on map<br />- Massive move of assets<br />- Customizing of information to see<br />- Management of icons related to asset types<br />- Management offices (sub-site)<br />- ClickAndCall : By clicking on the phone number, a call will run directly on the IP phone<br />- Can be used with Human ressources plugin]]></en>
       </long>
    </description>
    <homepage>https://github.com/InfotelGLPI/positions</homepage>
    <download>https://github.com/InfotelGLPI/positions/releases</download>
    <authors>
-      <author>Xavier Caillaud / Infotel</author>
+      <author>LudovicDupont</author>
+      <author>Infotel</author>
    </authors>
    <versions>
       <version>

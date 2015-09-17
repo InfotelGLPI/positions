@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Positions plugin 4.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-01-23 16:32+0100\n"
+"POT-Creation-Date: 2015-09-17 12:02+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,37 +18,26 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: hook.php:162 setup.php:107 inc/position.class.php:54
+#: hook.php:202 setup.php:90 inc/menu.class.php:34 inc/position.class.php:56
+#: inc/profile.class.php:136 inc/profile.class.php:144
 msgid "Cartography"
 msgid_plural "Cartographies"
 msgstr[0] ""
 msgstr[1] ""
 
-#: hook.php:318 inc/position.class.php:1024 inc/position.class.php:1901
-msgid "Create coordinates"
+#: setup.php:103
+msgid "This plugin requires GLPI >= 0.90"
 msgstr ""
 
-#: hook.php:319
-msgid "Delete coordinates"
-msgstr ""
-
-#: setup.php:54 setup.php:55 setup.php:68 setup.php:69
-msgid "Map view"
-msgstr ""
-
-#: setup.php:119
-msgid "This plugin requires GLPI >= 0.84"
-msgstr ""
-
-#: ajax/dropdownValue.php:152
+#: ajax/dropdownValue.php:148
 msgid "All types"
 msgstr ""
 
-#: front/config.form.php:45
+#: front/config.form.php:42
 msgid "Please activate the plugin"
 msgstr ""
 
-#: front/geoloc.php:107
+#: front/geoloc.php:109
 msgid "The selected object is not located on a map"
 msgstr ""
 
@@ -56,429 +45,434 @@ msgstr ""
 msgid "No picture uploaded"
 msgstr ""
 
-#: front/map.php:53 inc/position.class.php:958 inc/position.class.php:1924
+#: front/map.php:54 inc/position.class.php:985 inc/position.class.php:1908
 msgid "No location selected"
 msgstr ""
 
-#: inc/imageitem.class.php:209
+#: inc/imageitem.class.php:189
 msgid "Add pictures to use with plugin"
 msgstr ""
 
-#: inc/imageitem.class.php:217 inc/imageitem.class.php:218
+#: inc/imageitem.class.php:197 inc/imageitem.class.php:198
 msgid "Select pictures to upload (gif, jpg, png)"
 msgstr ""
 
-#: inc/imageitem.class.php:222 inc/imageitem.class.php:224
+#: inc/imageitem.class.php:202 inc/imageitem.class.php:204
 msgid "upload pictures to the server"
 msgstr ""
 
-#: inc/imageitem.class.php:223 inc/imageitem.class.php:229
+#: inc/imageitem.class.php:203 inc/imageitem.class.php:209
 msgid "Then"
 msgstr ""
 
-#: inc/imageitem.class.php:228 inc/imageitem.class.php:230
+#: inc/imageitem.class.php:208 inc/imageitem.class.php:210
 msgid "refresh this form"
 msgstr ""
 
-#: inc/imageitem.class.php:236
+#: inc/imageitem.class.php:216
 msgid "Associate images with types of equipment"
 msgstr ""
 
-#: inc/imageitem.class.php:243
+#: inc/imageitem.class.php:223
 msgid "Types of materials should be created so that the association can exist"
 msgstr ""
 
-#: inc/imageitem.class.php:271
+#: inc/imageitem.class.php:251
 msgid "List of associations"
 msgstr ""
 
-#: inc/imageitem.class.php:274 inc/imageitem.class.php:278
-#: inc/info.class.php:83 inc/info.class.php:170
+#: inc/imageitem.class.php:254 inc/imageitem.class.php:258
+#: inc/info.class.php:76 inc/info.class.php:152
 msgid "Equipment"
 msgstr ""
 
-#: inc/imageitem.class.php:275 inc/imageitem.class.php:279
+#: inc/imageitem.class.php:255 inc/imageitem.class.php:259
 msgid "Equipment type"
 msgstr ""
 
-#: inc/imageitem.class.php:276 inc/imageitem.class.php:280
+#: inc/imageitem.class.php:256 inc/imageitem.class.php:260
 msgid "Picture"
 msgstr ""
 
-#: inc/imageitem.class.php:309
+#: inc/imageitem.class.php:292
 msgid "No associated picture"
 msgstr ""
 
-#: inc/info.class.php:44
+#: inc/info.class.php:45
 msgid "Display of equipment"
 msgid_plural "Display of equipments"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/info.class.php:76 inc/info.class.php:162
+#: inc/info.class.php:69 inc/info.class.php:144
 msgid "Displayed fields"
 msgstr ""
 
-#: inc/info.class.php:90
-msgid "Display in the detail of the object"
-msgstr ""
-
-#: inc/info.class.php:554 inc/info.class.php:570
+#: inc/info.class.php:535 inc/info.class.php:551
 msgid "Direct link"
 msgstr ""
 
-#: inc/position.class.php:119
+#: inc/menu.class.php:50 inc/menu.class.php:51 inc/menu.class.php:60
+#: inc/menu.class.php:61
+msgid "Map view"
+msgstr ""
+
+#: inc/position.class.php:137
 msgid "No equipment associated"
 msgstr ""
 
-#: inc/position.class.php:176 inc/position.class.php:703
-#: inc/position.class.php:1631
+#: inc/position.class.php:203 inc/position.class.php:735
+#: inc/position.class.php:1615
 msgid "Coordinate x"
 msgstr ""
 
-#: inc/position.class.php:180 inc/position.class.php:738
-#: inc/position.class.php:1632
+#: inc/position.class.php:207 inc/position.class.php:770
+#: inc/position.class.php:1616
 msgid "Coordinate y"
 msgstr ""
 
-#: inc/position.class.php:295
-msgid "Select an area and click on OK"
-msgstr ""
-
-#: inc/position.class.php:363
-msgid "Creation of sub-areas on the map"
-msgstr ""
-
-#: inc/position.class.php:370
-msgid "Choose an existing location"
-msgstr ""
-
-#: inc/position.class.php:398
-msgid "No sub-area found"
-msgstr ""
-
-#: inc/position.class.php:408
-msgid "Create a new location"
-msgstr ""
-
-#: inc/position.class.php:434
-msgid "Add and continue"
-msgstr ""
-
-#: inc/position.class.php:619 inc/position.class.php:675
-msgid "This item is already bound to a location"
-msgstr ""
-
-#: inc/position.class.php:761 inc/position.class.php:909
-msgid "Change the coordinates"
-msgstr ""
-
-#: inc/position.class.php:915
-msgid "Add a sub-area"
-msgstr ""
-
-#: inc/position.class.php:947 inc/position.class.php:1001
-msgid "No location has a configured map"
-msgstr ""
-
-#: inc/position.class.php:952
-msgid "The object location does not match a map"
-msgstr ""
-
-#: inc/position.class.php:996
+#: inc/position.class.php:255 inc/position.class.php:1024
 msgid "See the map"
 msgstr ""
 
-#: inc/position.class.php:1466 inc/position.class.php:1965
+#: inc/position.class.php:338
+msgid "Select an area and click on OK"
+msgstr ""
+
+#: inc/position.class.php:406
+msgid "Creation of sub-areas on the map"
+msgstr ""
+
+#: inc/position.class.php:413
+msgid "Choose an existing location"
+msgstr ""
+
+#: inc/position.class.php:441
+msgid "No sub-area found"
+msgstr ""
+
+#: inc/position.class.php:451
+msgid "Create a new location"
+msgstr ""
+
+#: inc/position.class.php:477
+msgid "Add and continue"
+msgstr ""
+
+#: inc/position.class.php:661 inc/position.class.php:717
+msgid "This item is already bound to a location"
+msgstr ""
+
+#: inc/position.class.php:792 inc/position.class.php:937
+msgid "Change the coordinates"
+msgstr ""
+
+#: inc/position.class.php:942
+msgid "Add a sub-area"
+msgstr ""
+
+#: inc/position.class.php:974 inc/position.class.php:1029
+msgid "No location has a configured map"
+msgstr ""
+
+#: inc/position.class.php:979
+msgid "The object location does not match a map"
+msgstr ""
+
+#: inc/position.class.php:1052 inc/position.class.php:1885
+msgid "Create coordinates"
+msgstr ""
+
+#: inc/position.class.php:1083
+msgid "Limited view"
+msgstr ""
+
+#: inc/position.class.php:1449 inc/position.class.php:1949
 msgid "Configuring the display materials"
 msgstr ""
 
-#: inc/position.class.php:1627
+#: inc/position.class.php:1611
 msgid "Associated coordinate"
 msgstr ""
 
-#: inc/position.class.php:1959
+#: inc/position.class.php:1943
 msgid "Association : picture / types of equipment"
 msgstr ""
 
-#: inc/position.class.php:2000
+#: inc/position.class.php:1984
 msgid "Please download a newer version of canvasXpress at"
 msgstr ""
 
-#: inc/position.class.php:2001
+#: inc/position.class.php:1985
 msgid ""
 "You are using an older version that do not support all the functionality of "
 "this panel"
 msgstr ""
 
-#: inc/position.class.php:2002
+#: inc/position.class.php:1986
 msgid "Delete selected objects"
 msgstr ""
 
-#: inc/position.class.php:2003
+#: inc/position.class.php:1987
 msgid "Informations about"
 msgstr ""
 
-#: inc/position.class.php:2007
+#: inc/position.class.php:1991
 msgid "Hide"
 msgstr ""
 
-#: inc/position.class.php:2008
+#: inc/position.class.php:1992
 msgid "informations about selected items"
 msgstr ""
 
-#: inc/position.class.php:2009
+#: inc/position.class.php:1993
 msgid "All hidden objects"
 msgstr ""
 
-#: inc/position.class.php:2010
+#: inc/position.class.php:1994
 msgid "See all hidden objects"
 msgstr ""
 
-#: inc/position.class.php:2011
+#: inc/position.class.php:1995
 msgid "cancel last change"
 msgstr ""
 
-#: inc/position.class.php:2012
+#: inc/position.class.php:1996
 msgid "Replay the last change"
 msgstr ""
 
-#: inc/position.class.php:2013
+#: inc/position.class.php:1997
 msgid "Save as a new network"
 msgstr ""
 
-#: inc/position.class.php:2015
+#: inc/position.class.php:1999
 msgid "Save the network now"
 msgstr ""
 
-#: inc/position.class.php:2016
+#: inc/position.class.php:2000
 msgid "Simple search"
 msgstr ""
 
-#: inc/position.class.php:2017
+#: inc/position.class.php:2001
 msgid "Import JSON data"
 msgstr ""
 
-#: inc/position.class.php:2018
+#: inc/position.class.php:2002
 msgid "Export JSON data"
 msgstr ""
 
-#: inc/position.class.php:2019
+#: inc/position.class.php:2003
 msgid "Import JSON movie"
 msgstr ""
 
-#: inc/position.class.php:2020
+#: inc/position.class.php:2004
 msgid "Export JSON movie"
 msgstr ""
 
-#: inc/position.class.php:2021
+#: inc/position.class.php:2005
 msgid "Force save the entire network"
 msgstr ""
 
-#: inc/position.class.php:2022
+#: inc/position.class.php:2006
 msgid "Advanced test"
 msgstr ""
 
-#: inc/position.class.php:2023
+#: inc/position.class.php:2007
 msgid "Refresh the graph"
 msgstr ""
 
-#: inc/position.class.php:2024
+#: inc/position.class.php:2008
 msgid "See as a picture"
 msgstr ""
 
-#: inc/position.class.php:2028 inc/position.class.php:2029
+#: inc/position.class.php:2012 inc/position.class.php:2013
 msgid "Color"
 msgid_plural "Colors"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/position.class.php:2030
+#: inc/position.class.php:2014
 msgid "Scale Factor"
 msgstr ""
 
-#: inc/position.class.php:2031
+#: inc/position.class.php:2015
 msgid "Boxed"
 msgstr ""
 
-#: inc/position.class.php:2032
+#: inc/position.class.php:2016
 msgid "Transpose"
 msgstr ""
 
-#: inc/position.class.php:2033
+#: inc/position.class.php:2017
 msgid "Search on objects"
 msgstr ""
 
-#: inc/position.class.php:2035
+#: inc/position.class.php:2019
 msgid "Advanced Options"
 msgstr ""
 
-#: inc/position.class.php:2036
+#: inc/position.class.php:2020
 msgid "Search key"
 msgstr ""
 
-#: inc/position.class.php:2037
+#: inc/position.class.php:2021
 msgid "Regex accepted"
 msgstr ""
 
-#: inc/position.class.php:2038
+#: inc/position.class.php:2022
 msgid "One line by object"
 msgstr ""
 
-#: inc/position.class.php:2039
+#: inc/position.class.php:2023
 msgid "Stop highlighting"
 msgstr ""
 
-#: inc/position.class.php:2040
+#: inc/position.class.php:2024
 msgid "Highlight object"
 msgstr ""
 
-#: inc/position.class.php:2041
+#: inc/position.class.php:2025
 msgid "Edit selected object"
 msgstr ""
 
-#: inc/position.class.php:2042
+#: inc/position.class.php:2026
 msgid "Selected object"
 msgstr ""
 
-#: inc/position.class.php:2043
+#: inc/position.class.php:2027
 msgid "This object"
 msgstr ""
 
-#: inc/position.class.php:2044
+#: inc/position.class.php:2028
 msgid "Selected objects and all the"
 msgstr ""
 
-#: inc/position.class.php:2045
+#: inc/position.class.php:2029
 msgid "This object and all its"
 msgstr ""
 
-#: inc/position.class.php:2046
+#: inc/position.class.php:2030
 msgid "Do you want to delete"
 msgstr ""
 
-#: inc/position.class.php:2047
+#: inc/position.class.php:2031
 msgid "Links will be deleted"
 msgstr ""
 
-#: inc/position.class.php:2048
+#: inc/position.class.php:2032
 msgid "Tooltip"
 msgstr ""
 
-#: inc/position.class.php:2049
+#: inc/position.class.php:2033
 msgid "Object type"
 msgstr ""
 
-#: inc/position.class.php:2050
+#: inc/position.class.php:2034
 msgid "Required selection"
 msgstr ""
 
-#: inc/position.class.php:2051
+#: inc/position.class.php:2035
 msgid "Image path"
 msgstr ""
 
-#: inc/position.class.php:2052
+#: inc/position.class.php:2036
 msgid "The object is fixed"
 msgstr ""
 
-#: inc/position.class.php:2055
+#: inc/position.class.php:2039
 msgid "Object editor"
 msgstr ""
 
-#: inc/position.class.php:2056
+#: inc/position.class.php:2040
 msgid "Object id"
 msgstr ""
 
-#: inc/position.class.php:2058
+#: inc/position.class.php:2042
 msgid "Pattern"
 msgstr ""
 
-#: inc/position.class.php:2059
+#: inc/position.class.php:2043
 msgid "Edge"
 msgstr ""
 
-#: inc/position.class.php:2060 inc/position.class.php:2061
+#: inc/position.class.php:2044 inc/position.class.php:2045
 msgid "Object"
 msgid_plural "Objects"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/position.class.php:2063
+#: inc/position.class.php:2047
 msgid "Axes"
 msgstr ""
 
-#: inc/position.class.php:2065
+#: inc/position.class.php:2049
 msgid "Legend"
 msgstr ""
 
-#: inc/position.class.php:2066
+#: inc/position.class.php:2050
 msgid "Indicators"
 msgstr ""
 
-#: inc/position.class.php:2067
+#: inc/position.class.php:2051
 msgid "Decorations"
 msgstr ""
 
-#: inc/position.class.php:2068
+#: inc/position.class.php:2052
 msgid "Data"
 msgstr ""
 
-#: inc/position.class.php:2069
+#: inc/position.class.php:2053
 msgid "Font weight"
 msgstr ""
 
-#: inc/position.class.php:2070
+#: inc/position.class.php:2054
 msgid "Properties"
 msgstr ""
 
-#: inc/position.class.php:2071
+#: inc/position.class.php:2055
 msgid "Transform"
 msgstr ""
 
-#: inc/position.class.php:2072
+#: inc/position.class.php:2056
 msgid "Ticks"
 msgstr ""
 
-#: inc/position.class.php:2073
+#: inc/position.class.php:2057
 msgid "Font"
 msgstr ""
 
-#: inc/position.class.php:2074
+#: inc/position.class.php:2058
 msgid "Layout"
 msgstr ""
 
-#: inc/position.class.php:2075
+#: inc/position.class.php:2059
 msgid "Orientation"
 msgstr ""
 
-#: inc/position.class.php:2076
+#: inc/position.class.php:2060
 msgid "Overlays"
 msgstr ""
 
-#: inc/position.class.php:2077
+#: inc/position.class.php:2061
 msgid "Background"
 msgstr ""
 
-#: inc/position.class.php:2078
+#: inc/position.class.php:2062
 msgid "Gradient"
 msgstr ""
 
-#: inc/position.class.php:2079
+#: inc/position.class.php:2063
 msgid "Solid"
 msgstr ""
 
-#: inc/position.class.php:2081
+#: inc/position.class.php:2065
 msgid "Width"
 msgstr ""
 
-#: inc/position.class.php:2082
+#: inc/position.class.php:2066
 msgid "Height"
 msgstr ""
 
-#: inc/position.class.php:2083
+#: inc/position.class.php:2067
 msgid "Text"
-msgstr ""
-
-#: inc/profile.class.php:37 inc/profile.class.php:139
-msgid "Rights management"
 msgstr ""
