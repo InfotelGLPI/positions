@@ -35,7 +35,7 @@ class PluginPositionsPosition extends CommonDBTM {
 
    public $dohistory = true;
    static $rightname                   = "plugin_positions";
-   protected $usenotepadrights         = true;
+   protected $usenotepad              = true;
    
    static $types = array('Computer',
                           'Monitor',

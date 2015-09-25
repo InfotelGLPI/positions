@@ -35,7 +35,7 @@ class PluginPositionsInfo extends CommonDBTM {
    
    public $dohistory=true;
    static $rightname                   = "plugin_positions";
-   protected $usenotepadrights         = true;
+   protected $usenotepad         = true;
    /**
     * Return the localized name of the current Type
     *
