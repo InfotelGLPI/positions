@@ -3,7 +3,7 @@
    <name>Cartography</name>
    <key>positions</key>
    <state>stable</state>
-   <logo></logo>
+   <logo>https://raw.githubusercontent.com/InfotelGLPI/positions/master/positions.png</logo>
    <description>
       <short>
          <fr><![CDATA[Cartographie. Ce plugin permet d’ajouter des coordonnées à des matériels / ressources humaines et ainsi de les positionner sur des cartes]]></fr>
