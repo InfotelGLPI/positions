@@ -88,7 +88,7 @@ function plugin_version_positions() {
 
    return array (
       'name' => _n('Cartography','Cartographies', 1, 'positions'),
-      'version' => '4.2.0',
+      'version' => '4.2.1',
       'license' => 'GPLv2+',
       'author'  => "<a href='http://infotel.com/services/expertise-technique/glpi/'>Infotel</a>",
       'homepage'=>'https://github.com/InfotelGLPI/positions',
