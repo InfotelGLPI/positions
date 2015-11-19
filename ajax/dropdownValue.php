@@ -51,7 +51,7 @@ if (isset($_GET["entity_restrict"])
 }
 
 // Make a select box with preselected values
-if (!isset($_GET["limit"])) {
+if (isset($_GET["limit"])) {
    $_GET["limit"] = $CFG_GLPI["dropdown_chars_limit"];
 }
 
