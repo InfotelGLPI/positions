@@ -275,8 +275,8 @@ function plugin_positions_giveItem($type,$ID,$data,$num) {
                         if ($result_linked = $DB->query($query))
                            if ($DB->numrows($result_linked)) {
                               $item = new $itemtype();
-                              while ($data = $DB->fetch_assoc($result_linked)) {
-                                 if ($item->getFromDB($data['id'])) {
+                              while ($val = $DB->fetch_assoc($result_linked)) {
+                                 if ($item->getFromDB($val['id'])) {
                                     $out .= $item->getTypeName()." - ".$item->getLink()."<br>";
                                  }
                               }
@@ -295,18 +295,16 @@ function plugin_positions_giveItem($type,$ID,$data,$num) {
    if (in_array($type, PluginPositionsPosition::getTypes(true))) {
       switch ($table.'.'.$field) {
          case "glpi_plugin_positions_positions.name" :
-            $out = '';
+            $out = "";
             $pos = new PluginPositionsPosition();
-            if ($pos->getFromDB($data["ITEM_$num"])) {
+            if (isset($data[$num][0]['id']) 
+                  && !empty($data[$num][0]['id']) 
+                  &&  $pos->getFromDB($data[$num][0]['id'])) {
                $out .= $pos->getLink();
-               $split = explode("$$", $data["ITEM_$num"]);
-               $out .= PluginPositionsPosition::showGeolocLink($type, $data['id'], $split[1]);
+               $out .= PluginPositionsPosition::showGeolocLink($type, $data['id'], $data[$num][0]['id']);
                $out .= "<br>";
-            } else {
-               $out.=' ';
             }
             return $out;
-            break;
       }
    }
 
