@@ -50,11 +50,6 @@ if (isset($_GET["entity_restrict"])
    $_GET["entity_restrict"] = Toolbox::decodeArrayFromInput($_GET["entity_restrict"]);
 }
 
-// Make a select box with preselected values
-if (!isset($_GET["limit"])) {
-   $_GET["limit"] = $CFG_GLPI["dropdown_chars_limit"];
-}
-
 $NBMAX = $CFG_GLPI["dropdown_max"];
 $LIMIT = "LIMIT 0,$NBMAX";
 if ($_GET['searchText']==$CFG_GLPI["ajax_wildcard"]) {
