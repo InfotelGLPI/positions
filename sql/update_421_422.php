@@ -39,15 +39,12 @@ function update421to422() {
    $query = "SELECT * FROM `glpi_plugin_positions_positions`";
    $result_query= $DB->query($query);
    while ($data=$DB->fetch_array($result_query)) {
-      if(getItemTypeForTable($data['itemtype']) != "UNKNOWN"){
-         $itemclass = new $data['itemtype']();
-         $result = $itemclass->getFromDB($data['items_id']);
-         if($result == true){
-            $query = "UPDATE `glpi_plugin_positions_positions` SET `locations_id` = ".$itemclass->fields['locations_id']." WHERE `items_id` =".$data['items_id']." AND `itemtype` = '".$data['itemtype']."'";
-            $DB->queryOrDie($query, "ADD fields locations_ids for glpi_plugin_positions_positions");
-
+         if (!($itemclass = getAllDatasFromTable(getTableForItemType($data['itemtype']), "`id` = ".$data['items_id']))) {
+            continue;
          }
-      }
+         $itemclass = reset($itemclass);
+         $query = "UPDATE `glpi_plugin_positions_positions` SET `locations_id` = " . $itemclass['locations_id'] . " WHERE `items_id` =" . $data['items_id'] . " AND `itemtype` = '" . $data['itemtype'] . "'";
+         $DB->queryOrDie($query, "ADD fields locations_ids for glpi_plugin_positions_positions");
    }
    
    $migration->executeMigration();
