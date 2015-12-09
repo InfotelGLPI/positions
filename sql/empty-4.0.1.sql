@@ -30,15 +30,6 @@ CREATE TABLE `glpi_plugin_positions_positions` (
    KEY `is_deleted` (`is_deleted`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-DROP TABLE IF EXISTS `glpi_plugin_positions_profiles`;
-CREATE TABLE `glpi_plugin_positions_profiles` (
-   `id` int(11) NOT NULL auto_increment,
-   `profiles_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_profiles (id)',
-   `positions` char(1) collate utf8_unicode_ci default NULL,
-   PRIMARY KEY  (`id`),
-   KEY `profiles_id` (`profiles_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
 DROP TABLE IF EXISTS `glpi_plugin_positions_imageitems`;
 CREATE TABLE `glpi_plugin_positions_imageitems` (
    `id` int(11) NOT NULL auto_increment,

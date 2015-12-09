@@ -33,7 +33,7 @@ function plugin_positions_install() {
    include_once (GLPI_ROOT."/plugins/positions/inc/profile.class.php");
 
    if (!TableExists("glpi_plugin_positions_positions")) {
-      $DB->runFile(GLPI_ROOT."/plugins/positions/sql/empty-2.0.0.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/positions/sql/empty-4.2.2.sql");
    }
    
    //v1.0.0 to V2.0.0
@@ -93,6 +93,11 @@ function plugin_positions_install() {
       $result = $DB->query($query);
    }
    
+   // Update to 4.0.1
+   if(!FieldExists("glpi_plugin_positions_positions", "width") && !FieldExists("glpi_plugin_positions_positions", "height")){
+      $DB->runFile(GLPI_ROOT."/plugins/positions/sql/update-4.0.1.sql");
+   }
+   
    //to v4.2.2
    if (!TableExists("glpi_plugin_positions_configs")) {
       //add table config
@@ -110,6 +115,9 @@ function plugin_positions_install() {
       $query = "ALTER TABLE `glpi_plugin_positions_positions` 
                 ADD `locations_id` int(11) NOT NULL default '0' COMMENT 'RELATION to table glpi_locations';";
       $result = $DB->query($query);
+
+      include(GLPI_ROOT . "/plugins/positions/sql/update_421_422.php");
+      update421to422();
    }
 
    if (TableExists("glpi_plugin_positions_profiles")) {
@@ -126,7 +134,7 @@ function plugin_positions_install() {
             foreach ($DB->request($query) as $data) {
                $iq = "INSERT INTO `glpi_notepads`
                              (`itemtype`, `items_id`, `content`, `date`, `date_mod`)
-                      VALUES ('".getItemTypeForTable($t)."', '".$data['id']."',
+                      VALUES ('PluginPositionsPosition', '".$data['id']."',
                               '".addslashes($data['notepad'])."', NOW(), NOW())";
                $DB->queryOrDie($iq, "0.85 migrate notepad data");
             }
@@ -144,14 +152,9 @@ function plugin_positions_install() {
    if (!is_dir($rep_files_positions_pics))
       mkdir($rep_files_positions_pics);
    
-     // Update to 4.0.1
-   if(!FieldExists("glpi_plugin_positions_positions", "width") && !FieldExists("glpi_plugin_positions_positions", "height")){
-      $DB->runFile(GLPI_ROOT."/plugins/positions/sql/update-4.0.1.sql");
-   }
-
    PluginPositionsProfile::initProfile();
    PluginPositionsProfile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
-   $migration = new Migration("4.1.0");
+   $migration = new Migration("4.2.2");
    $migration->dropTable('glpi_plugin_positions_profiles');
    
    return true;
@@ -163,7 +166,8 @@ function plugin_positions_uninstall() {
    $tables = array("glpi_plugin_positions_positions",
                    "glpi_plugin_positions_positions_items",
                    "glpi_plugin_positions_imageitems",
-                   "glpi_plugin_positions_infos");
+                   "glpi_plugin_positions_infos",
+                   "glpi_plugin_positions_configs");
 
    foreach($tables as $table)
       $DB->query("DROP TABLE IF EXISTS `$table`;");
