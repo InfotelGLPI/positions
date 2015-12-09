@@ -249,21 +249,28 @@ class PluginPositionsInfo extends CommonDBTM {
       if (!isset($config->fields['entities_id'])) {
          $config->fields['entities_id'] = $_SESSION['glpiactive_entity'];
       }
-
+      
       $config_fields = explode(',', $config->fields['fields']);
       //Search option for this type
       $target = new $config->fields['itemtype']();
-
+     
       //Construct list
       echo "<span id='span_fields' name='span_fields'>";
       echo "<select name='_fields[]' multiple size='15' style='width:400px'>";
 
       foreach ($DB->list_fields(getTableForItemType($config->fields['itemtype'])) as $field) {
+
          $searchOption = $target->getSearchOptionByField('field', $field['Field']);
 
          if (empty($searchOption)) {
+            $table = getTableNameForForeignKeyField($field['Field']);
             if ($table = getTableNameForForeignKeyField($field['Field'])) {
-               $searchOption = $target->getSearchOptionByField('field', 'name', $table);
+               $crit = getItemForItemtype(getItemTypeForTable($table));
+               if ($crit instanceof CommonTreeDropdown) {
+                  $searchOption = $target->getSearchOptionByField('field', 'completename', $table);
+               } else {
+                  $searchOption = $target->getSearchOptionByField('field', 'name', $table);
+               }
             }
          }
 
@@ -435,8 +442,14 @@ class PluginPositionsInfo extends CommonDBTM {
                $searchOption = $target->getSearchOptionByField('field', $field['Field']);
 
                if (empty($searchOption)) {
+                  $table = getTableNameForForeignKeyField($field['Field']);
                   if ($table = getTableNameForForeignKeyField($field['Field'])) {
-                     $searchOption = $target->getSearchOptionByField('field', 'name', $table);
+                     $crit = getItemForItemtype(getItemTypeForTable($table));
+                     if ($crit instanceof CommonTreeDropdown) {
+                        $searchOption = $target->getSearchOptionByField('field', 'completename', $table);
+                     } else {
+                        $searchOption = $target->getSearchOptionByField('field', 'name', $table);
+                     }
                   }
                }
                

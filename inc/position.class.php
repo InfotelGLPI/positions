@@ -1133,8 +1133,6 @@ class PluginPositionsPosition extends CommonDBTM {
             foreach ($ids as $key => $val) {
                if (($val['locations_id'] == $params['locations_id'])) {
                   $itemclass = new $val['itemtype']();
-                  $itemclass->getFromDB($val['items_id']);
-
                   if ($itemclass->getFromDB($val['items_id'])) {
                   
                      $val['picture'] = null;
