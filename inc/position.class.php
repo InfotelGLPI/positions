@@ -131,7 +131,6 @@ class PluginPositionsPosition extends CommonDBTM {
    }
 
    function prepareInputForAdd($input) {
-
       if (!isset ($input["items_id"]) 
             || !isset($input["itemtype"])) {
          Session::addMessageAfterRedirect(__('No equipment associated', 'positions'), false, ERROR);
@@ -855,14 +854,10 @@ class PluginPositionsPosition extends CommonDBTM {
       global $CFG_GLPI;
 
       if (!$options['locations_id']) {
-
          $self = new self();
          $self->getFromDB($options["id"]);
          if (isset($self->fields["itemtype"])) {
-
-            $itemclass = new $self->fields["itemtype"]();
-            $itemclass->getFromDB($self->fields["items_id"]);
-            $options['locations_id'] = $itemclass->fields['locations_id'];
+            $options['locations_id'] = $self->fields['locations_id'];
          }
       }
       
@@ -1136,11 +1131,12 @@ class PluginPositionsPosition extends CommonDBTM {
       if (!empty($items)) {
          foreach ($items as $classe => $ids) {
             foreach ($ids as $key => $val) {
-               $itemclass = new $val['itemtype']();
-               $itemclass->getFromDB($val['items_id']);
+               if (($val['locations_id'] == $params['locations_id'])) {
+                  $itemclass = new $val['itemtype']();
+                  $itemclass->getFromDB($val['items_id']);
 
-               if ($itemclass->getFromDB($val['items_id'])) {
-                  if (($itemclass->fields['locations_id'] == $params['locations_id'])) {
+                  if ($itemclass->getFromDB($val['items_id'])) {
+                  
                      $val['picture'] = null;
                      $val['img']     = null;
 
@@ -1928,29 +1924,6 @@ class PluginPositionsPosition extends CommonDBTM {
 
    }
 
-   static function showConfigForm(){
-      global $CFG_GLPI;
-
-      echo "<div class='center'><table class='tab_cadre_fixe'>";
-      echo "<tr class='tab_bg_1'>";
-      echo "<th>";
-      _e('Setup');
-      echo "</th>";
-      echo "</tr>";
-      echo "<tr class='tab_bg_1'>";
-      echo "<td class='center'>";
-      echo "<a href='./imageitem.form.php'>" .
-      __('Association : picture / types of equipment', 'positions') . "</a>";
-      echo "</td>";
-      echo "</tr>";
-      echo "<tr class='tab_bg_1'>";
-      echo "<td class='center'>";
-      echo "<a href='./info.php'>" .
-      __('Configuring the display materials', 'positions'). "</a>";
-      echo "</td>";
-      echo "</tr>";
-      echo "</table></div>";
-   }
    
    /**
    * Display information on treeview plugin

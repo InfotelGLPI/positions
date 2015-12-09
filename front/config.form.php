@@ -31,9 +31,20 @@ include ('../../../inc/includes.php');
 
 $plugin = new Plugin();
 if ($plugin->isActivated("positions")) {
-   Html::header(PluginPositionsPosition::getTypeName(),'',"tools","pluginpositionsmenu", "config");
-   PluginPositionsPosition::showConfigForm();
-   Html::footer();
+   $config = new PluginPositionsConfig();
+   
+    if (isset($_POST["update_config"])) {
+         Session::checkRight("config", UPDATE);
+         $config->update($_POST);
+         Html::back();
+         
+      } else {
+         Html::header(PluginPositionsPosition::getTypeName(),'',"tools","pluginpositionsmenu", "config");
+         $config->showForm();
+         Html::footer();
+      }
+      
+
 
 } else {
    Html::header(__('Setup'), '', "config", "plugins");

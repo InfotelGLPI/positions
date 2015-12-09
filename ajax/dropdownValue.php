@@ -83,11 +83,18 @@ $where .= ")";
 
 $multi = false;
 
+ $config = new PluginPositionsConfig();
+ $config->getFromDB(1);
+   
 if (isset($_GET["name"]) && $_GET["name"] != "type") {
-   if ($_GET['locations_id'] != -1) {
-      $where .= " AND `locations_id` = '".$_GET['locations_id']."'";
+   if (!$config->fields['use_view_all_object']) {
+      if ($_GET['locations_id'] != -1) {
+         $where .= " AND `locations_id` = '" . $_GET['locations_id'] . "'";
+      }
+   }else{
+      $locations = getSonsOf('glpi_locations', $_GET['locations_id']);
+      $where .= " AND `locations_id` IN (" . implode(',',$locations). ")";
    }
-
    if ($item->maybeDeleted()) {
       $where .= " AND `is_deleted` = '0' ";
    }
@@ -125,12 +132,16 @@ if ($_GET['searchText']!=$CFG_GLPI["ajax_wildcard"]) {
 $query = "SELECT *
           FROM `".$_GET['table']."`
           $where ";
-if ($multi) {
-   $query .= " ORDER BY `entities_id`, $field
-              $LIMIT";
-} else {
-   $query .= " ORDER BY $field
-              $LIMIT";
+if ($config->fields['use_view_all_object'] && $_GET["name"] != "type") {
+   $query .= "ORDER BY `locations_id`";
+}else{
+   if ($multi) {
+      $query .= " ORDER BY `entities_id`, $field
+                 $LIMIT";
+   } else {
+      $query .= " ORDER BY $field
+                 $LIMIT";
+   }
 }
 
 $result = $DB->query($query);
@@ -149,18 +160,47 @@ if (!empty($output)&&$output!="&nbsp;") {
 }
 
 
-
 if ($number) {
-   while ($data =$DB->fetch_array($result)) {
-      $output = $data[$field];
-      $ID = $data['id'];
-      
-      if (empty($output)) {
-         $output = "($ID)";
-      }
+   if ($config->fields['use_view_all_object'] && $_GET["name"] != "type") {
+      $current_location = '';
+      while ($data =$DB->fetch_array($result)) {
+         if (empty($current_location)) {
+            $children = array();
+            $level = 1;
+            $current_location = new Location();
+            $current_location->getFromDB($data['locations_id']);
+         } elseif ($current_location->fields['id'] != $data['locations_id']) {
+            array_push($out, array('text' => $current_location->fields['completename'], 'children' => $children));
 
-      array_push($out, array('id'   => $_GET['itemtype'].";".$ID,
-                             'text' => $output));
+            $children = array();
+            $level = 1;
+            $current_location = new Location();
+            $current_location->getFromDB($data['locations_id']);
+         }
+         $output = $data[$field];
+         $ID = $data['id'];
+
+         if (empty($output)) {
+            $output = "($ID)";
+         }
+         array_push($children, array('id' => $_GET['itemtype'].";".$ID, 'text' => $output, 'level' => '1'));
+         $level++;
+         
+      }
+      array_push($out, array('text' => $current_location->fields['completename'], 'children' => $children));
+      
+   }else{
+      while ($data =$DB->fetch_array($result)) {
+         $output = $data[$field];
+         $ID = $data['id'];
+
+         if (empty($output)) {
+            $output = "($ID)";
+         }
+
+         array_push($out, array('id'   => $_GET['itemtype'].";".$ID,
+                                'text' => $output));
+      }
    }
 }
 

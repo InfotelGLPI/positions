@@ -112,7 +112,7 @@ if (isset($_SERVER["CONTENT_TYPE"]))
 
 // Handle non multipart uploads older WebKit versions didn't support multipart in HTML5
 if (strpos($contentType, "multipart") !== false) {
-   if (isset($_FILES['file']['tmp_name']) && is_uploaded_file($_FILES['file']['tmp_name'])) {
+   if (isset($_FILES['file']['tmp_name']) && is_uploaded_file(stripslashes($_FILES['file']['tmp_name']))) {
       // Open temp file
       $out = fopen($targetDir . DIRECTORY_SEPARATOR . $fileName, $chunk == 0 ? "wb" : "ab");
       if ($out) {

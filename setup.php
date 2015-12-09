@@ -45,6 +45,10 @@ function plugin_init_positions() {
       if (Session::haveRight("plugin_positions", UPDATE)) {
          $PLUGIN_HOOKS['use_massive_action']['positions']=1;
       }
+       if (Session::haveRight("config", UPDATE)) {
+         $PLUGIN_HOOKS['config_page']['positions'] = 'front/config.form.php';
+      }
+
       
       if (Session::haveRight("plugin_positions", READ)) {
          $PLUGIN_HOOKS['helpdesk_menu_entry']['positions'] = '/front/map.form.php';
@@ -88,7 +92,7 @@ function plugin_version_positions() {
 
    return array (
       'name' => _n('Cartography','Cartographies', 1, 'positions'),
-      'version' => '4.2.1',
+      'version' => '4.2.2',
       'license' => 'GPLv2+',
       'author'  => "<a href='http://infotel.com/services/expertise-technique/glpi/'>Infotel</a>",
       'homepage'=>'https://github.com/InfotelGLPI/positions',

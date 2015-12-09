@@ -93,7 +93,26 @@ function plugin_positions_install() {
       $result = $DB->query($query);
    }
    
-   if (TableExists("glpi_plugin_certificates_profiles")) {
+   //to v4.2.2
+   if (!TableExists("glpi_plugin_positions_configs")) {
+      //add table config
+      $query = "CREATE TABLE `glpi_plugin_positions_configs` (
+               `id` int(11) NOT NULL auto_increment,
+               `use_view_all_object` tinyint(1) NOT NULL default '0',
+               PRIMARY KEY  (`id`)
+            )ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+      $result = $DB->query($query);
+      
+      $query = "INSERT INTO `glpi_plugin_positions_configs` (`id`,`use_view_all_object`) VALUES ('1', '0');";
+      $DB->query($query);
+      
+      //add fields locations_id
+      $query = "ALTER TABLE `glpi_plugin_positions_positions` 
+                ADD `locations_id` int(11) NOT NULL default '0' COMMENT 'RELATION to table glpi_locations';";
+      $result = $DB->query($query);
+   }
+
+   if (TableExists("glpi_plugin_positions_profiles")) {
    
       $notepad_tables = array('glpi_plugin_positions_positions');
 
@@ -116,7 +135,7 @@ function plugin_positions_install() {
          }
       }
    }
-
+   
    $rep_files_positions = GLPI_PLUGIN_DOC_DIR."/positions";
    if (!is_dir($rep_files_positions))
       mkdir($rep_files_positions);
