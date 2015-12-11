@@ -1795,9 +1795,9 @@ class PluginPositionsPosition extends CommonDBTM {
                            if (isset($data['id'])) {
                               if (isset($ressource->fields['locations_id']) 
                                           && ($ressource->fields['locations_id']>0)) {
-                                 $documents_id = self::getDocument($ressource->fields['locations_id']);
+                                 $documents_id = self::getDocument($data['locations_id']);
                                  $positions_id = $data['id'];
-                                 $locations_id = $ressource->fields['locations_id'];
+                                 $locations_id = $data['locations_id'];
                               }
                            }
                         }
