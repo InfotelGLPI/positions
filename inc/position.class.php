@@ -1758,16 +1758,17 @@ class PluginPositionsPosition extends CommonDBTM {
       return $out;
    }
    
+   
    static function showGeolocLink($itemtype,$id, $positions_id=0) {
       global $CFG_GLPI;
-      
+
       if ($itemtype != 'User'
             && $itemtype != 'PluginResourcesResource') {
-         $item = new $itemtype();
-         $item->getFromDB($id);
-         $documents_id = self::getDocument($item->fields['locations_id']);
-         $locations_id = $item->fields['locations_id'];
-         
+         $position = new PluginPositionsPosition();
+         $position->getFromDBByQuery("WHERE itemtype ='" . $itemtype . "' AND items_id = " . $id);
+         $documents_id = self::getDocument($position->fields['locations_id']);
+         $locations_id = $position->fields['locations_id'];
+
       } else {
          
          //si plugin ressource active
@@ -1815,11 +1816,12 @@ class PluginPositionsPosition extends CommonDBTM {
                   if (!empty($datas)) {
                      foreach ($datas as $data) {
                         if (isset($data['id'])) {
-                           if (isset($ressource->fields['locations_id']) 
-                                       && ($ressource->fields['locations_id']>0)) {
-                              $documents_id = self::getDocument($ressource->fields['locations_id']);
+                           if (isset($data['locations_id']) 
+                                       && ($data['locations_id']>0)) {
+                              $documents_id = self::getDocument($data['locations_id']);
                               $positions_id = $data['id'];
-                              $locations_id = $ressource->fields['locations_id'];
+                              $locations_id = $data['locations_id'];
+
                            }
                         }
                      }
