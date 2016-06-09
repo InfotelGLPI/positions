@@ -32,6 +32,7 @@ if (strpos($_SERVER['PHP_SELF'],"dropdownInfoFields.php")) {
    header("Content-Type: text/html; charset=UTF-8");
    Html::header_nocache();
 }
+Session::checkLoginUser();
 
 $config = new PluginPositionsInfo();
 if ($_POST['id'] > 0) {
