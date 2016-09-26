@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Le Rohellec Benoit <blerohellec@hotmail.com>, 2015
-# Luis A. Uriarte <luisuriarte@gmail.com>, 2015
+# Luis Angel Uriarte <luisuriarte@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Project - positions plugin\n"

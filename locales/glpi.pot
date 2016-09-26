@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Positions plugin 4.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-09 11:16+0100\n"
+"POT-Creation-Date: 2016-09-26 11:48+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,14 +18,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: hook.php:221 setup.php:94 inc/menu.class.php:34 inc/position.class.php:56
+#: hook.php:225 setup.php:91 inc/menu.class.php:34 inc/position.class.php:56
 #: inc/profile.class.php:136 inc/profile.class.php:144
 msgid "Cartography"
 msgid_plural "Cartographies"
 msgstr[0] ""
 msgstr[1] ""
 
-#: setup.php:107
+#: setup.php:104
 msgid "This plugin requires GLPI >= 0.90"
 msgstr ""
 
@@ -41,11 +41,11 @@ msgstr ""
 msgid "The selected object is not located on a map"
 msgstr ""
 
-#: front/imageitem.form.php:45
+#: front/imageitem.form.php:44
 msgid "No picture uploaded"
 msgstr ""
 
-#: front/map.php:54 inc/position.class.php:980 inc/position.class.php:1904
+#: front/map.php:53 inc/position.class.php:980 inc/position.class.php:1904
 msgid "No location selected"
 msgstr ""
 
@@ -61,7 +61,7 @@ msgstr ""
 msgid "Association : picture / types of equipment"
 msgstr ""
 
-#: inc/config.class.php:83 inc/position.class.php:1445
+#: inc/config.class.php:83 inc/position.class.php:1443
 msgid "Configuring the display materials"
 msgstr ""
 
@@ -124,7 +124,7 @@ msgstr[1] ""
 msgid "Displayed fields"
 msgstr ""
 
-#: inc/info.class.php:535 inc/info.class.php:551
+#: inc/info.class.php:548 inc/info.class.php:564
 msgid "Direct link"
 msgstr ""
 
@@ -138,12 +138,12 @@ msgid "No equipment associated"
 msgstr ""
 
 #: inc/position.class.php:202 inc/position.class.php:734
-#: inc/position.class.php:1611
+#: inc/position.class.php:1609
 msgid "Coordinate x"
 msgstr ""
 
 #: inc/position.class.php:206 inc/position.class.php:769
-#: inc/position.class.php:1612
+#: inc/position.class.php:1610
 msgid "Coordinate y"
 msgstr ""
 
@@ -203,7 +203,7 @@ msgstr ""
 msgid "Limited view"
 msgstr ""
 
-#: inc/position.class.php:1607
+#: inc/position.class.php:1605
 msgid "Associated coordinate"
 msgstr ""
 
