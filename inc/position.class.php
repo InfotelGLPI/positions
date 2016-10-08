@@ -2038,6 +2038,12 @@ class PluginPositionsPosition extends CommonDBTM {
       $languages['width'] = __('Width', 'positions');
       $languages['height'] = __('Height', 'positions');
       $languages['text'] = __('Text', 'positions');
+      $languages['type'] = __('Type');
+      $languages['fieldsearched'] = __('Field searched', 'positions');
+      $languages['valuefound'] = __('Value found', 'positions');
+      $languages['menu'] = __('Menu', 'positions');
+      $languages['information'] = __('Information');
+      $languages['subtitle'] = __('Subtitle', 'positions');
 
       return $languages;
    }
