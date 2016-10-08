@@ -38,7 +38,7 @@ if (isset($_POST["add"]) && isset($_POST['type'])) {
       $_POST['itemtype'] = $test[0];
 
       if ($img->canCreate()) {
-         if (!empty($_POST["img"])) {
+         if ($_POST["img"] != -1) {
             $img->addItemImage($_POST);
          } else {
             Session::addMessageAfterRedirect(__('No picture uploaded', 'positions'), false, ERROR);
@@ -57,6 +57,7 @@ if (isset($_POST["add"]) && isset($_POST['type'])) {
    Html::back();
    
 } else {
+   $img->checkGlobal(READ);
    Html::header(PluginPositionsPosition::getTypeName(), '', "tools", "pluginpositionsmenu", "config");
    $img->showConfigForm();
    Html::footer();

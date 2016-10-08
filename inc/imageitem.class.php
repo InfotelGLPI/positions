@@ -157,13 +157,13 @@ class PluginPositionsImageItem extends CommonDBTM {
          }
 
          if (count($uploaded_files)) {
-            echo "<select name='$myname' id='imageitem'>";
-            echo "<option value=''>".Dropdown::EMPTY_VALUE."</option>";
+            $elements = array();
+            $elements[-1] = Dropdown::EMPTY_VALUE;
             asort($uploaded_files);
             foreach ($uploaded_files as $key => $val) {
-               echo "<option value='$val'>$val</option>";
+               $elements[$val] = $val;
             }
-            echo "</select>";
+            Dropdown::showFromArray($myname, $elements);
 
          } else {
             _e('File not found');
