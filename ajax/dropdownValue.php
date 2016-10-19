@@ -36,6 +36,9 @@ if (strpos($_SERVER['PHP_SELF'],"dropdownValue.php")) {
 
 Session::checkLoginUser();
 
+if(empty($_GET) && !empty($_POST)){
+   $_GET = $_POST;
+}
 // Security
 if (!TableExists($_GET['table'])) {
    exit();
