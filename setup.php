@@ -52,23 +52,23 @@ function plugin_init_positions() {
          $PLUGIN_HOOKS['menu_toadd']['positions'] = array('tools'   => 'PluginPositionsMenu');
       }
       
-      // Add specific files to add to the header : javascript or css
-      $PLUGIN_HOOKS['add_javascript']['positions'] = array(
-          //file upload
-          "lib/plupload/plupload.full.js",
-          "lib/extjs/adapter/ext/ext-base.js",
-          "lib/extjs/ext-all.js",
-          //"lib/jquery/js/jquery-1.10.2.min.js",
-          "upload.js",
-          "positions.js",
-          "geoloc.js",
-          "lib/canvas/canvasXpress.min.js",
-          "lib/canvas/ext-canvasXpress.js",
-          "lib/canvas/color-field.js",
-          //"lib/Jcrop/jquery.color.js",
-          //"lib/Jcrop/jquery.Jcrop.js"
-      );
-
+      if (strpos($_SERVER['REQUEST_URI'], "map.form.php") !== false
+            || strpos($_SERVER['REQUEST_URI'], "ticket.form.php") !== false
+               || strpos($_SERVER['REQUEST_URI'], "geoloc.php") !== false) {
+         // Add specific files to add to the header : javascript or css
+         $PLUGIN_HOOKS['add_javascript']['positions'] = array(
+             //file upload
+             "lib/plupload/plupload.full.js",
+             "lib/extjs/adapter/ext/ext-base-debug.js",
+             "lib/extjs/ext-all.js",
+             "upload.js",
+             "positions.js",
+             "geoloc.js",
+             "lib/canvas/canvasXpress.min.js",
+             "lib/canvas/ext-canvasXpress.js",
+             "lib/canvas/color-field.js",
+         );
+      }
       //css 
       $PLUGIN_HOOKS['add_css']['positions']= array ("positions.css",
                                                     "lib/canvas/color-field.css",
