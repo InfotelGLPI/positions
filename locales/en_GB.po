@@ -1,34 +1,35 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Positions Development Team
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Project - positions plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-09 11:16+0100\n"
-"PO-Revision-Date: 2015-12-09 10:18+0000\n"
-"Last-Translator: Xavier CAILLAUD <tsmr@thetsmr.fr>\n"
-"Language-Team: English (United Kingdom) (http://www.transifex.com/tsmr/GLPI_positions/language/en_GB/)\n"
+"POT-Creation-Date: 2016-10-31 14:48+0100\n"
+"PO-Revision-Date: 2016-11-03 23:12+0100\n"
+"Last-Translator: Amandine Manceau <amandine.manceau@infotel.com>\n"
+"Language-Team: English (United Kingdom) (http://www.transifex.com/tsmr/GLPI_positions/"
+"language/en_GB/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: en_GB\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: hook.php:221 setup.php:94 inc/menu.class.php:34 inc/position.class.php:56
+#: hook.php:225 setup.php:91 inc/menu.class.php:34 inc/position.class.php:56
 #: inc/profile.class.php:136 inc/profile.class.php:144
 msgid "Cartography"
 msgid_plural "Cartographies"
 msgstr[0] "Cartography"
 msgstr[1] "Cartographies"
 
-#: setup.php:107
+#: setup.php:104
 msgid "This plugin requires GLPI >= 0.90"
 msgstr "This plugin requires GLPI >= 0.90"
 
-#: ajax/dropdownValue.php:154
+#: ajax/dropdownValue.php:157
 msgid "All types"
 msgstr "All types"
 
@@ -40,11 +41,11 @@ msgstr "Please activate the plugin"
 msgid "The selected object is not located on a map"
 msgstr "The selected object is not located on a map"
 
-#: front/imageitem.form.php:45
+#: front/imageitem.form.php:44
 msgid "No picture uploaded"
 msgstr "No picture uploaded"
 
-#: front/map.php:54 inc/position.class.php:980 inc/position.class.php:1904
+#: front/map.php:53 inc/position.class.php:980 inc/position.class.php:1904
 msgid "No location selected"
 msgstr "No location selected"
 
@@ -60,7 +61,7 @@ msgstr "Add sub-places on the map objects"
 msgid "Association : picture / types of equipment"
 msgstr "Association : picture / types of equipment"
 
-#: inc/config.class.php:83 inc/position.class.php:1445
+#: inc/config.class.php:83 inc/position.class.php:1443
 msgid "Configuring the display materials"
 msgstr "Configuring the display materials"
 
@@ -96,8 +97,8 @@ msgstr "Types of materials should be created so that the association can exist"
 msgid "List of associations"
 msgstr "List of associations"
 
-#: inc/imageitem.class.php:254 inc/imageitem.class.php:258
-#: inc/info.class.php:76 inc/info.class.php:152
+#: inc/imageitem.class.php:254 inc/imageitem.class.php:258 inc/info.class.php:76
+#: inc/info.class.php:152
 msgid "Equipment"
 msgstr "Equipment"
 
@@ -123,12 +124,11 @@ msgstr[1] "Display of equipments"
 msgid "Displayed fields"
 msgstr "Displayed fields"
 
-#: inc/info.class.php:535 inc/info.class.php:551
+#: inc/info.class.php:548 inc/info.class.php:564
 msgid "Direct link"
 msgstr "Direct link"
 
-#: inc/menu.class.php:50 inc/menu.class.php:51 inc/menu.class.php:60
-#: inc/menu.class.php:61
+#: inc/menu.class.php:50 inc/menu.class.php:51 inc/menu.class.php:60 inc/menu.class.php:61
 msgid "Map view"
 msgstr "Map view"
 
@@ -136,13 +136,11 @@ msgstr "Map view"
 msgid "No equipment associated"
 msgstr "No equipment associated"
 
-#: inc/position.class.php:202 inc/position.class.php:734
-#: inc/position.class.php:1611
+#: inc/position.class.php:202 inc/position.class.php:734 inc/position.class.php:1609
 msgid "Coordinate x"
 msgstr "Coordinate x"
 
-#: inc/position.class.php:206 inc/position.class.php:769
-#: inc/position.class.php:1612
+#: inc/position.class.php:206 inc/position.class.php:769 inc/position.class.php:1610
 msgid "Coordinate y"
 msgstr "Coordinate y"
 
@@ -202,7 +200,7 @@ msgstr "Create coordinates"
 msgid "Limited view"
 msgstr "Limited view"
 
-#: inc/position.class.php:1607
+#: inc/position.class.php:1605
 msgid "Associated coordinate"
 msgstr "Associated coordinate"
 
@@ -211,9 +209,7 @@ msgid "Please download a newer version of canvasXpress at"
 msgstr "Please download a newer version of canvasXpress at"
 
 #: inc/position.class.php:1958
-msgid ""
-"You are using an older version that do not support all the functionality of "
-"this panel"
+msgid "You are using an older version that do not support all the functionality of this panel"
 msgstr "You are using an older version that do not support all the functionality of this panel"
 
 #: inc/position.class.php:1959
@@ -483,3 +479,19 @@ msgstr "Height"
 #: inc/position.class.php:2040
 msgid "Text"
 msgstr "Text"
+
+#: inc/position.class.php:2042
+msgid "Field searched"
+msgstr "Field searched"
+
+#: inc/position.class.php:2043
+msgid "Value found"
+msgstr "Value found"
+
+#: inc/position.class.php:2044
+msgid "Menu"
+msgstr "Menu"
+
+#: inc/position.class.php:2046
+msgid "Subtitle"
+msgstr "Subtitle"

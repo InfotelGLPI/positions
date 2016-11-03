@@ -5,6 +5,8 @@ CREATE TABLE `glpi_plugin_positions_configs` (
    PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+INSERT INTO `glpi_plugin_positions_configs`(`use_view_all_object`) VALUES ('0');
+
 DROP TABLE IF EXISTS `glpi_plugin_positions_positions`;
 CREATE TABLE `glpi_plugin_positions_positions` (
    `id` int(11) NOT NULL auto_increment,

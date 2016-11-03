@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: GLPI - Positions plugin 4.0.0\n"
+"Project-Id-Version: GLPI - Positions plugin 4.3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-26 11:48+0200\n"
+"POT-Creation-Date: 2016-10-31 14:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,7 +29,7 @@ msgstr[1] ""
 msgid "This plugin requires GLPI >= 0.90"
 msgstr ""
 
-#: ajax/dropdownValue.php:154
+#: ajax/dropdownValue.php:157
 msgid "All types"
 msgstr ""
 
@@ -483,4 +483,20 @@ msgstr ""
 
 #: inc/position.class.php:2040
 msgid "Text"
+msgstr ""
+
+#: inc/position.class.php:2042
+msgid "Field searched"
+msgstr ""
+
+#: inc/position.class.php:2043
+msgid "Value found"
+msgstr ""
+
+#: inc/position.class.php:2044
+msgid "Menu"
+msgstr ""
+
+#: inc/position.class.php:2046
+msgid "Subtitle"
 msgstr ""

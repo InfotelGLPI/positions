@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Positions Development Team
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
 # Alexey Petukhov <lexx015@gmail.com>, 2015
 # Cryon <mishkewitch@gmail.com>, 2015
@@ -10,17 +10,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Project - positions plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-09 11:16+0100\n"
-"PO-Revision-Date: 2015-12-23 14:10+0000\n"
-"Last-Translator: Cryon <mishkewitch@gmail.com>\n"
-"Language-Team: Russian (Russia) (http://www.transifex.com/tsmr/GLPI_positions/language/ru_RU/)\n"
+"POT-Creation-Date: 2016-10-31 14:48+0100\n"
+"PO-Revision-Date: 2016-11-03 23:12+0100\n"
+"Last-Translator: Amandine Manceau <amandine.manceau@infotel.com>\n"
+"Language-Team: Russian (Russia) (http://www.transifex.com/tsmr/GLPI_positions/"
+"language/ru_RU/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: ru_RU\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && "
+"(n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n"
+"%100<=14)? 2 : 3);\n"
 
-#: hook.php:221 setup.php:94 inc/menu.class.php:34 inc/position.class.php:56
+#: hook.php:225 setup.php:91 inc/menu.class.php:34 inc/position.class.php:56
 #: inc/profile.class.php:136 inc/profile.class.php:144
 msgid "Cartography"
 msgid_plural "Cartographies"
@@ -29,11 +32,11 @@ msgstr[1] "Картографий"
 msgstr[2] "Картографий"
 msgstr[3] "Картографии"
 
-#: setup.php:107
+#: setup.php:104
 msgid "This plugin requires GLPI >= 0.90"
 msgstr "Это расширение требует GLPI>=0.90"
 
-#: ajax/dropdownValue.php:154
+#: ajax/dropdownValue.php:157
 msgid "All types"
 msgstr "Все типы"
 
@@ -45,11 +48,11 @@ msgstr "Пожалуйста, активируйте расширение"
 msgid "The selected object is not located on a map"
 msgstr "Выбранный объект не расположен на карте"
 
-#: front/imageitem.form.php:45
+#: front/imageitem.form.php:44
 msgid "No picture uploaded"
 msgstr "Изображение не загружено"
 
-#: front/map.php:54 inc/position.class.php:980 inc/position.class.php:1904
+#: front/map.php:53 inc/position.class.php:980 inc/position.class.php:1904
 msgid "No location selected"
 msgstr "Местоположение не выбрано"
 
@@ -65,7 +68,7 @@ msgstr ""
 msgid "Association : picture / types of equipment"
 msgstr ""
 
-#: inc/config.class.php:83 inc/position.class.php:1445
+#: inc/config.class.php:83 inc/position.class.php:1443
 msgid "Configuring the display materials"
 msgstr ""
 
@@ -101,8 +104,8 @@ msgstr "Тип материалов должен быть создан для с
 msgid "List of associations"
 msgstr "Список ассоциаций"
 
-#: inc/imageitem.class.php:254 inc/imageitem.class.php:258
-#: inc/info.class.php:76 inc/info.class.php:152
+#: inc/imageitem.class.php:254 inc/imageitem.class.php:258 inc/info.class.php:76
+#: inc/info.class.php:152
 msgid "Equipment"
 msgstr "Оборудование"
 
@@ -130,7 +133,7 @@ msgstr[3] ""
 msgid "Displayed fields"
 msgstr "Отображаемые поля"
 
-#: inc/info.class.php:535 inc/info.class.php:551
+#: inc/info.class.php:548 inc/info.class.php:564
 msgid "Direct link"
 msgstr "Прямая ссылка"
 
@@ -143,13 +146,11 @@ msgstr "Просмотр карты"
 msgid "No equipment associated"
 msgstr "Нет связанного оборудования"
 
-#: inc/position.class.php:202 inc/position.class.php:734
-#: inc/position.class.php:1611
+#: inc/position.class.php:202 inc/position.class.php:734 inc/position.class.php:1609
 msgid "Coordinate x"
 msgstr "Координата х"
 
-#: inc/position.class.php:206 inc/position.class.php:769
-#: inc/position.class.php:1612
+#: inc/position.class.php:206 inc/position.class.php:769 inc/position.class.php:1610
 msgid "Coordinate y"
 msgstr "Координата у"
 
@@ -209,7 +210,7 @@ msgstr "Создать координаты"
 msgid "Limited view"
 msgstr "Ограниченный просмотр"
 
-#: inc/position.class.php:1607
+#: inc/position.class.php:1605
 msgid "Associated coordinate"
 msgstr ""
 
@@ -219,8 +220,8 @@ msgstr "Пожалуйста скачайте новую версию canvasXpre
 
 #: inc/position.class.php:1958
 msgid ""
-"You are using an older version that do not support all the functionality of "
-"this panel"
+"You are using an older version that do not support all the functionality of this "
+"panel"
 msgstr "Вы используете старую версию, которая не поддерживает все функции этой панели"
 
 #: inc/position.class.php:1959
@@ -494,3 +495,19 @@ msgstr "Высота"
 #: inc/position.class.php:2040
 msgid "Text"
 msgstr "Текст"
+
+#: inc/position.class.php:2042
+msgid "Field searched"
+msgstr ""
+
+#: inc/position.class.php:2043
+msgid "Value found"
+msgstr ""
+
+#: inc/position.class.php:2044
+msgid "Menu"
+msgstr ""
+
+#: inc/position.class.php:2046
+msgid "Subtitle"
+msgstr ""
