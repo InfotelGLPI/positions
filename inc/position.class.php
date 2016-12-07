@@ -986,15 +986,21 @@ class PluginPositionsPosition extends CommonDBTM {
    * @static function showLocationForm : affiche le formulaire contenant la liste des lieux
    * @param $locations_id : id du lieu
    */
-   static function showLocationForm($locations_id, $width = "30%") {
-      global $DB;
+   static function showLocationForm($locations_id, $width = "30%", $display = false) {
+      global $CFG_GLPI, $DB;
 
       $locations = array();
-
-      $target = "map.php";
+      
+      $target = $CFG_GLPI["root_doc"] .
+      "/plugins/positions/front/map.php";
       echo "<form method='post' id='locationform' action='$target'>";
-      echo "<table class='tab_cadrehov'>";
-      echo "<tr class='tab_bg_2'><td class='center'>";
+      if ($display) {
+         echo "<table>";
+         echo "<tr><td class='center'>";
+      } else {
+         echo "<table class='tab_cadrehov'>";
+         echo "<tr class='tab_bg_2'><td class='center'>";
+      }
 
       $query = "SELECT `items_id`
                FROM `glpi_documents_items`
@@ -1014,7 +1020,13 @@ class PluginPositionsPosition extends CommonDBTM {
                                           'entity'    => $_SESSION["glpiactiveentities"],
                                           'condition' => $condition,
                                           'width' => $width));
-         echo "</td></tr><tr class='tab_bg_1'><td class='center'>";
+         echo "</td></tr>";
+         if ($display) {
+            echo "<tr>";
+         } else {
+            echo "<tr class='tab_bg_1'>";
+         }
+         echo "<td class='center'>";
          echo "<input type='submit' name='export' value=\"" .
          __s('See the map', 'positions') . "\" class='submit'>";
          echo "</td></tr>";

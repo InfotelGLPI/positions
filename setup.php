@@ -52,14 +52,15 @@ function plugin_init_positions() {
          $PLUGIN_HOOKS['menu_toadd']['positions'] = array('tools'   => 'PluginPositionsMenu');
       }
       
-      if (strpos($_SERVER['REQUEST_URI'], "map.form.php") !== false
-            || strpos($_SERVER['REQUEST_URI'], "ticket.form.php") !== false
-               || strpos($_SERVER['REQUEST_URI'], "geoloc.php") !== false) {
+      if (strpos($_SERVER['REQUEST_URI'], "map.php") !== false
+            || strpos($_SERVER['REQUEST_URI'], "map.form.php") !== false
+               || strpos($_SERVER['REQUEST_URI'], "ticket.form.php") !== false
+                  || strpos($_SERVER['REQUEST_URI'], "geoloc.php") !== false) {
          // Add specific files to add to the header : javascript or css
          $PLUGIN_HOOKS['add_javascript']['positions'] = array(
              //file upload
              "lib/plupload/plupload.full.js",
-             "lib/extjs/adapter/ext/ext-base-debug.js",
+             "lib/extjs/adapter/ext/ext-base.js",
              "lib/extjs/ext-all.js",
              "upload.js",
              "positions.js",
