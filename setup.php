@@ -55,7 +55,8 @@ function plugin_init_positions() {
       if (strpos($_SERVER['REQUEST_URI'], "map.php") !== false
             || strpos($_SERVER['REQUEST_URI'], "map.form.php") !== false
                || strpos($_SERVER['REQUEST_URI'], "ticket.form.php") !== false
-                  || strpos($_SERVER['REQUEST_URI'], "geoloc.php") !== false) {
+                  || strpos($_SERVER['REQUEST_URI'], "imageitem.form.php") !== false
+                     || strpos($_SERVER['REQUEST_URI'], "geoloc.php") !== false) {
          // Add specific files to add to the header : javascript or css
          $PLUGIN_HOOKS['add_javascript']['positions'] = array(
              //file upload
@@ -90,7 +91,7 @@ function plugin_version_positions() {
 
    return array (
       'name' => _n('Cartography','Cartographies', 1, 'positions'),
-      'version' => '4.3.0',
+      'version' => '4.3.1',
       'license' => 'GPLv2+',
       'author'  => "<a href='http://infotel.com/services/expertise-technique/glpi/'>Infotel</a>",
       'homepage'=>'https://github.com/InfotelGLPI/positions',

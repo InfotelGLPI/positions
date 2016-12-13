@@ -67,6 +67,7 @@ class PluginPositionsImageItem extends CommonDBTM {
 
       echo "</td><td>\n"	;
       echo "<span id='show_$myname$rand'>&nbsp;</span>\n";
+      Html::showToolTip(nl2br(__('Types of materials should be created so that the association can exist', 'positions')));
       echo "</td></tr></table>\n";
 
       if ($value>0) {
@@ -77,7 +78,9 @@ class PluginPositionsImageItem extends CommonDBTM {
          $params["typetable"]=$value_type;
          Ajax::updateItem("show_$myname$rand",$CFG_GLPI["root_doc"].
                            "/plugins/positions/ajax/dropdownAllItems.php",$params);
+
       }
+
       return $rand;
    }
    
@@ -220,7 +223,7 @@ class PluginPositionsImageItem extends CommonDBTM {
       $types = PluginPositionsPosition::getTypes();
       self::showAllItems("type",0,0,$_SESSION["glpiactive_entity"],$types,-1, 'showType');
       echo "</td><td>";
-      Html::showToolTip(nl2br(__('Types of materials should be created so that the association can exist', 'positions')));
+
       echo "<input type='hidden' name='_glpi_csrf_token' value=''>";
       echo "</td><td>";
       self::showUploadedFilesDropdown("img");
