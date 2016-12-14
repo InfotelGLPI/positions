@@ -56,7 +56,8 @@ function plugin_init_positions() {
             || strpos($_SERVER['REQUEST_URI'], "map.form.php") !== false
                || strpos($_SERVER['REQUEST_URI'], "ticket.form.php") !== false
                   || strpos($_SERVER['REQUEST_URI'], "imageitem.form.php") !== false
-                     || strpos($_SERVER['REQUEST_URI'], "geoloc.php") !== false) {
+                     || strpos($_SERVER['REQUEST_URI'], "coordinates.form.php") !== false
+                        || strpos($_SERVER['REQUEST_URI'], "geoloc.php") !== false) {
          // Add specific files to add to the header : javascript or css
          $PLUGIN_HOOKS['add_javascript']['positions'] = array(
              //file upload
