@@ -104,7 +104,7 @@ function plugin_version_positions() {
 // Optional : check prerequisites before install : may print errors or add to message after redirect
 function plugin_positions_check_prerequisites() {
    if (version_compare(GLPI_VERSION,'0.90','lt') || version_compare(GLPI_VERSION,'9.2','ge')) {
-      _e('This plugin requires GLPI >= 0.90', 'positions');
+      echo __('This plugin requires GLPI >= 0.90', 'positions');
       return false;
    }
    return true;

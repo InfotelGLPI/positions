@@ -68,7 +68,7 @@ class PluginPositionsConfig extends CommonDBTM {
       echo "<div class='center'><table class='tab_cadre_fixe'>";
       echo "<tr class='tab_bg_1'>";
       echo "<th>";
-      _e('Setup');
+    echo __('Setup');
       echo "</th>";
       echo "</tr>";
       echo "<tr class='tab_bg_1'>";

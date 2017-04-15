@@ -169,11 +169,11 @@ class PluginPositionsImageItem extends CommonDBTM {
             Dropdown::showFromArray($myname, $elements);
 
          } else {
-            _e('File not found');
+            echo __('File not found');
          }
 
       } else {
-         _e("Upload directory doesn't exist");
+         echo __("Upload directory doesn't exist");
       }
    }
 
@@ -189,7 +189,7 @@ class PluginPositionsImageItem extends CommonDBTM {
       echo "</tr>";
       
       echo "<tr class='tab_bg_2'><th colspan='5'>";
-      _e('Add pictures to use with plugin', 'positions');
+      echo __('Add pictures to use with plugin', 'positions');
       echo "</th></tr>";
       
       echo "<tr class='tab_bg_1'><td colspan='2'>";
@@ -198,25 +198,25 @@ class PluginPositionsImageItem extends CommonDBTM {
       
       echo "<img src='../pics/select.png' id='pickfiles' 
             title=\"".__('Select pictures to upload (gif, jpg, png)', 'positions')."\">&nbsp;";
-      _e('Select pictures to upload (gif, jpg, png)', 'positions');
+      echo __('Select pictures to upload (gif, jpg, png)', 'positions');
       echo "</td><td>";
       echo "<span class='upload' id='filelist'></span>";
       echo "<img src='../pics/upload.png' id='uploadfiles' 
             title=\"".__('upload pictures to the server', 'positions')."\">&nbsp;";
       echo __('Then', 'positions')."&nbsp;";
-      _e('upload pictures to the server', 'positions');
+      echo __('upload pictures to the server', 'positions');
       echo "</td><td colspan='2'>";
       
       echo "<a href='".$_SERVER['PHP_SELF']."'><img src='../pics/refresh.png' 
             title=\"".__s('refresh this form','positions')."\"></a>&nbsp;";
       echo __('Then', 'positions')."&nbsp;";
-      _e('refresh this form','positions');
+      echo __('refresh this form','positions');
       echo "</span>";
       
       echo "</td></tr>";
       
       echo "<tr class='tab_bg_2'><th colspan='5'>";
-      _e('Associate images with types of equipment', 'positions');
+      echo __('Associate images with types of equipment', 'positions');
       echo "</th></tr>";
       
       echo "<tr class='tab_bg_1'><td>";
@@ -251,7 +251,7 @@ class PluginPositionsImageItem extends CommonDBTM {
                $colspan = 8;
             }
             echo "<tr class='tab_bg_2'><th colspan='$colspan'>";
-            _e('List of associations', 'positions');
+            echo __('List of associations', 'positions');
             echo "</th></tr>";
             echo "<tr>";
             echo "<th class='left'>".__('Equipment', 'positions')."</th>";
@@ -292,7 +292,7 @@ class PluginPositionsImageItem extends CommonDBTM {
                        "/plugins/positions/front/map.send.php?file=".$ligne["img"]."&type=pics'>
                      </object> ";
                } else {
-                  _e('No associated picture', 'positions');
+                  echo __('No associated picture', 'positions');
                }
                echo "</td>";
                

@@ -402,14 +402,14 @@ class PluginPositionsPosition extends CommonDBTM {
             //Liste des lieux existants
             echo "<table class='tab_cadre_fixe'>";
             echo "<tr class='tab_bg_1'><th colspan='2'>";
-            _e('Creation of sub-areas on the map', 'positions');
+            echo __('Creation of sub-areas on the map', 'positions');
             echo "</th></tr>";
 
             echo "<tr class='tab_bg_1'>";
             echo "<td>";
             echo "<input type=\"radio\" name=\"choice\" value=\"existLocation\" 
                      onclick=\"showlist('existLocation','visible')\">";
-            _e('Choose an existing location', 'positions');
+            echo __('Choose an existing location', 'positions');
             echo "</td>";
 
             echo "<td id=\"existLocation\" class='left' style=\"visibility:hidden\">";
@@ -437,7 +437,7 @@ class PluginPositionsPosition extends CommonDBTM {
                     'entity' => $_SESSION["glpiactive_entity"],
                     'condition' => $condition));
             } else {
-               _e('No sub-area found', 'positions');
+               echo __('No sub-area found', 'positions');
             }
             echo "</td>";
             echo "</tr>";
@@ -447,7 +447,7 @@ class PluginPositionsPosition extends CommonDBTM {
             echo "<td>";
             echo "<input type=\"radio\" checked name=\"choice\" value=\"newLocation\" 
                      onclick=\"showlist('newLocation','visible')\">";
-            _e('Create a new location', 'positions');
+            echo __('Create a new location', 'positions');
             echo "</td>";
 
             echo "<td id=\"newLocation\" class='left' style=\"visibility:hidden\">";
@@ -473,7 +473,7 @@ class PluginPositionsPosition extends CommonDBTM {
             
             //Case à cocher pour continuer l'ajout
             echo "<input type=\"checkbox\" id=\"continueAdd\" name=\"continueAdd\">&nbsp;";
-            _e('Add and continue', 'positions');
+            echo __('Add and continue', 'positions');
             echo "&nbsp;&nbsp;<input type=\"submit\" name=\"valid\" value='"._sx('button','Add')."' class='submit'>";
             echo "</td>";
             echo "</tr>";
@@ -966,7 +966,7 @@ class PluginPositionsPosition extends CommonDBTM {
                }
             } else {
                echo "<div class='center'>";
-               _e('No location has a configured map', 'positions');
+               echo __('No location has a configured map', 'positions');
                echo "</div>";
             }
          } else {
@@ -977,7 +977,7 @@ class PluginPositionsPosition extends CommonDBTM {
          }
       } else {
          echo "<div class='center'>";
-         _e('No location selected', 'positions');
+         echo __('No location selected', 'positions');
          echo "</div>";
       }
    }
@@ -1033,7 +1033,7 @@ class PluginPositionsPosition extends CommonDBTM {
          echo "</table>";
          Html::closeForm();
       } else {
-         _e('No location has a configured map', 'positions');
+         echo __('No location has a configured map', 'positions');
          echo "</td></tr>";
          echo "</table>";
          Html::closeForm();
