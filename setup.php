@@ -26,44 +26,44 @@
  along with positions. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
- 
+
 // Init the hooks of the plugins -Needed
 function plugin_init_positions() {
-   global $PLUGIN_HOOKS,$CFG_GLPI;
-   
+   global $PLUGIN_HOOKS;
+
    $PLUGIN_HOOKS['csrf_compliant']['positions'] = true;
-   $PLUGIN_HOOKS['change_profile']['positions'] = array('PluginPositionsProfile','initProfile');
-   
+   $PLUGIN_HOOKS['change_profile']['positions'] = array('PluginPositionsProfile', 'initProfile');
+
    if (Session::getLoginUserID()) {
-      
+
       Plugin::registerClass('PluginPositionsProfile',
-                         array('addtabon' => 'Profile'));
-      
+                            array('addtabon' => 'Profile'));
+
       Plugin::registerClass('PluginPositionsPosition',
-                         array('addtabon' => 'Location'));
-      
+                            array('addtabon' => 'Location'));
+
       if (Session::haveRight("plugin_positions", UPDATE)) {
-         $PLUGIN_HOOKS['use_massive_action']['positions']=1;
-         $PLUGIN_HOOKS['config_page']['positions'] = 'front/config.form.php';
+         $PLUGIN_HOOKS['use_massive_action']['positions'] = 1;
+         $PLUGIN_HOOKS['config_page']['positions']        = 'front/config.form.php';
       }
-      
+
       if (Session::haveRight("plugin_positions", READ)) {
          $PLUGIN_HOOKS['helpdesk_menu_entry']['positions'] = '/front/map.form.php';
-         $PLUGIN_HOOKS['menu_toadd']['positions'] = array('tools'   => 'PluginPositionsMenu');
+         $PLUGIN_HOOKS['menu_toadd']['positions']          = array('tools' => 'PluginPositionsMenu');
       }
-      
+
       if (strpos($_SERVER['REQUEST_URI'], "map.php") !== false
-            || strpos($_SERVER['REQUEST_URI'], "map.form.php") !== false
-               || strpos($_SERVER['REQUEST_URI'], "ticket.form.php") !== false
-                  || strpos($_SERVER['REQUEST_URI'], "imageitem.form.php") !== false
-                     || strpos($_SERVER['REQUEST_URI'], "coordinates.form.php") !== false
-                        || strpos($_SERVER['REQUEST_URI'], "geoloc.php") !== false) {
+          || strpos($_SERVER['REQUEST_URI'], "map.form.php") !== false
+          || strpos($_SERVER['REQUEST_URI'], "ticket.form.php") !== false
+          || strpos($_SERVER['REQUEST_URI'], "imageitem.form.php") !== false
+          || strpos($_SERVER['REQUEST_URI'], "coordinates.form.php") !== false
+          || strpos($_SERVER['REQUEST_URI'], "geoloc.php") !== false) {
          // Add specific files to add to the header : javascript or css
          $PLUGIN_HOOKS['add_javascript']['positions'] = array(
-             //file upload
+            //file upload
              "lib/plupload/plupload.full.js",
              "lib/extjs/adapter/ext/ext-base.js",
-             "lib/extjs/ext-all.js",
+            "lib/extjs/ext-all.js",
              "upload.js",
              "positions.js",
              "geoloc.js",
@@ -73,7 +73,7 @@ function plugin_init_positions() {
          );
       }
       //css 
-      $PLUGIN_HOOKS['add_css']['positions']= array ("positions.css",
+      $PLUGIN_HOOKS['add_css']['positions'] = array("positions.css",
                                                     "lib/canvas/color-field.css",
                                                     "lib/extjs/resources/css/ext-all.css",
                                                     //"lib/Jcrop/jquery.Jcrop.min.css",
@@ -90,21 +90,21 @@ function plugin_init_positions() {
 // Get the name and the version of the plugin - Needed
 function plugin_version_positions() {
 
-   return array (
-      'name' => _n('Cartography','Cartographies', 1, 'positions'),
-      'version' => '4.3.1',
-      'license' => 'GPLv2+',
-      'author'  => "<a href='http://infotel.com/services/expertise-technique/glpi/'>Infotel</a>",
-      'homepage'=>'https://github.com/InfotelGLPI/positions',
-      'minGlpiVersion' => '0.90',
+   return array(
+      'name'           => _n('Cartography', 'Cartographies', 1, 'positions'),
+      'version'        => '4.4.0',
+      'license'        => 'GPLv2+',
+      'author'         => "<a href='http://infotel.com/services/expertise-technique/glpi/'>Infotel</a>",
+      'homepage'       => 'https://github.com/InfotelGLPI/positions',
+      'minGlpiVersion' => '9.2',
    );
 
 }
 
 // Optional : check prerequisites before install : may print errors or add to message after redirect
 function plugin_positions_check_prerequisites() {
-   if (version_compare(GLPI_VERSION,'0.90','lt') || version_compare(GLPI_VERSION,'9.2','ge')) {
-      echo __('This plugin requires GLPI >= 0.90', 'positions');
+   if (version_compare(GLPI_VERSION, '9.2', 'lt') || version_compare(GLPI_VERSION, '9.3', 'ge')) {
+      echo __('This plugin requires GLPI >= 9.2');
       return false;
    }
    return true;

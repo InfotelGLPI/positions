@@ -29,16 +29,16 @@
 
 function plugin_positions_install() {
    global $DB,$CFG_GLPI;
-   
+
    include_once (GLPI_ROOT."/plugins/positions/inc/profile.class.php");
 
-   if (!TableExists("glpi_plugin_positions_positions")) {
+   if (!$DB->tableExists("glpi_plugin_positions_positions")) {
       $DB->runFile(GLPI_ROOT."/plugins/positions/sql/empty-4.2.2.sql");
    }
-   
+
    //v1.0.0 to V2.0.0
-   if (TableExists("glpi_plugin_positions_positions_items")
-           && !FieldExists("glpi_plugin_positions_positions_items", "items_id")) {
+   if ($DB->tableExists("glpi_plugin_positions_positions_items")
+           && !$DB->fieldExists("glpi_plugin_positions_positions_items", "items_id")) {
 
       $query = "ALTER TABLE `glpi_plugin_positions_positions` 
                 ADD `items_id` int(11) NOT NULL default '0' COMMENT 'RELATION to various tables, according to itemtype (id)';";
@@ -66,7 +66,7 @@ function plugin_positions_install() {
       $result = $DB->query($query);
    }
    //v1.0.0 to V2.0.0
-   if (!TableExists("glpi_plugin_positions_infos")) {
+   if (!$DB->tableExists("glpi_plugin_positions_infos")) {
 
       $query = "CREATE TABLE `glpi_plugin_positions_infos` (
                   `id` int(11) NOT NULL auto_increment,
@@ -86,20 +86,20 @@ function plugin_positions_install() {
    }
 
    //to V3.0.0
-   if (TableExists("glpi_plugin_positions_positions")
-           && FieldExists("glpi_plugin_positions_positions", "documents_id")) {
+   if ($DB->tableExists("glpi_plugin_positions_positions")
+           && $DB->fieldExists("glpi_plugin_positions_positions", "documents_id")) {
 
       $query = "ALTER TABLE `glpi_plugin_positions_positions` DROP `documents_id`;";
       $result = $DB->query($query);
    }
-   
+
    // Update to 4.0.1
-   if(!FieldExists("glpi_plugin_positions_positions", "width") && !FieldExists("glpi_plugin_positions_positions", "height")){
+   if(!$DB->fieldExists("glpi_plugin_positions_positions", "width") && !$DB->fieldExists("glpi_plugin_positions_positions", "height")){
       $DB->runFile(GLPI_ROOT."/plugins/positions/sql/update-4.0.1.sql");
    }
-   
+
    //to v4.2.2
-   if (!TableExists("glpi_plugin_positions_configs")) {
+   if (!$DB->tableExists("glpi_plugin_positions_configs")) {
       //add table config
       $query = "CREATE TABLE `glpi_plugin_positions_configs` (
                `id` int(11) NOT NULL auto_increment,
@@ -107,10 +107,10 @@ function plugin_positions_install() {
                PRIMARY KEY  (`id`)
             )ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
       $result = $DB->query($query);
-      
+
       $query = "INSERT INTO `glpi_plugin_positions_configs` (`id`,`use_view_all_object`) VALUES ('1', '0');";
       $DB->query($query);
-      
+
       //add fields locations_id
       $query = "ALTER TABLE `glpi_plugin_positions_positions` 
                 ADD `locations_id` int(11) NOT NULL default '0' COMMENT 'RELATION to table glpi_locations';";
@@ -120,13 +120,13 @@ function plugin_positions_install() {
       update421to422();
    }
 
-   if (TableExists("glpi_plugin_positions_profiles")) {
-   
+   if ($DB->tableExists("glpi_plugin_positions_profiles")) {
+
       $notepad_tables = array('glpi_plugin_positions_positions');
 
       foreach ($notepad_tables as $t) {
          // Migrate data
-         if (FieldExists($t, 'notepad')) {
+         if ($DB->fieldExists($t, 'notepad')) {
             $query = "SELECT id, notepad
                       FROM `$t`
                       WHERE notepad IS NOT NULL
@@ -143,7 +143,7 @@ function plugin_positions_install() {
          }
       }
    }
-   
+
    $rep_files_positions = GLPI_PLUGIN_DOC_DIR."/positions";
    if (!is_dir($rep_files_positions))
       mkdir($rep_files_positions);
@@ -151,12 +151,12 @@ function plugin_positions_install() {
    $rep_files_positions_pics = GLPI_PLUGIN_DOC_DIR."/positions/pics";
    if (!is_dir($rep_files_positions_pics))
       mkdir($rep_files_positions_pics);
-   
+
    PluginPositionsProfile::initProfile();
    PluginPositionsProfile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
    $migration = new Migration("4.2.2");
    $migration->dropTable('glpi_plugin_positions_profiles');
-   
+
    return true;
 }
 
@@ -171,11 +171,11 @@ function plugin_positions_uninstall() {
 
    foreach($tables as $table)
       $DB->query("DROP TABLE IF EXISTS `$table`;");
-   
+
    $rep_files_positions = GLPI_PLUGIN_DOC_DIR."/positions";
 
    Toolbox::deleteDir($rep_files_positions);
-   
+
    $tables_glpi = array("glpi_displaypreferences",
                         "glpi_documents_items",
                         "glpi_bookmarks",
@@ -183,16 +183,16 @@ function plugin_positions_uninstall() {
 
    foreach($tables_glpi as $table_glpi)
       $DB->query("DELETE FROM `$table_glpi` WHERE `itemtype` = 'PluginPositionsPosition' ;");
-   
+
    //Delete rights associated with the plugin
    $profileRight = new ProfileRight();
    foreach (PluginPositionsProfile::getAllRights() as $right) {
       $profileRight->deleteByCriteria(array('name' => $right['field']));
    }
-   
+
    PluginPositionsMenu::removeRightsFromSession();
    PluginPositionsProfile::removeRightsFromSession();
-   
+
    return true;
 }
 
@@ -205,7 +205,7 @@ function plugin_positions_getDatabaseRelations() {
    if ($plugin->isActivated("positions"))
       return array ("glpi_entities"=>array("glpi_plugin_positions_positions"=>"entities_id"));
                      //"glpi_locations"=>array("glpi_plugin_positions_positions"=>"locations_id"),
-                     
+
    else
       return array();
 }
@@ -313,14 +313,14 @@ function plugin_positions_giveItem($type,$ID,$data,$num) {
          }
          break;
    }
-   
+
    if (in_array($type, PluginPositionsPosition::getTypes(true))) {
       switch ($table.'.'.$field) {
          case "glpi_plugin_positions_positions.name" :
             $out = "";
             $pos = new PluginPositionsPosition();
-            if (isset($data[$num][0]['id']) 
-                  && !empty($data[$num][0]['id']) 
+            if (isset($data[$num][0]['id'])
+                  && !empty($data[$num][0]['id'])
                   &&  $pos->getFromDB($data[$num][0]['id'])) {
                $out .= $pos->getLink();
                $out .= PluginPositionsPosition::showGeolocLink($type, $data['id'], $data[$num][0]['id']);
@@ -354,7 +354,7 @@ function plugin_positions_postinit() {
          }
       }
    }
-   
+
    $PLUGIN_HOOKS['item_purge']['positions'] = array();
 
    foreach (PluginPositionsPosition::getTypes(true) as $type) {
@@ -366,7 +366,7 @@ function plugin_positions_postinit() {
 ////// SPECIFIC MODIF MASSIVE FUNCTIONS ///////
 
 //function plugin_positions_MassiveActions($type) {
-   
+
 //   $types = PluginPositionsPosition::getTypes(true);
 //   foreach ($types as $key => $value) {
 //      if ($value == "Location")
@@ -388,9 +388,9 @@ function plugin_positions_postinit() {
 //}
 
 //function plugin_positions_MassiveActionsProcess($data) {
-   
+
 //   $pos = new PluginPositionsPosition();
-   
+
 //   $res = array('ok' => 0,
 //            'ko' => 0,
 //            'noright' => 0);
@@ -407,7 +407,7 @@ function plugin_positions_postinit() {
 //                              'entities_id'   => $entity,
 //                              'x_coordinates' => $i,
 //                              'massiveaction' => 1);
-               
+
 //               $restrict = "`items_id` = '".$values["items_id"]."'
 //                     AND `itemtype` = '".$values["itemtype"]."'";
 //               if (countElementsInTable("glpi_plugin_positions_positions",$restrict) == 0) {

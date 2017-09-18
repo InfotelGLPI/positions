@@ -40,7 +40,7 @@ if(empty($_GET) && !empty($_POST)){
    $_GET = $_POST;
 }
 // Security
-if (!TableExists($_GET['table'])) {
+if (!$DB->tableExists($_GET['table'])) {
    exit();
 }
 

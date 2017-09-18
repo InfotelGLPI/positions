@@ -744,14 +744,16 @@ class PluginPositionsPosition extends CommonDBTM {
       echo "<td>" . __('Associated element') . ": </td>";
       echo "<td>";
 
-      if ($ID < 0 
-         || (!$this->fields['itemtype'] 
-            && !$this->fields['items_id'])) {
+      if ($ID < 0
+          || (!$this->fields['itemtype']
+              && !$this->fields['items_id'])
+      ) {
          $types = self::getTypes();
 
-         Dropdown::showAllItems("items_id", 0, 0, (
-         $this->fields['is_recursive'] ? -1 :
-         $this->fields['entities_id']), self::getTypes());
+         Dropdown::showSelectItemFromItemtypes(['items_id_name'   => "items_id",
+                                                'entity_restrict' => ($this->fields['is_recursive'] ? -1 : $this->fields['entities_id']),
+                                                'itemtypes'       => $types
+                                               ]);
       } else {
          if ($this->fields['itemtype'] 
             && $this->fields['items_id']) {
@@ -1303,7 +1305,7 @@ class PluginPositionsPosition extends CommonDBTM {
 
         //Création du canvas et des évènements
         echo "<script>
-         Ext.onReady(function(){
+         $(document).ready(function(){
             Ext.QuickTips.init();
                var panel = new Ext.canvasXpress({
                renderTo: 'Carte',
