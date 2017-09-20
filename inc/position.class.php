@@ -253,14 +253,6 @@ class PluginPositionsPosition extends CommonDBTM {
 
             return __('See the map', 'positions');
 
-         } else if ($item->getType() == "Location") {
-
-            if ($_SESSION['glpishow_count_on_tabs']) {
-               return self::createTabEntry(Document::getTypeName(Session::getPluralNumber()),
-                                                  Document_Item::countForItem($item));
-            }
-            return Document::getTypeName(Session::getPluralNumber());
-
          } else if (in_array($item->getType(), self::getTypes(true))
              && Session::haveRight('plugin_positions', READ)) {
 
@@ -291,11 +283,7 @@ class PluginPositionsPosition extends CommonDBTM {
 
          self::showAddPosition($item);
 
-      } else if ($item->getType() == "Location") {
-
-         Document_Item::showForItem($item, $withtemplate);
-
-      } else if (in_array($item->getType(), self::getTypes(true))) {
+      }  else if (in_array($item->getType(), self::getTypes(true))) {
 
          $self->showPluginFromItems(get_class($item), $item->getField('id'));
 
@@ -1079,9 +1067,7 @@ class PluginPositionsPosition extends CommonDBTM {
    }
 
    static function selectDisplay($params, $items) {
-      global $CFG_GLPI;
 
-      $colspan = count($items);
       if (!empty($items)) {
          $colspan = count($items);
          $colspan = ($colspan * 2) + 1;

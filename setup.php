@@ -39,9 +39,6 @@ function plugin_init_positions() {
       Plugin::registerClass('PluginPositionsProfile',
                             array('addtabon' => 'Profile'));
 
-      Plugin::registerClass('PluginPositionsPosition',
-                            array('addtabon' => 'Location'));
-
       if (Session::haveRight("plugin_positions", UPDATE)) {
          $PLUGIN_HOOKS['use_massive_action']['positions'] = 1;
          $PLUGIN_HOOKS['config_page']['positions']        = 'front/config.form.php';
@@ -52,12 +49,12 @@ function plugin_init_positions() {
          $PLUGIN_HOOKS['menu_toadd']['positions']          = array('tools' => 'PluginPositionsMenu');
       }
 
-      if (strpos($_SERVER['REQUEST_URI'], "map.php") !== false
-          || strpos($_SERVER['REQUEST_URI'], "map.form.php") !== false
-          || strpos($_SERVER['REQUEST_URI'], "ticket.form.php") !== false
-          || strpos($_SERVER['REQUEST_URI'], "imageitem.form.php") !== false
-          || strpos($_SERVER['REQUEST_URI'], "coordinates.form.php") !== false
-          || strpos($_SERVER['REQUEST_URI'], "geoloc.php") !== false) {
+//      if (strpos($_SERVER['REQUEST_URI'], "map.php") !== false
+//          || strpos($_SERVER['REQUEST_URI'], "map.form.php") !== false
+//          || strpos($_SERVER['REQUEST_URI'], "ticket.form.php") !== false
+//          || strpos($_SERVER['REQUEST_URI'], "imageitem.form.php") !== false
+//          || strpos($_SERVER['REQUEST_URI'], "coordinates.form.php") !== false
+//          || strpos($_SERVER['REQUEST_URI'], "geoloc.php") !== false) {
          // Add specific files to add to the header : javascript or css
          $PLUGIN_HOOKS['add_javascript']['positions'] = array(
             //file upload
@@ -71,7 +68,12 @@ function plugin_init_positions() {
              "lib/canvas/ext-canvasXpress.js",
              "lib/canvas/color-field.js",
          );
-      }
+//      }
+      $PLUGIN_HOOKS["javascript"]['positions'] = array(
+      "/plugins/positions/upload.js",
+      "/plugins/positions/positions.js",
+      "/plugins/positions/geoloc.js",
+   );
       //css 
       $PLUGIN_HOOKS['add_css']['positions'] = array("positions.css",
                                                     "lib/canvas/color-field.css",
