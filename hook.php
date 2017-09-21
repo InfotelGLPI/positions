@@ -178,7 +178,7 @@ function plugin_positions_uninstall() {
 
    $tables_glpi = array("glpi_displaypreferences",
                         "glpi_documents_items",
-                        "glpi_bookmarks",
+                        "glpi_savedsearches",
                         "glpi_logs");
 
    foreach($tables_glpi as $table_glpi)
