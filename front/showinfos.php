@@ -50,9 +50,10 @@ if ($itemtype == 'Location') {
    $detail   = new PluginPositionsInfo();
    $restrict = "`is_active` = 1 ";
    $pos->getFromDB($idpos);
-   $restrict  = "`is_active` = '1' AND `is_deleted` = '0'";
+   $restrict = "`is_active` = '1' AND `is_deleted` = '0'";
    $restrict .= getEntitiesRestrictRequest(" AND ", "glpi_plugin_positions_infos", '', '', $pos->maybeRecursive());
-   $infos     = getAllDatasFromTable('glpi_plugin_positions_infos', $restrict);
+   $dbu   = new DbUtils();
+   $infos = $dbu->getAllDataFromTable('glpi_plugin_positions_infos', $restrict);
 
    $item = new $itemtype();
    $item->getFromDB($items_id);

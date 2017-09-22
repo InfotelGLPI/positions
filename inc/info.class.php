@@ -190,11 +190,12 @@ class PluginPositionsInfo extends CommonDBTM {
       } else {
       
          $possible_types=PluginPositionsPosition::getTypes();
-         
+
          $restrict = "`is_active` = '1' AND `is_deleted` = '0'";
-         $restrict .= getEntitiesRestrictRequest(" AND ","glpi_plugin_positions_infos",'','',
-                        $this->maybeRecursive());
-         $types = getAllDatasFromTable('glpi_plugin_positions_infos',$restrict);
+         $restrict .= getEntitiesRestrictRequest(" AND ", "glpi_plugin_positions_infos", '', '',
+                                                 $this->maybeRecursive());
+         $dbu   = new DbUtils();
+         $types = $dbu->getAllDataFromTable('glpi_plugin_positions_infos', $restrict);
 
          if (!empty($types)) {
             foreach ($types as $type) {
@@ -616,27 +617,28 @@ class PluginPositionsInfo extends CommonDBTM {
             }
             break;*/
          case 'PluginResourcesResource' :
-            $resID=$itemclass->fields['id'];
-            $entitiesID=$itemclass->fields['entities_id'];
-            $restrict = "`plugin_resources_resources_id` = $resID AND `itemtype` = 'User' " ;
-            $infos = getAllDatasFromTable('glpi_plugin_resources_resources_items',$restrict);
+            $resID      = $itemclass->fields['id'];
+            $entitiesID = $itemclass->fields['entities_id'];
+            $restrict   = "`plugin_resources_resources_id` = $resID AND `itemtype` = 'User' ";
+            $dbu        = new DbUtils();
+            $infos      = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items', $restrict);
             if (!empty($infos)) {
                foreach ($infos as $info) {
-                  if (isset($info['items_id']) && ($info['items_id']>0)) {
-                     $userid=$info['items_id'];
+                  if (isset($info['items_id']) && ($info['items_id'] > 0)) {
+                     $userid    = $info['items_id'];
                      $condition = "`users_id` = '$userid '
                                     AND `is_deleted` = '0' 
                                     AND `is_template` = '0' 
                                     AND `entities_id` = '$entitiesID'
                                     AND `contact_num` != 0 ";
-                                    
-                     $phones = getAllDatasFromTable('glpi_phones',$condition);
+
+                     $phones = $dbu->getAllDataFromTable('glpi_phones', $condition);
                      if (!empty($phones)) {
                         foreach ($phones as $phone) {
-                           $contact_num=$phone['contact_num'];
-                           $number_line=$phone['number_line'];
-                           
-                           $location=Dropdown::getDropdownName("glpi_locations",
+                           $contact_num = $phone['contact_num'];
+                           $number_line = $phone['number_line'];
+
+                           $location = Dropdown::getDropdownName("glpi_locations",
                                                                      $phone["locations_id"]);
                            
                            if (!$export) {

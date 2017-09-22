@@ -806,13 +806,14 @@ class PluginPositionsPosition extends CommonDBTM {
 
       $items = array();
       foreach (self::getTypes() as $key => $item) {
-         $table = getTableForItemType($item);
+         $table     = getTableForItemType($item);
          $itemclass = new $item();
-         $restrict = "`is_template` = '0' AND `is_deleted` = '0'";
+         $restrict  = "`is_template` = '0' AND `is_deleted` = '0'";
          $restrict .= " AND `locations_id` = '" . $locations_id . "'";
          $restrict .= getEntitiesRestrictRequest(" AND ", $table, '', '',
-             $itemclass->maybeRecursive());
-         $datas = getAllDatasFromTable($table, $restrict);
+                                                 $itemclass->maybeRecursive());
+         $dbu   = new DbUtils();
+         $datas = $dbu->getAllDataFromTable($table, $restrict);
          if (!empty($datas)) {
             foreach ($datas as $data) {
                $items[$item][] = $data["id"];
@@ -826,8 +827,9 @@ class PluginPositionsPosition extends CommonDBTM {
 
       $itemsMap = array();
       $restrict = getEntitiesRestrictRequest(" ", "glpi_plugin_positions_positions", '', '',
-         true);
-      $datas = getAllDatasFromTable("glpi_plugin_positions_positions", $restrict);
+                                             true);
+      $dbu      = new DbUtils();
+      $datas    = $dbu->getAllDataFromTable("glpi_plugin_positions_positions", $restrict);
       if (!empty($datas)) {
          foreach ($datas as $data) {
             $itemsMap[$data['itemtype']][] = $data;
@@ -1411,30 +1413,31 @@ class PluginPositionsPosition extends CommonDBTM {
                 }
             }
             $height = $defaultheight + $height;
-            if ($itemclass->getType() == 'Phone') {
-                $height = $height + 80;
-            } else if ($itemclass->getType() == 'PluginResourcesResource') {
-                $resID = $itemclass->fields['id'];
-                $restrict = "`plugin_resources_resources_id` = $resID AND `itemtype` = 'User' ";
-                $datas = getAllDatasFromTable('glpi_plugin_resources_resources_items', $restrict);
-                if (!empty($datas)) {
-                    foreach ($datas as $data) {
-                        if (isset($data['items_id']) && ($data['items_id'] > 0)) {
-                            $userid = $data['items_id'];
-                            $entitiesID = $itemclass->fields['entities_id'];
-                            $condition = "`users_id` = '$userid'
+           if ($itemclass->getType() == 'Phone') {
+              $height = $height + 80;
+           } else if ($itemclass->getType() == 'PluginResourcesResource') {
+              $resID    = $itemclass->fields['id'];
+              $restrict = "`plugin_resources_resources_id` = $resID AND `itemtype` = 'User' ";
+              $dbu      = new DbUtils();
+              $datas    = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items', $restrict);
+              if (!empty($datas)) {
+                 foreach ($datas as $data) {
+                    if (isset($data['items_id']) && ($data['items_id'] > 0)) {
+                       $userid     = $data['items_id'];
+                       $entitiesID = $itemclass->fields['entities_id'];
+                       $condition  = "`users_id` = '$userid'
                                     AND `is_deleted` = '0' 
                                     AND `is_template` = '0' 
                                     AND `entities_id` = '$entitiesID'
                                     AND `contact_num` != 0 ";
-                            if (($number = countElementsInTable("glpi_phones", $condition)) > 1) {
-                                $addheight = 30 * $number;
-                            }
-                            $height = $height + $addheight;
-                        }
+                       if (($number = countElementsInTable("glpi_phones", $condition)) > 1) {
+                          $addheight = 30 * $number;
+                       }
+                       $height = $height + $addheight;
                     }
-                }
-            }
+                 }
+              }
+           }
         } else {
             $height = $defaultheight + 30;
         }
@@ -1666,17 +1669,18 @@ class PluginPositionsPosition extends CommonDBTM {
    }
    
    static function showGeolocInfos($itemtype,$id, $positions_id=0) {
-      global $CFG_GLPI;
-      
+
+      $dbu      = new DbUtils();
+
       if ($itemtype != 'User'
-            && $itemtype != 'PluginResourcesResource') {
+          && $itemtype != 'PluginResourcesResource') {
          $item = new $itemtype();
          $item->getFromDB($id);
-         
-         $restrict = "`items_id` = '".$id."'
+
+         $restrict = "`items_id` = '" . $id . "'
                      AND `is_deleted` = '0' 
-                     AND `itemtype` = '".$itemtype."'" ;
-         $datas = getAllDatasFromTable('glpi_plugin_positions_positions',$restrict);
+                     AND `itemtype` = '" . $itemtype . "'";
+         $datas    = $dbu->getAllDataFromTable('glpi_plugin_positions_positions', $restrict);
          if (!empty($datas)) {
             foreach ($datas as $data) {
                $positions_id = $data['id'];
@@ -1684,7 +1688,7 @@ class PluginPositionsPosition extends CommonDBTM {
          }
          $documents_id = self::getDocument($item->fields['locations_id']);
          $locations_id = $item->fields['locations_id'];
-         
+
       } else {
          
          //si plugin ressource active
@@ -1695,7 +1699,7 @@ class PluginPositionsPosition extends CommonDBTM {
             if ($itemtype != 'PluginResourcesResource') {
                $condition = "`items_id`= '".$id."' AND `itemtype` = 'User'";
             
-               $infos = getAllDatasFromTable('glpi_plugin_resources_resources_items',$condition);
+               $infos = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items',$condition);
                if (!empty($infos)) {
                   foreach ($infos as $info) {
                      $ressource     = new PluginResourcesResource();
@@ -1705,7 +1709,7 @@ class PluginPositionsPosition extends CommonDBTM {
                                  AND `is_deleted` = '0' 
                                  AND `entities_id` = '".$ressource->fields['entities_id']."'
                                  AND `itemtype` = 'PluginResourcesResource'" ;
-                     $datas = getAllDatasFromTable('glpi_plugin_positions_positions',$restrict);
+                     $datas = $dbu->getAllDataFromTable('glpi_plugin_positions_positions',$restrict);
                      if (!empty($datas)) {
                         foreach ($datas as $data) {
                            if (isset($data['id'])) {
@@ -1728,7 +1732,7 @@ class PluginPositionsPosition extends CommonDBTM {
                               AND `is_deleted` = '0' 
                               AND `entities_id` = '".$ressource->fields['entities_id']."'
                               AND `itemtype` = '".$ressource->getType()."'" ;
-                  $datas = getAllDatasFromTable('glpi_plugin_positions_positions',$restrict);
+                  $datas = $dbu->getAllDataFromTable('glpi_plugin_positions_positions',$restrict);
                   if (!empty($datas)) {
                      foreach ($datas as $data) {
                         if (isset($data['id'])) {
@@ -1762,6 +1766,7 @@ class PluginPositionsPosition extends CommonDBTM {
    static function showGeolocLink($itemtype,$id, $positions_id=0) {
       global $CFG_GLPI;
 
+      $dbu = new DbUtils();
       if ($itemtype != 'User'
             && $itemtype != 'PluginResourcesResource') {
          $position = new PluginPositionsPosition();
@@ -1779,7 +1784,7 @@ class PluginPositionsPosition extends CommonDBTM {
             if ($itemtype != 'PluginResourcesResource') {
                $condition = "`items_id`= '".$id."' AND `itemtype` = 'User'";
             
-               $infos = getAllDatasFromTable('glpi_plugin_resources_resources_items',$condition);
+               $infos = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items',$condition);
                if (!empty($infos)) {
                   foreach ($infos as $info) {
                      $ressource     = new PluginResourcesResource();
@@ -1789,7 +1794,7 @@ class PluginPositionsPosition extends CommonDBTM {
                                  AND `is_deleted` = '0' 
                                  AND `entities_id` = '".$ressource->fields['entities_id']."'
                                  AND `itemtype` = 'PluginResourcesResource'" ;
-                     $datas = getAllDatasFromTable('glpi_plugin_positions_positions',$restrict);
+                     $datas = $dbu->getAllDataFromTable('glpi_plugin_positions_positions',$restrict);
                      if (!empty($datas)) {
                         foreach ($datas as $data) {
                            if (isset($data['id'])) {
@@ -1812,7 +1817,7 @@ class PluginPositionsPosition extends CommonDBTM {
                               AND `is_deleted` = '0' 
                               AND `entities_id` = '".$ressource->fields['entities_id']."'
                               AND `itemtype` = '".$ressource->getType()."'" ;
-                  $datas = getAllDatasFromTable('glpi_plugin_positions_positions',$restrict);
+                  $datas = $dbu->getAllDataFromTable('glpi_plugin_positions_positions',$restrict);
                   if (!empty($datas)) {
                      foreach ($datas as $data) {
                         if (isset($data['id'])) {

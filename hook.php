@@ -429,7 +429,7 @@ function plugin_positions_postinit() {
 //            if ($val == 1) {
 //               $restrict = "`items_id` = '".$key."'
 //                     AND `itemtype` = '".$data["itemtype"]."'";
-//               $items = getAllDatasFromTable("glpi_plugin_positions_positions", $restrict);
+//               $items = $dbu->getAllDataFromTable("glpi_plugin_positions_positions", $restrict);
 //               if (!empty($items)) {
 //                  foreach ($items as $item) {
 //                     $values = array('id' => $item["id"],
