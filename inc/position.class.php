@@ -1260,8 +1260,8 @@ class PluginPositionsPosition extends CommonDBTM {
         //création des noeuds
         foreach ($items as $node) {
             $node['imagePath'] = $node['img'];
-            $node['x']         = $node['x_coordinates'] + 1;
-            $node['y']         = $node['y_coordinates'] + 1;
+            $node['x']         = $node['x_coordinates'] + 0;
+            $node['y']         = $node['y_coordinates'] + 0;
             if(empty($node['hideTooltip'])) unset($node['hideTooltip']);
             if(empty($node['hideLabel']))   unset($node['hideLabel']);
             $node['testEvent'] = $eventless;
