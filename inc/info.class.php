@@ -35,10 +35,11 @@ if (!defined('GLPI_ROOT')) {
  * Class PluginPositionsInfo
  */
 class PluginPositionsInfo extends CommonDBTM {
-   
-   public $dohistory=true;
-   static $rightname                   = "plugin_positions";
-   protected $usenotepad         = true;
+
+   public    $dohistory  = true;
+   static    $rightname  = "plugin_positions";
+   protected $usenotepad = true;
+
    /**
     * Return the localized name of the current Type
     *
@@ -47,7 +48,6 @@ class PluginPositionsInfo extends CommonDBTM {
    public static function getTypeName($nb = 0) {
       return _n('Display of equipment', 'Display of equipments', $nb, 'positions');
    }
-
 
    /**
     * Get the Search options for the given Type
@@ -60,63 +60,63 @@ class PluginPositionsInfo extends CommonDBTM {
     **/
    function getSearchOptions() {
       $tab = array();
-    
-      $tab['common']                = self::getTypeName();
 
-      $tab[1]['table']              = $this->getTable();
-      $tab[1]['field']              = 'name';
-      $tab[1]['name']               = __('Name');
-      $tab[1]['datatype']           = 'itemlink';
-      $tab[1]['itemlink_type']      = $this->getType();
-      $tab[1]['massiveaction']      = false;
+      $tab['common'] = self::getTypeName();
 
-      $tab[2]['table']              = $this->getTable();
-      $tab[2]['field']              = 'id';
-      $tab[2]['name']               = __('ID');
-      $tab[2]['datatype']           = 'number';
-      $tab[2]['massiveaction']      = false;
+      $tab[1]['table']         = $this->getTable();
+      $tab[1]['field']         = 'name';
+      $tab[1]['name']          = __('Name');
+      $tab[1]['datatype']      = 'itemlink';
+      $tab[1]['itemlink_type'] = $this->getType();
+      $tab[1]['massiveaction'] = false;
 
-      $tab[3]['table']              = $this->getTable();
-      $tab[3]['field']              = 'fields';
-      $tab[3]['name']               = __('Displayed fields', 'positions');
-      $tab[3]['massiveaction']      = false;
-      $tab[3]['datatype']           = 'specific';
-      $tab[3]['additionalfields']   = array('itemtype');
+      $tab[2]['table']         = $this->getTable();
+      $tab[2]['field']         = 'id';
+      $tab[2]['name']          = __('ID');
+      $tab[2]['datatype']      = 'number';
+      $tab[2]['massiveaction'] = false;
 
-      $tab[4]['table']              = $this->getTable();
-      $tab[4]['field']              = 'itemtype';
-      $tab[4]['name']               = __('Equipment', 'positions');
-      $tab[4]['massiveaction']      = false;
-      $tab[4]['datatype']           = 'itemtypename';
-      $tab[4]['forcegroupby']       = true;
+      $tab[3]['table']            = $this->getTable();
+      $tab[3]['field']            = 'fields';
+      $tab[3]['name']             = __('Displayed fields', 'positions');
+      $tab[3]['massiveaction']    = false;
+      $tab[3]['datatype']         = 'specific';
+      $tab[3]['additionalfields'] = array('itemtype');
 
-      $tab[86]['table']             = $this->getTable();
-      $tab[86]['field']             = 'is_recursive';
-      $tab[86]['name']              = __('Child entities');
-      $tab[86]['datatype']          = 'bool';
-      
-      $tab[14]['table']             = $this->getTable();
-      $tab[14]['field']             = 'date_mod';
-      $tab[14]['name']              = __('Last update');
-      $tab[14]['massiveaction']     = false;
-      $tab[14]['datatype']          = 'datetime';
-      
-      $tab[16]['table']             = $this->getTable();
-      $tab[16]['field']             = 'comment';
-      $tab[16]['name']              = __('Comments');
-      $tab[16]['datatype']          = 'text';
+      $tab[4]['table']         = $this->getTable();
+      $tab[4]['field']         = 'itemtype';
+      $tab[4]['name']          = __('Equipment', 'positions');
+      $tab[4]['massiveaction'] = false;
+      $tab[4]['datatype']      = 'itemtypename';
+      $tab[4]['forcegroupby']  = true;
 
-      $tab[30]['table']             = $this->getTable();
-      $tab[30]['field']             = 'is_active';
-      $tab[30]['name']              = __('Active');
-      $tab[30]['datatype']          = 'bool';
-      $tab[30]['massiveaction']     = false;
+      $tab[86]['table']    = $this->getTable();
+      $tab[86]['field']    = 'is_recursive';
+      $tab[86]['name']     = __('Child entities');
+      $tab[86]['datatype'] = 'bool';
 
-      $tab[80]['table']             = 'glpi_entities';
-      $tab[80]['field']             = 'completename';
-      $tab[80]['name']              = __('Entity');
-      $tab[80]['datatype']          = 'dropdown';
-      
+      $tab[14]['table']         = $this->getTable();
+      $tab[14]['field']         = 'date_mod';
+      $tab[14]['name']          = __('Last update');
+      $tab[14]['massiveaction'] = false;
+      $tab[14]['datatype']      = 'datetime';
+
+      $tab[16]['table']    = $this->getTable();
+      $tab[16]['field']    = 'comment';
+      $tab[16]['name']     = __('Comments');
+      $tab[16]['datatype'] = 'text';
+
+      $tab[30]['table']         = $this->getTable();
+      $tab[30]['field']         = 'is_active';
+      $tab[30]['name']          = __('Active');
+      $tab[30]['datatype']      = 'bool';
+      $tab[30]['massiveaction'] = false;
+
+      $tab[80]['table']    = 'glpi_entities';
+      $tab[80]['field']    = 'completename';
+      $tab[80]['name']     = __('Entity');
+      $tab[80]['datatype'] = 'dropdown';
+
       return $tab;
    }
 
@@ -130,7 +130,7 @@ class PluginPositionsInfo extends CommonDBTM {
     *
     * @return array array containing the tabs
     **/
-   function defineTabs($options=array()) {
+   function defineTabs($options = array()) {
 
       $ong = array();
       $this->addDefaultFormTab($ong);
@@ -146,58 +146,58 @@ class PluginPositionsInfo extends CommonDBTM {
     *
     * @return bool
     */
-   function showForm ($ID, $options=array()) {
-      
+   function showForm($ID, $options = array()) {
+
       if (!$this->canView()) return false;
-      
+
       $this->initForm($ID, $options);
       $this->showFormHeader($options);
-      
+
       echo "<tr class='tab_bg_1'>";
-      echo "<td>".__('Name')."&nbsp;:</td>";
+      echo "<td>" . __('Name') . "&nbsp;:</td>";
       echo "<td>";
       Html::autocompletionTextField($this, "name");
       echo "</td>";
-      echo "<td rowspan='5'>".__('Comments')."&nbsp;:</td>";
+      echo "<td rowspan='5'>" . __('Comments') . "&nbsp;:</td>";
       echo "<td rowspan='5'>
-         <textarea cols='45' rows='8' name='comment' >".$this->fields["comment"]."</textarea>";
+         <textarea cols='45' rows='8' name='comment' >" . $this->fields["comment"] . "</textarea>";
       echo "</td>";
       echo "</tr>";
-      
+
       echo "<tr class='tab_bg_1'><td>" . __('Active') . "&nbsp;:</td>";
       echo "<td>";
       Dropdown::showYesNo('is_active', $this->fields['is_active']);
       echo "</td></tr>";
-      
-      echo "<tr class='tab_bg_1'><td>".__('Displayed fields', 'positions')."&nbsp;:</td>";
+
+      echo "<tr class='tab_bg_1'><td>" . __('Displayed fields', 'positions') . "&nbsp;:</td>";
       echo "<td>";
-      
+
       $this->showItemtype($ID, $this->fields['itemtype']);
-      
+
       echo "</td>";
       echo "</tr>";
-      
-      echo "<tr class='tab_bg_1'><td>".__('Equipment', 'positions')."&nbsp;:</td>";
-      echo "<td>";	
-      
+
+      echo "<tr class='tab_bg_1'><td>" . __('Equipment', 'positions') . "&nbsp;:</td>";
+      echo "<td>";
+
       self::selectCriterias($this);
-      
+
       echo "</td>";
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
       echo "<td colspan='2'>";
-      $datestring = __('Last update').": ";
-      $date = Html::convDateTime($this->fields["date_mod"]);
-      echo $datestring.$date;
+      $datestring = __('Last update') . ": ";
+      $date       = Html::convDateTime($this->fields["date_mod"]);
+      echo $datestring . $date;
       echo "</td>";
       echo "</tr>";
-      
+
       $this->showFormButtons($options);
 
       return true;
    }
-   
+
    /**
     * Display a dropdown which contains all the available itemtypes
     *
@@ -205,19 +205,19 @@ class PluginPositionsInfo extends CommonDBTM {
     * @param value the selected value
     *
     * @return nothing
-   **/
-   function showItemtype($ID, $value=0) {
+    **/
+   function showItemtype($ID, $value = 0) {
       global $CFG_GLPI;
 
       //Criteria already added : only display the selected itemtype
       if ($ID > 0) {
-          $item = new $this->fields['itemtype']();
-          echo $item->getTypeName();
-          echo "<input type='hidden' name='itemtype' value='".$this->fields['itemtype']."'";
+         $item = new $this->fields['itemtype']();
+         echo $item->getTypeName();
+         echo "<input type='hidden' name='itemtype' value='" . $this->fields['itemtype'] . "'";
 
       } else {
-      
-         $possible_types=PluginPositionsPosition::getTypes();
+
+         $possible_types = PluginPositionsPosition::getTypes();
 
          $restrict = "`is_active` = '1' AND `is_deleted` = '0'";
          $restrict .= getEntitiesRestrictRequest(" AND ", "glpi_plugin_positions_infos", '', '',
@@ -227,7 +227,7 @@ class PluginPositionsInfo extends CommonDBTM {
 
          if (!empty($types)) {
             foreach ($types as $type) {
-               foreach ($possible_types as $key=>$val) {
+               foreach ($possible_types as $key => $val) {
                   if ($type["itemtype"] == $val)
                      unset($possible_types[$key]);
                }
@@ -238,88 +238,88 @@ class PluginPositionsInfo extends CommonDBTM {
          foreach ($possible_types as $itemtype) {
             if (class_exists($itemtype)) {
                $item = new $itemtype();
-               if ($item->can(-1,READ)) {
+               if ($item->can(-1, READ)) {
                   $options[$itemtype] = $item->getTypeName($itemtype);
                }
             }
          }
          asort($options);
          $rand = Dropdown::showFromArray('itemtype', $options);
-         
+
          $params = array('itemtype' => '__VALUE__',
                          'id'       => $ID);
          Ajax::updateItemOnSelectEvent("dropdown_itemtype$rand", "span_fields",
-                           $CFG_GLPI["root_doc"]."/plugins/positions/ajax/dropdownInfoFields.php",
-                           $params);
+                                       $CFG_GLPI["root_doc"] . "/plugins/positions/ajax/dropdownInfoFields.php",
+                                       $params);
       }
 
    }
-   
+
    /**
     * Display a list of available fields for widget fields
     *
     * @param $widget an instance of CommonDBTM class
     *
     * @return nothing
-   **/
+    **/
    static function selectCriterias(CommonDBTM $config) {
       global $DB;
 
       echo "<span id='span_fields' name='span_fields'>";
 
       if (!isset($config->fields['itemtype']) || !$config->fields['itemtype']) {
-         echo  "</span>";
+         echo "</span>";
          return;
       }
 
       if (!isset($config->fields['entities_id'])) {
          $config->fields['entities_id'] = $_SESSION['glpiactive_entity'];
       }
-      
+
       $config_fields = explode(',', $config->fields['fields']);
       //Search option for this type
-      $target = new $config->fields['itemtype']();
-     
+      $item = new $config->fields['itemtype']();
+
       //Construct list
       echo "<span id='span_fields' name='span_fields'>";
       echo "<select name='_fields[]' multiple size='15' style='width:400px'>";
 
       foreach ($DB->list_fields(getTableForItemType($config->fields['itemtype'])) as $field) {
 
-         $searchOption = $target->getSearchOptionByField('field', $field['Field']);
+         $searchOption = $item->getSearchOptionByField('field', $field['Field'], getTableForItemType($item->getType()));
 
          if (empty($searchOption)) {
             if ($table = getTableNameForForeignKeyField($field['Field'])) {
                $crit = getItemForItemtype(getItemTypeForTable($table));
                if ($crit instanceof CommonTreeDropdown) {
-                  $searchOption = $target->getSearchOptionByField('field', 'completename', $table);
+                  $searchOption = $item->getSearchOptionByField('field', 'completename', $table);
                } else {
-                  $searchOption = $target->getSearchOptionByField('field', 'name', $table);
+                  $searchOption = $item->getSearchOptionByField('field', 'name', $table);
                }
             }
          }
 
          if (!empty($searchOption)
-             && !in_array($field['Field'],self::getUnallowedFields($config->fields['itemtype']))) {
+             && !in_array($field['Field'], self::getUnallowedFields($config->fields['itemtype']))) {
 
-            echo "<option value='".$field['Field']."'";
-            if (isset($config_fields) && in_array($field['Field'],$config_fields)) {
+            echo "<option value='" . $field['Field'] . "'";
+            if (isset($config_fields) && in_array($field['Field'], $config_fields)) {
                echo " selected ";
             }
-            echo  ">".$searchOption['name']."</option>";
+            echo ">" . $searchOption['name'] . "</option>";
          }
       }
 
       echo "</select></span>";
    }
-   
+
    /**
     * Perform checks to be sure that an itemtype and at least a field are selected
     *
     * @param input the values to insert in DB
     *
     * @return input the values to insert, but modified
-   **/
+    **/
    static function checkBeforeInsert($input) {
 
       if (!$input['itemtype'] || empty($input['_fields'])) {
@@ -328,7 +328,7 @@ class PluginPositionsInfo extends CommonDBTM {
          $input = array();
 
       } else {
-         $input['fields'] = implode(',',$input['_fields']);
+         $input['fields'] = implode(',', $input['_fields']);
          unset($input['_fields']);
       }
       return $input;
@@ -356,7 +356,7 @@ class PluginPositionsInfo extends CommonDBTM {
     **/
    function prepareInputForUpdate($input) {
 
-      $input['fields'] = implode(',',$input['_fields']);
+      $input['fields'] = implode(',', $input['_fields']);
       unset($input['_fields']);
 
       return $input;
@@ -368,11 +368,10 @@ class PluginPositionsInfo extends CommonDBTM {
     * @return array
     */
    static function getUnallowedFields($itemclass) {
-      
+
       switch ($itemclass) {
          case "Computer" :
-            return array('comment',
-                         'date_mod', 
+            return array('date_mod',
                          'notepad',
                          'os_license_number',
                          'os_licenseid',
@@ -381,9 +380,8 @@ class PluginPositionsInfo extends CommonDBTM {
                          'is_ocs_import');
             break;
          case "Printer" :
-            return array('comment',
-                         'is_recursive',
-                         'date_mod', 
+            return array('is_recursive',
+                         'date_mod',
                          'notepad',
                          'have_serial',
                          'have_parallel',
@@ -395,16 +393,14 @@ class PluginPositionsInfo extends CommonDBTM {
             break;
          case "NetworkEquipment" :
             return array('is_recursive',
-                         'comment',
-                         'date_mod', 
+                         'date_mod',
                          'notepad',
                          'ram',
                          'networkequipmentfirmwares_id',
                          'manufacturers_id');
             break;
          case "Monitor" :
-            return array('comment',
-                         'date_mod', 
+            return array('date_mod',
                          'notepad',
                          'size',
                          'have_micro',
@@ -419,16 +415,14 @@ class PluginPositionsInfo extends CommonDBTM {
                          'is_global');
             break;
          case "Peripheral" :
-            return array('comment',
-                         'date_mod', 
+            return array('date_mod',
                          'notepad',
                          'brand',
                          'manufacturers_id',
                          'is_global');
             break;
          case "Phone" :
-            return array('comment',
-                         'date_mod', 
+            return array('date_mod',
                          'notepad',
                          'brand',
                          'have_headset',
@@ -440,7 +434,7 @@ class PluginPositionsInfo extends CommonDBTM {
          case "PluginResourcesResource" :
             return array('alert',
                          'comment',
-                         'date_mod', 
+                         'date_mod',
                          'picture',
                          'is_recursive',
                          'items_id',
@@ -453,10 +447,10 @@ class PluginPositionsInfo extends CommonDBTM {
                          'date_begin',
                          'date_end');
             break;
-         default: 
+         default:
             return array('alert',
                          'comment',
-                         'date_mod', 
+                         'date_mod',
                          'picture',
                          'is_recursive',
                          'items_id',
@@ -478,15 +472,16 @@ class PluginPositionsInfo extends CommonDBTM {
    static function showFields($item, $itemclass) {
       global $DB;
 
-      if (isset($item["fields"]) 
-         && !empty($item["fields"])) {
+      if (isset($item["fields"])
+          && !empty($item["fields"])) {
 
-         $input = explode(',',$item['fields']);
+         $input  = explode(',', $item['fields']);
          $target = new $item['itemtype']();
          foreach ($DB->list_fields(getTableForItemType($item['itemtype'])) as $field) {
-            
-            if(in_array($field['Field'],$input)) {
-               $searchOption = $target->getSearchOptionByField('field', $field['Field']);
+
+            if (in_array($field['Field'], $input)) {
+               $searchOption = $target->getSearchOptionByField('field', $field['Field'],
+                                                             getTableForItemType($target->getType()));
 
                if (empty($searchOption)) {
                   if ($table = getTableNameForForeignKeyField($field['Field'])) {
@@ -498,13 +493,13 @@ class PluginPositionsInfo extends CommonDBTM {
                      }
                   }
                }
-               
-               if (!empty($searchOption)
-                  && isset($itemclass->fields[$field['Field']])
-                   && !empty($itemclass->fields[$field['Field']])
-                   && !in_array($field['Field'],self::getUnallowedFields($item['itemtype']))) {
 
-                  self::getFieldsValue($searchOption,$field, $itemclass);
+               if (!empty($searchOption)
+                   && isset($itemclass->fields[$field['Field']])
+                   && !empty($itemclass->fields[$field['Field']])
+                   && !in_array($field['Field'], self::getUnallowedFields($item['itemtype']))) {
+
+                  self::getFieldsValue($searchOption, $field, $itemclass);
                }
             }
          }
@@ -517,7 +512,7 @@ class PluginPositionsInfo extends CommonDBTM {
     * @return bool|string
     */
    static function getTypeFields($searchOption) {
-      
+
       $dropdown_tables = array('glpi_entities',
                                'glpi_locations',
                                'glpi_states',
@@ -543,9 +538,9 @@ class PluginPositionsInfo extends CommonDBTM {
                                'glpi_phonetypes',
                                'glpi_printermodels',
                                'glpi_printertypes');
-      
-      if (in_array($searchOption['table'],$dropdown_tables)) {
-            return "dropdown";
+
+      if (in_array($searchOption['table'], $dropdown_tables)) {
+         return "dropdown";
       }
       return false;
    }
@@ -557,39 +552,39 @@ class PluginPositionsInfo extends CommonDBTM {
     */
    static function getFieldsValue($searchOption, $field, $itemclass) {
       global $CFG_GLPI;
-      
+
       $display = $itemclass->fields[$field['Field']];
-      echo "<h3><span class='title'>".$searchOption['name']." : </span>";
-      
+      echo "<h3><span class='title'>" . $searchOption['name'] . " : </span>";
+
       $type = self::getTypeFields($searchOption);
       if ($type == 'dropdown') {
-         echo Dropdown::getDropdownName($searchOption['table'],$display);
-         
-      } else if (isset($searchOption['datatype']) 
-                  && $searchOption['datatype'] == 'decimal') {
+         echo Dropdown::getDropdownName($searchOption['table'], $display);
+
+      } else if (isset($searchOption['datatype'])
+                 && $searchOption['datatype'] == 'decimal') {
          echo Html::formatNumber($display, 2);
-         
+
       } else if ($searchOption['table'] == 'glpi_users') {
          echo getUserName($display);
-         
+
       } else if ($searchOption['field'] == 'contact_num') {
-         
-         echo "<img src='".$CFG_GLPI["root_doc"]."/plugins/positions/pics/miniphones.png' title='".
-         $display."'>&nbsp;
-         <a href=\"tel:".$display."\">".
-         $display."</a>";
-         
+
+         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/positions/pics/miniphones.png' title='" .
+              $display . "'>&nbsp;
+         <a href=\"tel:" . $display . "\">" .
+              $display . "</a>";
+
       } else if ($searchOption['field'] == 'number_line') {
-         
-         echo "<img src='".$CFG_GLPI["root_doc"]."/plugins/positions/pics/miniphones.png' title='".
-         $display."'>&nbsp;
-         <a href=\"tel:".$display."\">".
-         $display."</a>";
-         
+
+         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/positions/pics/miniphones.png' title='" .
+              $display . "'>&nbsp;
+         <a href=\"tel:" . $display . "\">" .
+              $display . "</a>";
+
       } else {
          echo $display;
       }
-      
+
       echo "</h3></br>";
 
    }
@@ -600,35 +595,35 @@ class PluginPositionsInfo extends CommonDBTM {
    static function getDirectLink($itemclass) {
       global $CFG_GLPI;
 
-      if (isset($itemclass->fields["name"]) 
-            && !empty($itemclass->fields["name"]) 
-               && $itemclass->getType() != 'Location' ) {
-               
-         echo "<h3>".__('Direct link', 'positions')." : ";
+      if (isset($itemclass->fields["name"])
+          && !empty($itemclass->fields["name"])
+          && $itemclass->getType() != 'Location') {
 
-         echo "<a href='".Toolbox::getItemTypeFormURL($itemclass->getType()).
-         "?id=".$itemclass->fields["id"]."' target='_blank'>";
-         $title = $itemclass->fields["name"];
+         echo "<h3>" . __('Direct link', 'positions') . " : ";
+
+         echo "<a href='" . Toolbox::getItemTypeFormURL($itemclass->getType()) .
+              "?id=" . $itemclass->fields["id"] . "' target='_blank'>";
+         $title  = $itemclass->fields["name"];
          $plugin = new Plugin();
          if ($plugin->isActivated("resources")
-            && $itemclass->getType() == 'PluginResourcesResource') {
-            $title= $itemclass->fields["firstname"]." ".$itemclass->fields["name"];
+             && $itemclass->getType() == 'PluginResourcesResource') {
+            $title = $itemclass->fields["firstname"] . " " . $itemclass->fields["name"];
          }
          echo $title;
          echo "</a>";
-         
+
          echo "</h3></br>";
-         
+
       } else {
-         echo "<h3>".__('Direct link', 'positions')." : ";
-         
-         echo "<a href='".$CFG_GLPI['root_doc'].
-         "/plugins/positions/front/map.php?locations_id=".$itemclass->fields["id"]."'
+         echo "<h3>" . __('Direct link', 'positions') . " : ";
+
+         echo "<a href='" . $CFG_GLPI['root_doc'] .
+              "/plugins/positions/front/map.php?locations_id=" . $itemclass->fields["id"] . "'
          target='_blank'>";
          $title = $itemclass->fields["name"];
          echo $title;
          echo "</a>";
-         
+
          echo "</h3></br>";
       }
    }
@@ -639,9 +634,9 @@ class PluginPositionsInfo extends CommonDBTM {
     *
     * @return string
     */
-   static function getCallValue($itemclass, $export=false) {
+   static function getCallValue($itemclass, $export = false) {
       global $CFG_GLPI;
-      
+
       $display = "";
       switch ($itemclass->getType()) {
          case 'PluginResourcesResource' :
@@ -667,49 +662,49 @@ class PluginPositionsInfo extends CommonDBTM {
                            $number_line = $phone['number_line'];
 
                            $location = Dropdown::getDropdownName("glpi_locations",
-                                                                     $phone["locations_id"]);
-                           
+                                                                 $phone["locations_id"]);
+
                            if (!$export) {
                               echo "<h3>";
                            }
-                           if (isset($contact_num) && $contact_num!=NULL) {
+                           if (isset($contact_num) && $contact_num != NULL) {
                               if (!$export) {
-                                 if (countElementsInTable("glpi_phones",$condition) > 1) {
-                                    echo $location." : <br>";
+                                 if (countElementsInTable("glpi_phones", $condition) > 1) {
+                                    echo $location . " : <br>";
                                  }
-                                 echo "<span class='title'>".__('Alternate username number')." : </span>";
-                                 echo "<img src='".$CFG_GLPI["root_doc"]."/plugins/positions/pics/miniphones.png' title='".
-                                 $contact_num."'>&nbsp;
-                                 <a href=\"tel:".$contact_num."\">".
-                                 $contact_num."</a>&nbsp;&nbsp;&nbsp;&nbsp;";
+                                 echo "<span class='title'>" . __('Alternate username number') . " : </span>";
+                                 echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/positions/pics/miniphones.png' title='" .
+                                      $contact_num . "'>&nbsp;
+                                 <a href=\"tel:" . $contact_num . "\">" .
+                                      $contact_num . "</a>&nbsp;&nbsp;&nbsp;&nbsp;";
                               } else {
-                                 $display.="\n".__('Alternate username number')." : ".$contact_num;
+                                 $display .= "\n" . __('Alternate username number') . " : " . $contact_num;
                               }
                            }
-                           if (isset($number_line) && $number_line!=NULL) {
+                           if (isset($number_line) && $number_line != NULL) {
                               if (!$export) {
-                                 echo "<span class='title'>"._x('quantity', 'Number of lines')." : </span>";
-                                 echo "<img src='".$CFG_GLPI["root_doc"]."/plugins/positions/pics/miniphones.png' title='".
-                                 $number_line."'>&nbsp;
-                                 <a href=\"tel:".$number_line."\">".
-                                 $number_line."</a>";
+                                 echo "<span class='title'>" . _x('quantity', 'Number of lines') . " : </span>";
+                                 echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/positions/pics/miniphones.png' title='" .
+                                      $number_line . "'>&nbsp;
+                                 <a href=\"tel:" . $number_line . "\">" .
+                                      $number_line . "</a>";
                               } else {
-                                 $display.="\n"._x('quantity', 'Number of lines')." :\n".$number_line;
-                              } 
+                                 $display .= "\n" . _x('quantity', 'Number of lines') . " :\n" . $number_line;
+                              }
                            }
                            if (!$export) {
                               echo "</h3>";
                            }
-                           
+
                            if ($export) {
                               return $display;
                            }
                         }
                      }
-                  }  
+                  }
                }
             }
             break;
-      } 
+      }
    }
 }
