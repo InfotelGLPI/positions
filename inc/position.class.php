@@ -120,13 +120,6 @@ class PluginPositionsPosition extends CommonDBTM {
          }
       }
 
-      if (!isset($input['hideTooltip']) || empty($input['hideTooltip'])) {
-         $input['hideTooltip'] = 0;
-      }
-      if (!isset($input['hideLabel'])|| empty($input['hideLabel'])) {
-         $input['hideLabel'] = 0;
-      }
-
       return $input;
    }
 
