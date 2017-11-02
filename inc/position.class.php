@@ -156,6 +156,13 @@ class PluginPositionsPosition extends CommonDBTM {
          $input["y_coordinates"] = '-225';
       }
 
+      //default size
+      $config = new PluginPositionsConfig();
+      $config->getFromDB(1);
+
+      $input['width'] = $config->fields['default_width'];
+      $input['height'] = $config->fields['default_height'];
+
       $input = $this->checkValues($input);
       
       return $input;

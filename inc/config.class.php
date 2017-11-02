@@ -31,25 +31,39 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginPositionsConfig
+ */
 class PluginPositionsConfig extends CommonDBTM {
-   
+
+   /**
+    * Get Tab Name used for itemtype
+    *
+    * NB : Only called for existing object
+    *      Must check right on what will be displayed + template
+    *
+    * @since version 0.83
+    *
+    * @param CommonGLPI $item         Item on which the tab need to be displayed
+    * @param boolean    $withtemplate is a template object ? (default 0)
+    *
+    *  @return string tab name
+    **/
    function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
         return __('Plugin Setup', 'positions');
    }
 
-   
-   
- static function showForm(){
-      global $CFG_GLPI;
-      
+
+   static function showForm() {
+
       $config = new self();
       $config->getFromDB(1);
 
       echo "<div class='center'>";
-       echo "<form method='post' action='".
-         Toolbox::getItemTypeFormURL('PluginPositionsConfig')."'>";
+      echo "<form method='post' action='" .
+           Toolbox::getItemTypeFormURL('PluginPositionsConfig') . "'>";
       echo "<table class='tab_cadre_fixe'>";
-      echo "<tr class='tab_bg_1'><th colspan='2'>".__('General setup')."</th></tr>";
+      echo "<tr class='tab_bg_1'><th colspan='2'>" . __('General setup') . "</th></tr>";
       echo "<tr class='tab_bg_1'>";
       echo "<td>";
       echo __('Add sub-places on the map objects', 'positions');
@@ -57,34 +71,51 @@ class PluginPositionsConfig extends CommonDBTM {
       echo "<td>";
       Dropdown::showYesNo('use_view_all_object', $config->fields['use_view_all_object']);
       echo "</td></tr>";
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>";
+      echo __('Default width of images', 'positions');
+      echo "</td>";
+      echo "<td>";
+      Dropdown::showNumber('default_width', ['min'   => 1,
+                                             'max'   => 300,
+                                             'value' => $config->fields['default_width']]);
+      echo "</td></tr>";
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>";
+      echo __('Default height of images', 'positions');
+      echo "</td>";
+      echo "<td>";
+      Dropdown::showNumber('default_height', ['min'   => 1,
+                                              'max'   => 300,
+                                              'value' => $config->fields['default_height']]);
+      echo "</td></tr>";
+
       echo "<tr><th colspan='2'>";
       echo "<input type='hidden' name='id' value='1'>";
       echo "<div align='center'>";
-      echo "<input type='submit' name='update_config' value=\""._x('button', 'Post')."\" class='submit' >";
+      echo "<input type='submit' name='update_config' value=\"" . _x('button', 'Post') . "\" class='submit' >";
       echo "</div></th></tr>";
       echo "</table></div>";
       Html::closeForm();
-      
+
       echo "<div class='center'><table class='tab_cadre_fixe'>";
       echo "<tr class='tab_bg_1'>";
       echo "<th>";
-    echo __('Setup');
+      echo __('Setup');
       echo "</th>";
       echo "</tr>";
       echo "<tr class='tab_bg_1'>";
       echo "<td class='center'>";
       echo "<a href='./imageitem.form.php'>" .
-      __('Association : picture / types of equipment', 'positions') . "</a>";
+           __('Association : picture / types of equipment', 'positions') . "</a>";
       echo "</td>";
       echo "</tr>";
       echo "<tr class='tab_bg_1'>";
       echo "<td class='center'>";
       echo "<a href='./info.php'>" .
-      __('Configuring the display materials', 'positions'). "</a>";
+           __('Configuring the display materials', 'positions') . "</a>";
       echo "</td>";
       echo "</tr>";
       echo "</table></div>";
    }
 }
-
-?>

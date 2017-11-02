@@ -1,5 +1,5 @@
 jQuery(document).ready(function($){
-   if(document.getElementById('container')) {
+   if(document.getElementById('plugin_position_container')) {
       var token = 0;
       if(document.getElementsByName("_glpi_csrf_token").item(0) != undefined) {
          var token = document.getElementsByName("_glpi_csrf_token").item(0).value;
@@ -9,7 +9,7 @@ jQuery(document).ready(function($){
        var uploader = new plupload.Uploader({
            runtimes : 'html5, html4',
            browse_button : 'pickfiles',
-           container : 'container',
+           container : 'plugin_position_container',
            max_file_size : '1mb',
            url : 'upload.php',
            //flash_swf_url : '../lib/plupload/plupload.flash.swf',
