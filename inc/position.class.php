@@ -155,7 +155,7 @@ class PluginPositionsPosition extends CommonDBTM {
          $input["x_coordinates"] = '-1000';
          $input["y_coordinates"] = '-225';
       }
-      
+
       $input = $this->checkValues($input);
       
       return $input;
@@ -315,16 +315,18 @@ class PluginPositionsPosition extends CommonDBTM {
 
       if (!Session::haveRight('plugin_positions', READ)) return false;
 
+      Html::requireJs('positions');
+
       $alert = __('Select an area and click on OK', 'positions');
-      echo "<script type='text/javascript'>
+
+      echo Html::scriptBlock('$(document).ready(function() {
          jQuery(function($){
-         $('#target').Jcrop({
+         $(\'#target\').Jcrop({
             onChange:   showCoords,
             onSelect:   showCoords,
             onRelease:  clearCoords
             });
-         });
-      </script>";
+         });});');
 
       echo "<script type='text/javascript'>
          function showCoords(c) {
@@ -402,7 +404,7 @@ class PluginPositionsPosition extends CommonDBTM {
                                  )
                                 ";
             $result = $DB->query($query);
-            $number = $DB->numrows($result);
+            $DB->numrows($result);
 
             $locations = array();
             while ($data = $DB->fetch_assoc($result)) {
@@ -487,8 +489,6 @@ class PluginPositionsPosition extends CommonDBTM {
 
       $x1            = $input['x1'];
       $y1            = $input['y1'];
-      $x2            = $input['x2'];
-      $y2            = $input['y2'];
       $width         = $input['w'];
       $height        = $input['h'];
       
@@ -992,7 +992,7 @@ class PluginPositionsPosition extends CommonDBTM {
                WHERE `itemtype` = 'Location' ";
 
       $result = $DB->query($query);
-      $number = $DB->numrows($result);
+      $DB->numrows($result);
 
       while ($data = $DB->fetch_assoc($result)) {
          $locations[] = $data['items_id'];
@@ -1039,7 +1039,7 @@ class PluginPositionsPosition extends CommonDBTM {
       if ($loc->getFromDB($locations_id)) {
          $entity = $loc->fields["entities_id"];
       }
-      
+
       echo "<table class='tab_cadre' width='30%'>";
       echo "<tr><th colspan='3'>" . __('Create coordinates', 'positions'). " :</th></tr>";
 

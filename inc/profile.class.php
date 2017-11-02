@@ -31,10 +31,26 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginPositionsProfile
+ */
 class PluginPositionsProfile extends CommonDBTM {
    
    static $rightname = "profile";
-   
+
+   /**
+    * Get Tab Name used for itemtype
+    *
+    * NB : Only called for existing object
+    *      Must check right on what will be displayed + template
+    *
+    * @since version 0.83
+    *
+    * @param CommonGLPI $item         Item on which the tab need to be displayed
+    * @param boolean    $withtemplate is a template object ? (default 0)
+    *
+    *  @return string tab name
+    **/
    function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
 
       if ($item->getType()=='Profile') {
@@ -44,8 +60,18 @@ class PluginPositionsProfile extends CommonDBTM {
    }
 
 
+   /**
+    * show Tab content
+    *
+    * @since version 0.83
+    *
+    * @param CommonGLPI $item         Item on which the tab need to be displayed
+    * @param integer    $tabnum       tab number (default 1)
+    * @param boolean    $withtemplate is a template object ? (default 0)
+    *
+    * @return boolean
+    **/
    static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
-      global $CFG_GLPI;
 
       if ($item->getType()=='Profile') {
          $ID = $item->getID();
@@ -57,7 +83,10 @@ class PluginPositionsProfile extends CommonDBTM {
       }
       return true;
    }
-   
+
+   /**
+    * @param $ID
+    */
    static function createFirstAccess($ID) {
       //85
       self::addDefaultProfileInfos($ID,
@@ -127,6 +156,11 @@ class PluginPositionsProfile extends CommonDBTM {
       echo "</div>";
    }
 
+   /**
+    * @param bool $all
+    *
+    * @return array
+    */
    static function getAllRights($all = false) {
       
       if ($all == false) {
@@ -170,12 +204,15 @@ class PluginPositionsProfile extends CommonDBTM {
             return 0;
       }
    }
-   
+
    /**
-   * @since 0.85
-   * Migration rights from old system to the new one for one profile
-   * @param $profiles_id the profile ID
-   */
+    * @since 0.85
+    * Migration rights from old system to the new one for one profile
+    *
+    * @param $profiles_id the profile ID
+    *
+    * @return bool
+    */
    static function migrateOneProfile($profiles_id) {
       global $DB;
       //Cannot launch migration if there's nothing to migrate...
@@ -235,4 +272,3 @@ class PluginPositionsProfile extends CommonDBTM {
       }
    }
 }
-?>

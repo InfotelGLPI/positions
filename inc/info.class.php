@@ -31,6 +31,9 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginPositionsInfo
+ */
 class PluginPositionsInfo extends CommonDBTM {
    
    public $dohistory=true;
@@ -46,6 +49,15 @@ class PluginPositionsInfo extends CommonDBTM {
    }
 
 
+   /**
+    * Get the Search options for the given Type
+    *
+    * This should be overloaded in Class
+    *
+    * @return array an *indexed* array of search options
+    *
+    * @see https://glpi-developer-documentation.rtfd.io/en/master/devapi/search.html
+    **/
    function getSearchOptions() {
       $tab = array();
     
@@ -107,7 +119,17 @@ class PluginPositionsInfo extends CommonDBTM {
       
       return $tab;
    }
-   
+
+   /**
+    * Define tabs to display
+    *
+    * NB : Only called for existing object
+    *
+    * @param array $options Options
+    *     - withtemplate is a template view ?
+    *
+    * @return array array containing the tabs
+    **/
    function defineTabs($options=array()) {
 
       $ong = array();
@@ -117,7 +139,13 @@ class PluginPositionsInfo extends CommonDBTM {
 
       return $ong;
    }
-   
+
+   /**
+    * @param       $ID
+    * @param array $options
+    *
+    * @return bool
+    */
    function showForm ($ID, $options=array()) {
       
       if (!$this->canView()) return false;
@@ -237,9 +265,6 @@ class PluginPositionsInfo extends CommonDBTM {
    static function selectCriterias(CommonDBTM $config) {
       global $DB;
 
-      //Do not add fields in DB with theses types
-      $blacklisted_types = array('longtext', 'text');
-
       echo "<span id='span_fields' name='span_fields'>";
 
       if (!isset($config->fields['itemtype']) || !$config->fields['itemtype']) {
@@ -264,7 +289,6 @@ class PluginPositionsInfo extends CommonDBTM {
          $searchOption = $target->getSearchOptionByField('field', $field['Field']);
 
          if (empty($searchOption)) {
-            $table = getTableNameForForeignKeyField($field['Field']);
             if ($table = getTableNameForForeignKeyField($field['Field'])) {
                $crit = getItemForItemtype(getItemTypeForTable($table));
                if ($crit instanceof CommonTreeDropdown) {
@@ -276,7 +300,6 @@ class PluginPositionsInfo extends CommonDBTM {
          }
 
          if (!empty($searchOption)
-             /*&& !in_array($field['Type'],$blacklisted_types)*/
              && !in_array($field['Field'],self::getUnallowedFields($config->fields['itemtype']))) {
 
             echo "<option value='".$field['Field']."'";
@@ -312,11 +335,25 @@ class PluginPositionsInfo extends CommonDBTM {
    }
 
 
+   /**
+    * Prepare input datas for adding the item
+    *
+    * @param array $input datas used to add the item
+    *
+    * @return array the modified $input array
+    **/
    function prepareInputForAdd($input) {
       return self::checkBeforeInsert($input);
    }
 
 
+   /**
+    * Prepare input datas for updating the item
+    *
+    * @param array $input data used to update the item
+    *
+    * @return array the modified $input array
+    **/
    function prepareInputForUpdate($input) {
 
       $input['fields'] = implode(',',$input['_fields']);
@@ -324,7 +361,12 @@ class PluginPositionsInfo extends CommonDBTM {
 
       return $input;
    }
-   
+
+   /**
+    * @param $itemclass
+    *
+    * @return array
+    */
    static function getUnallowedFields($itemclass) {
       
       switch ($itemclass) {
@@ -428,8 +470,12 @@ class PluginPositionsInfo extends CommonDBTM {
                          'date_end');
       }
    }
-   
-   static function showFields($item,$itemclass) {
+
+   /**
+    * @param $item
+    * @param $itemclass
+    */
+   static function showFields($item, $itemclass) {
       global $DB;
 
       if (isset($item["fields"]) 
@@ -443,7 +489,6 @@ class PluginPositionsInfo extends CommonDBTM {
                $searchOption = $target->getSearchOptionByField('field', $field['Field']);
 
                if (empty($searchOption)) {
-                  $table = getTableNameForForeignKeyField($field['Field']);
                   if ($table = getTableNameForForeignKeyField($field['Field'])) {
                      $crit = getItemForItemtype(getItemTypeForTable($table));
                      if ($crit instanceof CommonTreeDropdown) {
@@ -465,7 +510,12 @@ class PluginPositionsInfo extends CommonDBTM {
          }
       }
    }
-   
+
+   /**
+    * @param $searchOption
+    *
+    * @return bool|string
+    */
    static function getTypeFields($searchOption) {
       
       $dropdown_tables = array('glpi_entities',
@@ -499,8 +549,13 @@ class PluginPositionsInfo extends CommonDBTM {
       }
       return false;
    }
-   
-   static function getFieldsValue($searchOption,$field,$itemclass) {
+
+   /**
+    * @param $searchOption
+    * @param $field
+    * @param $itemclass
+    */
+   static function getFieldsValue($searchOption, $field, $itemclass) {
       global $CFG_GLPI;
       
       $display = $itemclass->fields[$field['Field']];
@@ -538,7 +593,10 @@ class PluginPositionsInfo extends CommonDBTM {
       echo "</h3></br>";
 
    }
-   
+
+   /**
+    * @param $itemclass
+    */
    static function getDirectLink($itemclass) {
       global $CFG_GLPI;
 
@@ -574,48 +632,18 @@ class PluginPositionsInfo extends CommonDBTM {
          echo "</h3></br>";
       }
    }
-   
+
+   /**
+    * @param      $itemclass
+    * @param bool $export
+    *
+    * @return string
+    */
    static function getCallValue($itemclass, $export=false) {
       global $CFG_GLPI;
       
-      $plugin = new Plugin();
       $display = "";
       switch ($itemclass->getType()) {
-         /*case 'Phone' :
-            if (isset($itemclass->fields['contact_num']) 
-               && !empty($itemclass->fields['contact_num'])) {
-               
-               $contact_num= $itemclass->fields["contact_num"];
-               
-               if (!$export) {
-                  echo "<span class='title'>".__('Alternate username number')." : </span>";
-                  echo "<img src='".$CFG_GLPI["root_doc"]."/plugins/positions/pics/miniphones.png' title='".
-                  $contact_num."'>&nbsp;
-                  <a href=\"tel:".$contact_num."\">".
-                  $contact_num."</a>&nbsp;&nbsp;&nbsp;&nbsp;";
-               } else {
-                  $display.="\n".__('Alternate username number')." : ".$contact_num;
-               }
-            }
-            if (isset($itemclass->fields['number_line']) 
-               && !empty($itemclass->fields['number_line'])) {
-               
-               $directline= $itemclass->fields["number_line"];
-               
-               if (!$export) {
-                  echo "<span class='title'>"._x('quantity', 'Number of lines')." : </span>";
-                  echo "<img src='".$CFG_GLPI["root_doc"]."/plugins/positions/pics/miniphones.png' title='".
-                  $directline."'>&nbsp;
-                  <a href=\"tel:".$directline."\">".
-                  $directline."</a>";
-               } else {
-                  $display.="\n"._x('quantity', 'Number of lines')." : ".$directline;
-               }
-            }
-            if ($export) {
-               return $display;
-            }
-            break;*/
          case 'PluginResourcesResource' :
             $resID      = $itemclass->fields['id'];
             $entitiesID = $itemclass->fields['entities_id'];
@@ -685,4 +713,3 @@ class PluginPositionsInfo extends CommonDBTM {
       } 
    }
 }
-?>

@@ -26,14 +26,31 @@
  along with positions. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
- 
+
+/**
+ * Class PluginPositionsMenu
+ */
 class PluginPositionsMenu extends CommonGLPI {
    static $rightname = 'plugin_positions';
 
+   /**
+    * Get menu name
+    *
+    * @since version 0.85
+    *
+    * @return string character menu shortcut key
+    **/
    static function getMenuName() {
       return _n('Cartography', 'Cartographies', 2, 'positions');
    }
 
+   /**
+    * get menu content
+    *
+    * @since version 0.85
+    *
+    * @return array array for menu
+    **/
    static function getMenuContent() {
       global $CFG_GLPI;
 

@@ -31,14 +31,27 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Class PluginPositionsImageItem
+ */
 class PluginPositionsImageItem extends CommonDBTM {
-   
-   static $rightname    = "plugin_positions";
-   
-   static function showAllItems($myname,$value_type=0,$value=0,$entity_restrict=-1,$types, $locations_id=-1, $action='showItem') {
-      global $DB,$CFG_GLPI;
 
-      $rand=mt_rand();
+   static $rightname = "plugin_positions";
+
+   /**
+    * @param        $myname
+    * @param int    $value_type
+    * @param int    $value
+    * @param int    $entity_restrict
+    * @param        $types
+    * @param int    $locations_id
+    * @param string $action
+    *
+    * @return \nothing
+    */
+   static function showAllItems($myname, $value_type = 0, $value = 0, $entity_restrict = -1, $types, $locations_id = -1, $action = 'showItem') {
+      global $CFG_GLPI;
+
       $plugin = new Plugin();
       echo "<table border='0'><tr><td>\n";
 
@@ -62,33 +75,39 @@ class PluginPositionsImageItem extends CommonDBTM {
                       'entity_restrict' => $entity_restrict,
                       'locations_id'    => $locations_id);
 
-      Ajax::updateItemOnSelectEvent("dropdown_$myname$rand", "show_$myname$rand",$CFG_GLPI["root_doc"].
-                                    "/plugins/positions/ajax/dropdownAllItems.php",$params);
+      Ajax::updateItemOnSelectEvent("dropdown_$myname$rand", "show_$myname$rand",
+                                    $CFG_GLPI["root_doc"] ."/plugins/positions/ajax/dropdownAllItems.php", $params);
 
-      echo "</td><td>\n"	;
+      echo "</td><td>\n";
       echo "<span id='show_$myname$rand'>&nbsp;</span>\n";
       Html::showToolTip(nl2br(__('Types of materials should be created so that the association can exist', 'positions')));
       echo "</td></tr></table>\n";
 
-      if ($value>0) {
+      if ($value > 0) {
          echo "<script type='text/javascript' >\n";
-         echo "document.getElementById('item_type$rand').value='".$value_type."';";
+         echo "document.getElementById('item_type$rand').value='" . $value_type . "';";
          echo "</script>\n";
 
-         $params["typetable"]=$value_type;
-         Ajax::updateItem("show_$myname$rand",$CFG_GLPI["root_doc"].
-                           "/plugins/positions/ajax/dropdownAllItems.php",$params);
+         $params["typetable"] = $value_type;
+         Ajax::updateItem("show_$myname$rand", $CFG_GLPI["root_doc"] .
+                                               "/plugins/positions/ajax/dropdownAllItems.php", $params);
 
       }
 
       return $rand;
    }
-   
+
+   /**
+    * @param $itemtype
+    * @param $type
+    *
+    * @return bool
+    */
    function getFromDBbyType($itemtype, $type) {
       global $DB;
 
       $query = "SELECT *
-                FROM `".$this->getTable()."`
+                FROM `" . $this->getTable() . "`
                 WHERE `itemtype` = '$itemtype'
                       AND `type` = '$type'";
 
@@ -106,11 +125,14 @@ class PluginPositionsImageItem extends CommonDBTM {
    }
 
 
+   /**
+    * @param $values
+    */
    function addItemImage($values) {
       global $DB;
 
       if ($values["type"] != '-1') {
-         if ($this->GetfromDBbyType($values["itemtype"],$values["type"])) {
+         if ($this->GetfromDBbyType($values["itemtype"], $values["type"])) {
             $this->update(array('id'  => $this->fields['id'],
                                 'img' => $values["img"]));
          } else {
@@ -119,20 +141,20 @@ class PluginPositionsImageItem extends CommonDBTM {
                              'img'      => $values["img"]));
          }
       } else {
-         $query = "SELECT * 
-                   FROM `".getTableForItemType($values["itemtype"]."Type")."` ";
+         $query  = "SELECT * 
+                   FROM `" . getTableForItemType($values["itemtype"] . "Type") . "` ";
          $result = $DB->query($query);
          $number = $DB->numrows($result);
-         $i = 0;
+         $i      = 0;
          while ($i < $number) {
             $type_table = $DB->result($result, $i, "id");
-            if ($this->GetfromDBbyType($values["itemtype"],$type_table)) {
-            $this->update(array('id'  => $this->fields['id'],
-                                'img' => $values["img"]));
-           } else {
-             $this->add(array('itemtype' => $values["itemtype"],
-                              'type'     => $type_table,
-                              'img'      => $values["img"]));
+            if ($this->GetfromDBbyType($values["itemtype"], $type_table)) {
+               $this->update(array('id'  => $this->fields['id'],
+                                   'img' => $values["img"]));
+            } else {
+               $this->add(array('itemtype' => $values["itemtype"],
+                                'type'     => $type_table,
+                                'img'      => $values["img"]));
             }
             $i++;
          }
@@ -143,14 +165,13 @@ class PluginPositionsImageItem extends CommonDBTM {
     * Show dropdown of uploaded files
     *
     * @param $myname dropdown name
-   **/
+    **/
    static function showUploadedFilesDropdown($myname) {
-      global $CFG_GLPI;
 
-      if (is_dir(GLPI_PLUGIN_DOC_DIR."/positions/pics")) {
+      if (is_dir(GLPI_PLUGIN_DOC_DIR . "/positions/pics")) {
          $uploaded_files = array();
 
-         if ($handle = opendir(GLPI_PLUGIN_DOC_DIR."/positions/pics")) {
+         if ($handle = opendir(GLPI_PLUGIN_DOC_DIR . "/positions/pics")) {
             while (false !== ($file = readdir($handle))) {
                if ($file != "." && $file != "..") {
                   $uploaded_files[] = $file;
@@ -160,7 +181,7 @@ class PluginPositionsImageItem extends CommonDBTM {
          }
 
          if (count($uploaded_files)) {
-            $elements = array();
+            $elements     = array();
             $elements[-1] = Dropdown::EMPTY_VALUE;
             asort($uploaded_files);
             foreach ($uploaded_files as $key => $val) {
@@ -178,50 +199,52 @@ class PluginPositionsImageItem extends CommonDBTM {
    }
 
    function showConfigForm() {
-      global $DB,$CFG_GLPI;
-      
+      global $DB, $CFG_GLPI;
+
+      Html::requireJs('positions');
+
       echo "<form method='post' action='./imageitem.form.php' name='imageitemform'>";
-      
+
       echo "<table class='tab_cadre_fixe' cellpadding='5'>";
       echo "<tr>";
       echo "<th colspan='5'>";
-      echo __('Setup')." : </th>";
+      echo __('Setup') . " : </th>";
       echo "</tr>";
-      
+
       echo "<tr class='tab_bg_2'><th colspan='5'>";
       echo __('Add pictures to use with plugin', 'positions');
       echo "</th></tr>";
-      
+
       echo "<tr class='tab_bg_1'><td colspan='2'>";
-      
-      echo "<span class='upload' id='container'>";
-      
-      echo "<img src='../pics/select.png' id='pickfiles' 
-            title=\"".__('Select pictures to upload (gif, jpg, png)', 'positions')."\">&nbsp;";
+
+      echo "<span class='upload' id='plugin_position_container'></span>";
+
+      echo "<img src='../pics/select.png' id='pickfiles'
+            title=\"" . __('Select pictures to upload (gif, jpg, png)', 'positions') . "\">&nbsp;";
       echo __('Select pictures to upload (gif, jpg, png)', 'positions');
       echo "</td><td>";
       echo "<span class='upload' id='filelist'></span>";
-      echo "<img src='../pics/upload.png' id='uploadfiles' 
-            title=\"".__('upload pictures to the server', 'positions')."\">&nbsp;";
-      echo __('Then', 'positions')."&nbsp;";
+      echo "<img src='../pics/upload.png' id='uploadfiles'
+            title=\"" . __('upload pictures to the server', 'positions') . "\">&nbsp;";
+      echo __('Then', 'positions') . "&nbsp;";
       echo __('upload pictures to the server', 'positions');
       echo "</td><td colspan='2'>";
-      
-      echo "<a href='".$_SERVER['PHP_SELF']."'><img src='../pics/refresh.png' 
-            title=\"".__s('refresh this form','positions')."\"></a>&nbsp;";
-      echo __('Then', 'positions')."&nbsp;";
-      echo __('refresh this form','positions');
+
+      echo "<a href='" . $_SERVER['PHP_SELF'] . "'><img src='../pics/refresh.png' 
+            title=\"" . __s('refresh this form', 'positions') . "\"></a>&nbsp;";
+      echo __('Then', 'positions') . "&nbsp;";
+      echo __('refresh this form', 'positions');
       echo "</span>";
-      
+
       echo "</td></tr>";
-      
+
       echo "<tr class='tab_bg_2'><th colspan='5'>";
       echo __('Associate images with types of equipment', 'positions');
       echo "</th></tr>";
-      
+
       echo "<tr class='tab_bg_1'><td>";
       $types = PluginPositionsPosition::getTypes();
-      self::showAllItems("type",0,0,$_SESSION["glpiactive_entity"],$types,-1, 'showType');
+      self::showAllItems("type", 0, 0, $_SESSION["glpiactive_entity"], $types, -1, 'showType');
       echo "</td><td>";
 
       echo "<input type='hidden' name='_glpi_csrf_token' value=''>";
@@ -230,20 +253,20 @@ class PluginPositionsImageItem extends CommonDBTM {
       echo "</td><td>";
       echo "<div id=\"imageitemPreview\"></div>";
       echo "</td><td>";
-      echo "<div align='center'><input type='submit' name='add' value=\""._sx('button','Add').
-            "\" class='submit' ></div></td></tr>";
+      echo "<div align='center'><input type='submit' name='add' value=\"" . _sx('button', 'Add') .
+           "\" class='submit' ></div></td></tr>";
       echo "</table>";
       Html::closeForm();
 
       $query = "SELECT * 
-                FROM `".$this->getTable()."` 
+                FROM `" . $this->getTable() . "` 
                 ORDER BY `itemtype`,`type` ASC;";
-      $i = 0;
+      $i     = 0;
       if ($result = $DB->query($query)) {
          $number = $DB->numrows($result);
          if ($number != 0) {
-            echo "<form method='post' name='massiveaction_form' id='massiveaction_form' action='".
-                  "./imageitem.form.php'>";
+            echo "<form method='post' name='massiveaction_form' id='massiveaction_form' action='" .
+                 "./imageitem.form.php'>";
             echo "<div id='liste'>";
             echo "<table class='tab_cadre_fixe' cellpadding='5'>";
             $colspan = 4;
@@ -254,19 +277,19 @@ class PluginPositionsImageItem extends CommonDBTM {
             echo __('List of associations', 'positions');
             echo "</th></tr>";
             echo "<tr>";
-            echo "<th class='left'>".__('Equipment', 'positions')."</th>";
-            echo "<th class='left'>".__('Equipment type', 'positions')."</th>";
-            echo "<th class='left'>".__('Picture', 'positions')."</th><th></th>";
+            echo "<th class='left'>" . __('Equipment', 'positions') . "</th>";
+            echo "<th class='left'>" . __('Equipment type', 'positions') . "</th>";
+            echo "<th class='left'>" . __('Picture', 'positions') . "</th><th></th>";
             if ($number > 1) {
-               echo "<th class='left'>".__('Equipment', 'positions')."</th>";
-               echo "<th class='left'>".__('Equipment type', 'positions')."</th>";
-               echo "<th class='left'>".__('Picture', 'positions')."</th><th></th>";
+               echo "<th class='left'>" . __('Equipment', 'positions') . "</th>";
+               echo "<th class='left'>" . __('Equipment type', 'positions') . "</th>";
+               echo "<th class='left'>" . __('Picture', 'positions') . "</th><th></th>";
             }
             echo "</tr>";
 
             while ($ligne = $DB->fetch_assoc($result)) {
                $ID = $ligne["id"];
-               if ($i  % 2==0 && $number>1) {
+               if ($i % 2 == 0 && $number > 1) {
                   echo "<tr class='tab_bg_1'>";
                }
                if ($number == 1) {
@@ -276,35 +299,36 @@ class PluginPositionsImageItem extends CommonDBTM {
                   continue;
                }
                //$item = new $ligne["itemtype"]();
-               echo "<td>".$item->getTypeName()."</td>";
-               $class = $ligne["itemtype"]."Type";
+               echo "<td>" . $item->getTypeName() . "</td>";
+               $class     = $ligne["itemtype"] . "Type";
                $typeclass = new $class();
                $typeclass->getFromDB($ligne["type"]);
                $name = $ligne["type"];
                if (isset($typeclass->fields["name"]))
                   $name = $typeclass->fields["name"];
-               echo "<td>".$name."</td>";
+               echo "<td>" . $name . "</td>";
                echo "<td>";
                if (!empty($ligne["img"])) {
-               $ext = pathinfo($ligne["img"], PATHINFO_EXTENSION);
-               echo "<object data='".$CFG_GLPI['root_doc']."/plugins/positions/front/map.send.php?file=".$ligne["img"]."&type=pics' type='image/$ext'>
-                      <param name='src' value='".$CFG_GLPI['root_doc'].
-                       "/plugins/positions/front/map.send.php?file=".$ligne["img"]."&type=pics'>
+                  $ext = pathinfo($ligne["img"], PATHINFO_EXTENSION);
+                  echo "<object data='" . $CFG_GLPI['root_doc'] . "/plugins/positions/front/map.send.php?file=" . $ligne["img"] . "&type=pics' type='image/$ext'>
+                      <param name='src' value='" . $CFG_GLPI['root_doc'] .
+                       "/plugins/positions/front/map.send.php?file=" . $ligne["img"] . "&type=pics'>
                      </object> ";
                } else {
                   echo __('No associated picture', 'positions');
                }
                echo "</td>";
-               
+
                echo "<td>";
                echo "<input type='hidden' name='id' value='$ID'>";
                echo "<input type='checkbox' name='item[$ID]' value='1'>";
                echo "</td>";
 
                $i++;
-               if (($i == $number) 
-                     && ($number % 2 !=0) 
-                        && $number >1) {
+               if (($i == $number)
+                   && ($number % 2 != 0)
+                   && $number > 1
+               ) {
                   echo "<td>&nbsp;</td>";
                   echo "<td>&nbsp;</td>";
                   echo "<td>&nbsp;</td>";
@@ -321,11 +345,11 @@ class PluginPositionsImageItem extends CommonDBTM {
                echo "<td colspan='4' class='center'>";
             }
             echo "<a onclick= \"if (markCheckboxes ('massiveaction_form')) return false;\" 
-                  href='#'>".__('Check all')."</a>";
+                  href='#'>" . __('Check all') . "</a>";
             echo " - <a onclick= \"if ( unMarkCheckboxes ('massiveaction_form') ) return false;\" 
-                  href='#'>".__('Uncheck all')."</a> ";
-            echo "<input type='submit' name='delete' value=\""._sx('button','Delete permanently').
-                     "\" class='submit'>";
+                  href='#'>" . __('Uncheck all') . "</a> ";
+            echo "<input type='submit' name='delete' value=\"" . _sx('button', 'Delete permanently') .
+                 "\" class='submit'>";
             echo "</td></tr>";
             echo "</table>";
             echo "</div>";
@@ -335,13 +359,19 @@ class PluginPositionsImageItem extends CommonDBTM {
    }
 
 
-   function displayItemImage($type,$itemtype) {
+   /**
+    * @param $type
+    * @param $itemtype
+    *
+    * @return string
+    */
+   function displayItemImage($type, $itemtype) {
 
       $image_name = "";
       $restrict   = "`itemtype` = '$itemtype'";
       $dbu        = new DbUtils();
       $datas      = $dbu->getAllDataFromTable($this->getTable(), $restrict);
-      
+
       if (!empty($datas)) {
          foreach ($datas as $data) {
             if ($type == $data["type"]) {
@@ -354,4 +384,3 @@ class PluginPositionsImageItem extends CommonDBTM {
    }
 
 }
-?>
