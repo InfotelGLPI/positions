@@ -1045,6 +1045,11 @@ class PluginPositionsPosition extends CommonDBTM {
       $loc = new Location();
       if ($loc->getFromDB($locations_id)) {
          $entity = $loc->fields["entities_id"];
+            if($loc->isRecursive()) {
+               $entities = getSonsOf('glpi_entities', $loc->fields["entities_id"]);
+            } else {
+               $entities = $loc->fields["entities_id"];
+            }
       }
 
       echo "<table class='tab_cadre' width='30%'>";
@@ -1053,7 +1058,7 @@ class PluginPositionsPosition extends CommonDBTM {
       echo "<tr class='tab_bg_1'><td>";
       echo _n('Associated item', 'Associated items', 2) . "</td>";
       echo "<td>";
-      PluginPositionsImageItem::showAllItems("items_id", 0, 0, $entity, self::getTypes(), $locations_id);
+      PluginPositionsImageItem::showAllItems("items_id", 0, 0, $entities, self::getTypes(), $locations_id);
       echo "</td>";
 
       echo "<td>";
@@ -1903,7 +1908,7 @@ class PluginPositionsPosition extends CommonDBTM {
       $location = $itemclass->fields["locations_id"];
       if (isset($location)
          && !empty($location)) {
-         
+         echo "<input type='hidden' name='locations_id' value='$location'>";
          echo Dropdown::getDropdownName("glpi_locations", $location);
       } else {
          echo "<div class='red'>" . __('No location selected', 'positions') . "</div>";
