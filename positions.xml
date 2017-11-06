@@ -24,6 +24,10 @@
    </authors>
    <versions>
       <version>
+         <num>4.4.0</num>
+         <compatibility>9.2</compatibility>
+      </version>
+      <version>
           <num>4.3.0</num>
           <compatibility>9.1</compatibility>
       </version>
@@ -53,6 +57,7 @@
       <lang>fr_FR</lang>
       <lang>de_DE</lang>
       <lang>es_ES</lang>
+      <lang>pl_PL</lang>
       <lang>pt_BR</lang>
       <lang>ro_RO</lang>
       <lang>tr_TR</lang>
