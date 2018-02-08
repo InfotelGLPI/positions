@@ -449,7 +449,6 @@ class PluginPositionsInfo extends CommonDBTM {
             break;
          default:
             return array('alert',
-                         'comment',
                          'date_mod',
                          'picture',
                          'is_recursive',
