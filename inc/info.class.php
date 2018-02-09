@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of positions.
 
  positions is free software; you can redistribute it and/or modify
@@ -59,7 +59,7 @@ class PluginPositionsInfo extends CommonDBTM {
     * @see https://glpi-developer-documentation.rtfd.io/en/master/devapi/search.html
     **/
    function getSearchOptions() {
-      $tab = array();
+      $tab = [];
 
       $tab['common'] = self::getTypeName();
 
@@ -81,7 +81,7 @@ class PluginPositionsInfo extends CommonDBTM {
       $tab[3]['name']             = __('Displayed fields', 'positions');
       $tab[3]['massiveaction']    = false;
       $tab[3]['datatype']         = 'specific';
-      $tab[3]['additionalfields'] = array('itemtype');
+      $tab[3]['additionalfields'] = ['itemtype'];
 
       $tab[4]['table']         = $this->getTable();
       $tab[4]['field']         = 'itemtype';
@@ -130,9 +130,9 @@ class PluginPositionsInfo extends CommonDBTM {
     *
     * @return array array containing the tabs
     **/
-   function defineTabs($options = array()) {
+   function defineTabs($options = []) {
 
-      $ong = array();
+      $ong = [];
       $this->addDefaultFormTab($ong);
       $this->addStandardTab('Notepad', $ong, $options);
       $this->addStandardTab('Log', $ong, $options);
@@ -146,9 +146,11 @@ class PluginPositionsInfo extends CommonDBTM {
     *
     * @return bool
     */
-   function showForm($ID, $options = array()) {
+   function showForm($ID, $options = []) {
 
-      if (!$this->canView()) return false;
+      if (!$this->canView()) {
+         return false;
+      }
 
       $this->initForm($ID, $options);
       $this->showFormHeader($options);
@@ -228,8 +230,9 @@ class PluginPositionsInfo extends CommonDBTM {
          if (!empty($types)) {
             foreach ($types as $type) {
                foreach ($possible_types as $key => $val) {
-                  if ($type["itemtype"] == $val)
+                  if ($type["itemtype"] == $val) {
                      unset($possible_types[$key]);
+                  }
                }
             }
          }
@@ -246,8 +249,8 @@ class PluginPositionsInfo extends CommonDBTM {
          asort($options);
          $rand = Dropdown::showFromArray('itemtype', $options);
 
-         $params = array('itemtype' => '__VALUE__',
-                         'id'       => $ID);
+         $params = ['itemtype' => '__VALUE__',
+                         'id'       => $ID];
          Ajax::updateItemOnSelectEvent("dropdown_itemtype$rand", "span_fields",
                                        $CFG_GLPI["root_doc"] . "/plugins/positions/ajax/dropdownInfoFields.php",
                                        $params);
@@ -325,7 +328,7 @@ class PluginPositionsInfo extends CommonDBTM {
       if (!$input['itemtype'] || empty($input['_fields'])) {
          Session::addMessageAfterRedirect(__("It's mandatory to select a type and at least one field"),
                                           true, ERROR);
-         $input = array();
+         $input = [];
 
       } else {
          $input['fields'] = implode(',', $input['_fields']);
@@ -371,16 +374,16 @@ class PluginPositionsInfo extends CommonDBTM {
 
       switch ($itemclass) {
          case "Computer" :
-            return array('date_mod',
+            return ['date_mod',
                          'notepad',
                          'os_license_number',
                          'os_licenseid',
                          'autoupdatesystems_id',
                          'manufacturers_id',
-                         'is_ocs_import');
+                         'is_ocs_import'];
             break;
          case "Printer" :
-            return array('is_recursive',
+            return ['is_recursive',
                          'date_mod',
                          'notepad',
                          'have_serial',
@@ -389,18 +392,18 @@ class PluginPositionsInfo extends CommonDBTM {
                          'have_wifi',
                          'have_ethernet',
                          'manufacturers_id',
-                         'is_global');
+                         'is_global'];
             break;
          case "NetworkEquipment" :
-            return array('is_recursive',
+            return ['is_recursive',
                          'date_mod',
                          'notepad',
                          'ram',
                          'networkequipmentfirmwares_id',
-                         'manufacturers_id');
+                         'manufacturers_id'];
             break;
          case "Monitor" :
-            return array('date_mod',
+            return ['date_mod',
                          'notepad',
                          'size',
                          'have_micro',
@@ -412,27 +415,27 @@ class PluginPositionsInfo extends CommonDBTM {
                          'have_hdmi',
                          'have_displayport',
                          'manufacturers_id',
-                         'is_global');
+                         'is_global'];
             break;
          case "Peripheral" :
-            return array('date_mod',
+            return ['date_mod',
                          'notepad',
                          'brand',
                          'manufacturers_id',
-                         'is_global');
+                         'is_global'];
             break;
          case "Phone" :
-            return array('date_mod',
+            return ['date_mod',
                          'notepad',
                          'brand',
                          'have_headset',
                          'have_hp',
                          'manufacturers_id',
                          'phonepowersupplies_id',
-                         'is_global');
+                         'is_global'];
             break;
          case "PluginResourcesResource" :
-            return array('alert',
+            return ['alert',
                          'comment',
                          'date_mod',
                          'picture',
@@ -445,10 +448,10 @@ class PluginPositionsInfo extends CommonDBTM {
                          'users_id_recipient',
                          'users_id_recipient_leaving',
                          'date_begin',
-                         'date_end');
+                         'date_end'];
             break;
          default:
-            return array('alert',
+            return ['alert',
                          'date_mod',
                          'picture',
                          'is_recursive',
@@ -460,7 +463,7 @@ class PluginPositionsInfo extends CommonDBTM {
                          'users_id_recipient',
                          'users_id_recipient_leaving',
                          'date_begin',
-                         'date_end');
+                         'date_end'];
       }
    }
 
@@ -512,7 +515,7 @@ class PluginPositionsInfo extends CommonDBTM {
     */
    static function getTypeFields($searchOption) {
 
-      $dropdown_tables = array('glpi_entities',
+      $dropdown_tables = ['glpi_entities',
                                'glpi_locations',
                                'glpi_states',
                                'glpi_plugin_resources_contracttypes',
@@ -536,7 +539,7 @@ class PluginPositionsInfo extends CommonDBTM {
                                'glpi_phonemodels',
                                'glpi_phonetypes',
                                'glpi_printermodels',
-                               'glpi_printertypes');
+                               'glpi_printertypes'];
 
       if (in_array($searchOption['table'], $dropdown_tables)) {
          return "dropdown";
@@ -666,7 +669,7 @@ class PluginPositionsInfo extends CommonDBTM {
                            if (!$export) {
                               echo "<h3>";
                            }
-                           if (isset($contact_num) && $contact_num != NULL) {
+                           if (isset($contact_num) && $contact_num != null) {
                               if (!$export) {
                                  if (countElementsInTable("glpi_phones", $condition) > 1) {
                                     echo $location . " : <br>";
@@ -680,7 +683,7 @@ class PluginPositionsInfo extends CommonDBTM {
                                  $display .= "\n" . __('Alternate username number') . " : " . $contact_num;
                               }
                            }
-                           if (isset($number_line) && $number_line != NULL) {
+                           if (isset($number_line) && $number_line != null) {
                               if (!$export) {
                                  echo "<span class='title'>" . _x('quantity', 'Number of lines') . " : </span>";
                                  echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/positions/pics/miniphones.png' title='" .

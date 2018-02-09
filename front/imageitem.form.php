@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of positions.
 
  positions is free software; you can redistribute it and/or modify
@@ -46,20 +46,19 @@ if (isset($_POST["add"]) && isset($_POST['type'])) {
       }
    }
    Html::back();
-   
+
 } else if (isset($_POST["delete"])) {
    $img->getFromDB($_POST["id"], -1);
    foreach ($_POST["item"] as $key => $val) {
       if ($val == 1) {
-         $img->delete(array('id' => $key));
+         $img->delete(['id' => $key]);
       }
    }
    Html::back();
-   
+
 } else {
    $img->checkGlobal(READ);
    Html::header(PluginPositionsPosition::getTypeName(), '', "tools", "pluginpositionsmenu", "config");
    $img->showConfigForm();
    Html::footer();
 }
-?>

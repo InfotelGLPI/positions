@@ -35,7 +35,7 @@
 function update421to422() {
    global $DB;
    $migration = new Migration('422');
-  
+
    $query = "SELECT * FROM `glpi_plugin_positions_positions`";
    $result_query = $DB->query($query);
    while ($data = $DB->fetch_array($result_query)) {
@@ -54,4 +54,3 @@ function update421to422() {
    return true;
 }
 
-?>

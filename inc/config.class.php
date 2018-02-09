@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of positions.
 
  positions is free software; you can redistribute it and/or modify
@@ -49,7 +49,7 @@ class PluginPositionsConfig extends CommonDBTM {
     *
     *  @return string tab name
     **/
-   function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
+   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
         return __('Plugin Setup', 'positions');
    }
 

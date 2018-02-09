@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of positions.
 
  positions is free software; you can redistribute it and/or modify
@@ -29,8 +29,12 @@
 
 include ('../../../inc/includes.php');
 
-if (!isset($_GET["id"])) $_GET["id"] = "";
-if (!isset($_GET["withtemplate"])) $_GET["withtemplate"] = "";
+if (!isset($_GET["id"])) {
+   $_GET["id"] = "";
+}
+if (!isset($_GET["withtemplate"])) {
+   $_GET["withtemplate"] = "";
+}
 
 $pos = new PluginPositionsPosition();
 
@@ -46,21 +50,21 @@ if (isset($_POST["add"])) {
       $pos->add($_POST);
    }
    Html::back();
-   
+
 } else if (isset($_POST["additem"])) {
    $pos->check(-1, UPDATE, $_POST);
    $pos->add($_POST);
    Html::back();
-   
+
 } else if (isset($_POST["update"])) {
    if (isset($_POST["multi"])) {
       $data = explode(",", $_POST["multi"]);
       for ($i = 0; $i < count($data); $i = $i + 3) {
          if (isset($data[$i + 1]) && isset($data[$i + 2])) {
-            $input = array('id'            => $data[$i],
+            $input = ['id'            => $data[$i],
                            'x_coordinates' => $data[$i + 1],
                            'y_coordinates' => $data[$i + 2],
-                           'locations_id'  => $_POST["locations_id"]);
+                           'locations_id'  => $_POST["locations_id"]];
             $pos->check($input['id'], UPDATE);
             $pos->update($input);
          }
@@ -72,7 +76,7 @@ if (isset($_POST["add"])) {
          Html::redirect($CFG_GLPI["root_doc"].
                  "/plugins/positions/front/map.php?locations_id=".$_POST["locations_id"]);
       }
-      
+
    } else {
       $pos->check($_POST['id'], UPDATE);
       $pos->update($_POST);
@@ -83,48 +87,47 @@ if (isset($_POST["add"])) {
                  "/plugins/positions/front/position.form.php?id=".$_POST['id']);
       }
    }
-   
+
 } else if (isset($_POST["delete"])) {
    $pos->check($_POST['id'], DELETE);
    $pos->delete($_POST);
    $pos->redirectToList();
-   
+
 } else if (isset($_POST["restore"])) {
    $pos->check($_POST['id'], PURGE);
    $pos->restore($_POST);
    $pos->redirectToList();
-   
+
 } else if (isset($_POST["purge"])) {
    $pos->check($_POST['id'], PURGE);
    $pos->delete($_POST, 1);
    $pos->redirectToList();
 
-//from items
+   //from items
 } else if (isset($_POST["delete_item"])) {
    $pos->check($_POST['id'], UPDATE);
    $pos->delete($_POST, 1);
    Html::back();
 
-//from coordinates ou map
+   //from coordinates ou map
 } else if (isset($_POST["deletepos"])) {
    $pos->check($_POST['id'], UPDATE);
    $pos->delete($_POST, 1);
    Html::redirect($CFG_GLPI["root_doc"].
            "/plugins/positions/front/map.php?locations_id=".$_POST["locations_id"]);
-   
+
 } else if (isset($_POST["addLocation"])) {
    $pos->checkGlobal(READ);
    Html::header(PluginPositionsPosition::getTypeName(), '', "tools", "pluginpositionsmenu", "positions");
    $map     = PluginPositionsPosition::getDocument($_POST["locations_id"]);
-   $options = array("document_id"  => $map,
-                    "locations_id" => $_POST["locations_id"]);
+   $options = ["document_id"  => $map,
+                    "locations_id" => $_POST["locations_id"]];
    PluginPositionsPosition::showMapCreateLocation($options);
    Html::footer();
-   
+
 } else {
    $pos->checkGlobal(READ);
    Html::header(PluginPositionsPosition::getTypeName(), '', "tools", "pluginpositionsmenu", "positions");
    $pos->display($_GET);
    Html::footer();
 }
-?>

@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of positions.
 
  positions is free software; you can redistribute it and/or modify
@@ -29,7 +29,7 @@
 
 include ('../../../inc/includes.php');
 
-Html::header(PluginPositionsPosition::getTypeName(),'',"tools","pluginpositionsmenu","info");
+Html::header(PluginPositionsPosition::getTypeName(), '', "tools", "pluginpositionsmenu", "info");
 
 $config = new PluginPositionsInfo();
 if ($config->canView() || Session::haveRight("config", UPDATE)) {
@@ -41,4 +41,3 @@ if ($config->canView() || Session::haveRight("config", UPDATE)) {
 
 Html::footer();
 
-?>

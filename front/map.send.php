@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of positions.
 
  positions is free software; you can redistribute it and/or modify
@@ -46,10 +46,10 @@ if (isset($_GET['docid'])) { // docid for document
    } else {
       $doc->send();
    }
-   
+
 } else if (isset($_GET["file"]) && isset($_GET["type"])) {
    PluginPositionsPosition::sendFile(GLPI_PLUGIN_DOC_DIR."/positions/".$_GET["type"]."/".$_GET["file"], $_GET["file"], $_GET["type"]);
-   
+
 } else if (isset($_GET["file"])) { // for other file
    $splitter = explode("/", $_GET["file"]);
    if (count($splitter) == 2) {
@@ -62,4 +62,3 @@ if (isset($_GET['docid'])) { // docid for document
       Html::displayErrorAndDie(__('Invalid filename'), true);
    }
 }
-?>

@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of positions.
 
  positions is free software; you can redistribute it and/or modify
@@ -26,20 +26,22 @@
  along with positions. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
- 
+
 include ('../../../inc/includes.php');
 
-if (!isset($_GET["id"])) $_GET["id"] = "";
+if (!isset($_GET["id"])) {
+   $_GET["id"] = "";
+}
 
 if (isset($_GET["users_id"])) {
-   
+
    //si plugin ressource active
    $plugin = new Plugin();
    if ($plugin->isActivated("resources")) {
       //recherche de la ressource lie a ce user
       $condition = "`items_id`= '".$_GET["users_id"]."' and `itemtype` = 'User'";
       $dbu = new DbUtils();
-      $infos = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items',$condition);
+      $infos = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items', $condition);
       if (!empty($infos)) {
          foreach ($infos as $info) {
             $ressource     = new PluginResourcesResource();
@@ -53,7 +55,7 @@ if (isset($_GET["users_id"])) {
             if (!empty($datas)) {
                foreach ($datas as $data) {
                   if (isset($data['id'])) {
-                     if (isset($ressource->fields['locations_id']) 
+                     if (isset($ressource->fields['locations_id'])
                                  && ($ressource->fields['locations_id']>0)) {
                         $id            = $data['id'];
                         $locations_id  = $ressource->fields['locations_id'];
@@ -67,14 +69,20 @@ if (isset($_GET["users_id"])) {
          }
       }
    }
-   
+
 } else {
-   if (!isset($_POST["locations_id"])) $_POST["locations_id"] = $_GET["locations_id"];
-   if (!isset($_POST["download"])) $_POST["download"] = $_GET["download"];
+   if (!isset($_POST["locations_id"])) {
+      $_POST["locations_id"] = $_GET["locations_id"];
+   }
+   if (!isset($_POST["download"])) {
+      $_POST["download"] = $_GET["download"];
+   }
 
    $types = PluginPositionsPosition::getTypes();
-   if (!isset($_POST["itemtype"])) $_POST["itemtype"] = $types;
-   
+   if (!isset($_POST["itemtype"])) {
+      $_POST["itemtype"] = $types;
+   }
+
    $locations_id  = $_POST["locations_id"];
    $id            = $_GET["positions_id"];
    $itemtype      = $_POST['itemtype'];
@@ -85,7 +93,7 @@ if (isset($_GET["users_id"])) {
 $plugin = new Plugin();
 
 if (isset($_GET['from_treeview']) && $plugin->isActivated("treeview")) {
-   Html::header(PluginPositionsPosition::getTypeName(),'', "tools", "pluginpositionsmenu", "positions");
+   Html::header(PluginPositionsPosition::getTypeName(), '', "tools", "pluginpositionsmenu", "positions");
 } else {
    //TODO
    //Use modal
@@ -94,16 +102,16 @@ if (isset($_GET['from_treeview']) && $plugin->isActivated("treeview")) {
 
 if (isset($locations_id) && !empty($locations_id)) {
    $target        = $_SERVER['PHP_SELF']."?id=".$id;
-   
-   $options = array('id'           => $id,
+
+   $options = ['id'           => $id,
                     'locations_id' => $locations_id,
                     'itemtype'     => $itemtype,
                     'target'       => $target,
                     'menuoff'      => $menuoff,
-                    'download'     => $download);
+                    'download'     => $download];
 
    PluginPositionsPosition::showMap($options);
-   
+
 } else {
    echo "<div class='center'><br><br>";
    echo "<img src='" . $CFG_GLPI["root_doc"] . "/pics/warning.png' alt='warning'><br><br>";
@@ -115,4 +123,3 @@ if (isset($_GET['from_treeview']) && $plugin->isActivated("treeview")) {
 } else {
    Html::popFooter();
 }
-?>

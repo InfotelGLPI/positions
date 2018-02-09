@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of positions.
 
  positions is free software; you can redistribute it and/or modify
@@ -60,4 +60,3 @@ if ($itemtype == 'Location') {
 
    PluginPositionsPosition::showOverlay($items_id, $image, $item, $infos);
 }
-?>

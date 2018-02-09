@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of positions.
 
  positions is free software; you can redistribute it and/or modify
@@ -29,20 +29,25 @@
 
 include ('../../../inc/includes.php');
 
-Html::header(PluginPositionsPosition::getTypeName(),'', "tools", "pluginpositionsmenu", "positions");
+Html::header(PluginPositionsPosition::getTypeName(), '', "tools", "pluginpositionsmenu", "positions");
 
-if (!isset($_GET["id"])) $_GET["id"] = "";
-if (isset($_POST["affich"]) && !isset($_POST["itemtype"])) $_POST["itemtype"] = "0";
+if (!isset($_GET["id"])) {
+   $_GET["id"] = "";
+}
+if (isset($_POST["affich"]) && !isset($_POST["itemtype"])) {
+   $_POST["itemtype"] = "0";
+}
 $types = PluginPositionsPosition::getTypes();
-if (!isset($_POST["itemtype"])) $_POST["itemtype"] = $types;
+if (!isset($_POST["itemtype"])) {
+   $_POST["itemtype"] = $types;
+}
 
-$options = array('id'           => $_GET["id"],
+$options = ['id'           => $_GET["id"],
                  'locations_id' => 0,
                  'itemtype'     => $_POST['itemtype'],
-                 'target'       => $_SERVER['PHP_SELF']."?id=".$_GET["id"]);
+                 'target'       => $_SERVER['PHP_SELF']."?id=".$_GET["id"]];
 
 PluginPositionsPosition::showMap($options);
 
 Html::footer();
 
-?>

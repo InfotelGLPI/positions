@@ -8,7 +8,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-		
+
  This file is part of Positions.
 
  Positions is free software; you can redistribute it and/or modify
@@ -25,54 +25,54 @@
  along with Positions. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
-  
-.x-window-mc {  
+
+.x-window-mc {
   background-color: #EAEEF1;
 }
 
-.x-window-tc,  
-.x-window-bc {  
-   background-image: url("../../lib/extjs/resources/images/default/window/top-bottom.png");  
+.x-window-tc,
+.x-window-bc {
+   background-image: url("../../lib/extjs/resources/images/default/window/top-bottom.png");
 }
 
-.x-window-ml,  
-.x-window-mr  {  
-   background-image: url("../../lib/extjs/resources/images/default/window/left-right.png");  
+.x-window-ml,
+.x-window-mr  {
+   background-image: url("../../lib/extjs/resources/images/default/window/left-right.png");
 }
 
-.x-window-tl,  
-.x-window-bl {  
-   background-image: url("../../lib/extjs/resources/images/default/window/left-corners.png");  
+.x-window-tl,
+.x-window-bl {
+   background-image: url("../../lib/extjs/resources/images/default/window/left-corners.png");
 }
 
-.x-window-tr,  
-.x-window-br {  
-   background-image: url("../../lib/extjs/resources/images/default/window/right-corners.png");  
+.x-window-tr,
+.x-window-br {
+   background-image: url("../../lib/extjs/resources/images/default/window/right-corners.png");
 }
 
-.x-panel-ghost {  
-   background-color: #e6e6e6;  
+.x-panel-ghost {
+   background-color: #e6e6e6;
 }
 
-.x-panel-ghost ul {  
-   border-color: #afafaf;  
+.x-panel-ghost ul {
+   border-color: #afafaf;
 }
 
-.x-panel-ghost .x-window-tl {  
-   border-bottom-color: #afafaf;  
+.x-panel-ghost .x-window-tl {
+   border-bottom-color: #afafaf;
 }
 
 .plugin_positions_tab_cadre_fixe {
    margin: 0 auto 10px auto;
-	background-color: #ffffff;
-	z-index:1;
-	text-align: left;
-	font-size: 11px;
-	/*border: 1px solid #7BAEE1;
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
-	border-radius: 4px;
-	-moz-box-shadow: 0px 0px 5px #8FBBE7;*/
+    background-color: #ffffff;
+    z-index:1;
+    text-align: left;
+    font-size: 11px;
+    /*border: 1px solid #7BAEE1;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    -moz-box-shadow: 0px 0px 5px #8FBBE7;*/
    width:1300px;
 }
 
@@ -85,27 +85,27 @@
 }
 /*
 .plugin_positions_tab_cadre_fixe td {
-	color: #022F5C;	
+    color: #022F5C;
 }*/
 
 .plugin_positions_tab_cadre_fixe img {
-	vertical-align: middle;	
+    vertical-align: middle;
 }
 
 
 .plugin_positions_tab_cadre_fixe th {
    font-size: 12px;
-	font-weight: bold;
-	text-align: center;
-	/*background: #AFD0F8; */
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
-	border-radius: 3px;
-	padding: 3px;
+    font-weight: bold;
+    text-align: center;
+    /*background: #AFD0F8; */
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    padding: 3px;
 }
 
 #Carte {
-   margin: 0 auto; 
+   margin: 0 auto;
    position: relative;
    z-index:1;
 }
@@ -125,25 +125,25 @@
 }
 
 .ui-draggable .miniclose {
-	background-image:url(pics/miniclose.png);
-	position:absolute;
-	right:-10px;
-	top:-10px;
-	cursor:pointer;
-	height:15px;
-	width:15px;
-	z-index:3000;
+    background-image:url(pics/miniclose.png);
+    position:absolute;
+    right:-10px;
+    top:-10px;
+    cursor:pointer;
+    height:15px;
+    width:15px;
+    z-index:3000;
 }
 
 .ui-draggable .miniconfig {
-	background-image:url(pics/miniconfig.png);
-	position:absolute;
-	left:-10px;
-	top:-8px;
-	cursor:pointer;
-	height:14px;
-	width:14px;
-	z-index:3000;
+    background-image:url(pics/miniconfig.png);
+    position:absolute;
+    left:-10px;
+    top:-8px;
+    cursor:pointer;
+    height:14px;
+    width:14px;
+    z-index:3000;
 }
 
 .ui-draggable-readonly {
@@ -154,51 +154,51 @@
    position: absolute;
 }
 /*
-.ui-draggable-dragging { 
-   background: #2EFE2E; 
+.ui-draggable-dragging {
+   background: #2EFE2E;
 }*/
 
 /* the overlayed element */
 .simple_overlay {
-	
-	/* must be initially hidden */
-	display:none;
-	
-	/* place overlay on top of other elements */
-	z-index:10000;
-	
-	/* styling */
-	background-color:#CCC;
-	
-	width:500px;	
-	/*min-height:300px;*/
-	border:1px solid #666;
-	
-	/* CSS3 styling for latest browsers */
-	-moz-box-shadow:0 0 90px 5px #000;
-	-webkit-box-shadow: 0 0 90px #000;	
+
+    /* must be initially hidden */
+    display:none;
+
+    /* place overlay on top of other elements */
+    z-index:10000;
+
+    /* styling */
+    background-color:#CCC;
+
+    width:500px;
+    /*min-height:300px;*/
+    border:1px solid #666;
+
+    /* CSS3 styling for latest browsers */
+    -moz-box-shadow:0 0 90px 5px #000;
+    -webkit-box-shadow: 0 0 90px #000;
 }
 
 /* close button positioned on upper right corner */
 .simple_overlay .close {
-	background-image:url(pics/close.png);
-	position:absolute;
-	right:-15px;
-	top:-15px;
-	cursor:pointer;
-	height:35px;
-	width:35px;
+    background-image:url(pics/close.png);
+    position:absolute;
+    right:-15px;
+    top:-15px;
+    cursor:pointer;
+    height:35px;
+    width:35px;
 }
 
 /* config button positioned on bottom right corner */
 .simple_overlay .config {
-	background-image:url(pics/config.png);
-	position:absolute;
-	right:-12px;
-	bottom:-10px;
-	cursor:pointer;
-	height:28px;
-	width:28px;
+    background-image:url(pics/config.png);
+    position:absolute;
+    right:-12px;
+    bottom:-10px;
+    cursor:pointer;
+    height:28px;
+    width:28px;
 }
 
 /* styling for elements inside overlay */
@@ -260,13 +260,13 @@
 
 #imageitemPreview {
    max-width:90px;
-   max-height:90px; 
+   max-height:90px;
 }
 
 /*.globe {
-	background-image:url(pics/sm_globe.png);
-	height:17px;
-	width:17px;
+    background-image:url(pics/sm_globe.png);
+    height:17px;
+    width:17px;
 }*/
 
 /*used ?*/

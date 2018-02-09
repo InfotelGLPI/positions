@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of positions.
 
  positions is free software; you can redistribute it and/or modify
@@ -32,26 +32,25 @@ include ('../../../inc/includes.php');
 $plugin = new Plugin();
 if ($plugin->isActivated("positions")) {
    $config = new PluginPositionsConfig();
-   
-    if (isset($_POST["update_config"])) {
-         Session::checkRight("config", UPDATE);
-         $config->update($_POST);
-         Html::back();
-         
-      } else {
-         Html::header(PluginPositionsPosition::getTypeName(),'',"tools","pluginpositionsmenu", "config");
-         $config->showForm();
-         Html::footer();
-      }
-      
+
+   if (isset($_POST["update_config"])) {
+        Session::checkRight("config", UPDATE);
+        $config->update($_POST);
+        Html::back();
+
+   } else {
+      Html::header(PluginPositionsPosition::getTypeName(), '', "tools", "pluginpositionsmenu", "config");
+      $config->showForm();
+      Html::footer();
+   }
+
 
 
 } else {
    Html::header(__('Setup'), '', "config", "plugins");
    echo "<div align='center'><br><br>";
    echo "<img src=\"".$CFG_GLPI["root_doc"]."/pics/warning.png\" alt='warning'><br><br>";
-   echo "<b>".__('Please activate the plugin','positions')."</b></div>";
+   echo "<b>".__('Please activate the plugin', 'positions')."</b></div>";
    Html::footer();
 }
 
-?>

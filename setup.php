@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of positions.
 
  positions is free software; you can redistribute it and/or modify
@@ -32,12 +32,12 @@ function plugin_init_positions() {
    global $PLUGIN_HOOKS;
 
    $PLUGIN_HOOKS['csrf_compliant']['positions'] = true;
-   $PLUGIN_HOOKS['change_profile']['positions'] = array('PluginPositionsProfile', 'initProfile');
+   $PLUGIN_HOOKS['change_profile']['positions'] = ['PluginPositionsProfile', 'initProfile'];
 
    if (Session::getLoginUserID()) {
 
       Plugin::registerClass('PluginPositionsProfile',
-                            array('addtabon' => 'Profile'));
+                            ['addtabon' => 'Profile']);
 
       if (Session::haveRight("plugin_positions", UPDATE)) {
          $PLUGIN_HOOKS['use_massive_action']['positions'] = 1;
@@ -46,11 +46,11 @@ function plugin_init_positions() {
 
       if (Session::haveRight("plugin_positions", READ)) {
          $PLUGIN_HOOKS['helpdesk_menu_entry']['positions'] = '/front/map.form.php';
-         $PLUGIN_HOOKS['menu_toadd']['positions']          = array('tools' => 'PluginPositionsMenu');
+         $PLUGIN_HOOKS['menu_toadd']['positions']          = ['tools' => 'PluginPositionsMenu'];
       }
 
       // Add specific files to add to the header : javascript or css
-      $PLUGIN_HOOKS['add_javascript']['positions'] = array(
+      $PLUGIN_HOOKS['add_javascript']['positions'] = [
          //file upload
          "lib/plupload/plupload.full.js",
          "lib/extjs/adapter/ext/ext-base.js",
@@ -61,21 +61,21 @@ function plugin_init_positions() {
          "lib/canvas/canvasXpress.min.js",
          "lib/canvas/ext-canvasXpress.js",
          "lib/canvas/color-field.js",
-      );
-      $PLUGIN_HOOKS["javascript"]['positions']     = array(
+      ];
+      $PLUGIN_HOOKS["javascript"]['positions']     = [
          "/plugins/positions/positions.js",
-//         "/plugins/positions/geoloc.js",
+      //         "/plugins/positions/geoloc.js",
          "/plugins/positions/lib/Jcrop/jquery.Jcrop.js",
-      );
-      //css 
-      $PLUGIN_HOOKS['add_css']['positions'] = array("positions.css",
+      ];
+      //css
+      $PLUGIN_HOOKS['add_css']['positions'] = ["positions.css",
                                                     "lib/canvas/color-field.css",
                                                     "lib/extjs/resources/css/ext-all.css",
                                                     //"lib/Jcrop/jquery.Jcrop.min.css",
-      );
+      ];
 
       if (class_exists('PluginTreeviewConfig')) {
-         $PLUGIN_HOOKS['treeview_params']['positions'] = array('PluginPositionsPosition', 'showPositionTreeview');
+         $PLUGIN_HOOKS['treeview_params']['positions'] = ['PluginPositionsPosition', 'showPositionTreeview'];
       }
    }
    // End init, when all types are registered
@@ -85,14 +85,14 @@ function plugin_init_positions() {
 // Get the name and the version of the plugin - Needed
 function plugin_version_positions() {
 
-   return array(
+   return [
       'name'           => _n('Cartography', 'Cartographies', 1, 'positions'),
       'version'        => '4.4.0',
       'license'        => 'GPLv2+',
       'author'         => "<a href='http://infotel.com/services/expertise-technique/glpi/'>Infotel</a>",
       'homepage'       => 'https://github.com/InfotelGLPI/positions',
       'minGlpiVersion' => '9.2',
-   );
+   ];
 
 }
 
@@ -111,4 +111,3 @@ function plugin_positions_check_config() {
    return true;
 }
 
-?>

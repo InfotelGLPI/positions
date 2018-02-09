@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of positions.
 
  positions is free software; you can redistribute it and/or modify
@@ -30,14 +30,13 @@
 include ('../../../inc/includes.php');
 
 if (isset ($_POST['valid'])
-      && (isset($_POST['locations_id']) 
+      && (isset($_POST['locations_id'])
          || isset($_POST['locations_idParent']) )) {
-   
+
    $options = PluginPositionsPosition::cropPicture($_POST);
-   
-   Html::header(PluginPositionsPosition::getTypeName(),'', "tools", "pluginpositionsmenu", "positions");
+
+   Html::header(PluginPositionsPosition::getTypeName(), '', "tools", "pluginpositionsmenu", "positions");
    PluginPositionsPosition::showFormResCreateLocation($options);
    Html::footer();
 }
 
-?>

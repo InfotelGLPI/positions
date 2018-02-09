@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of positions.
 
  positions is free software; you can redistribute it and/or modify
@@ -66,14 +66,14 @@ class PluginPositionsImageItem extends CommonDBTM {
       }
 
       $rand = Dropdown::showItemTypes($myname, $types,
-                                      array('emptylabel' => Dropdown::EMPTY_VALUE, 'width' => 150));
+                                      ['emptylabel' => Dropdown::EMPTY_VALUE, 'width' => 150]);
 
-      $params = array('type'            => '__VALUE__',
+      $params = ['type'            => '__VALUE__',
                       'value'           => $value,
                       'myname'          => $myname,
                       'action'          => $action,
                       'entity_restrict' => $entity_restrict,
-                      'locations_id'    => $locations_id);
+                      'locations_id'    => $locations_id];
 
       Ajax::updateItemOnSelectEvent("dropdown_$myname$rand", "show_$myname$rand",
                                     $CFG_GLPI["root_doc"] ."/plugins/positions/ajax/dropdownAllItems.php", $params);
@@ -133,12 +133,12 @@ class PluginPositionsImageItem extends CommonDBTM {
 
       if ($values["type"] != '-1') {
          if ($this->GetfromDBbyType($values["itemtype"], $values["type"])) {
-            $this->update(array('id'  => $this->fields['id'],
-                                'img' => $values["img"]));
+            $this->update(['id'  => $this->fields['id'],
+                                'img' => $values["img"]]);
          } else {
-            $this->add(array('itemtype' => $values["itemtype"],
+            $this->add(['itemtype' => $values["itemtype"],
                              'type'     => $values["type"],
-                             'img'      => $values["img"]));
+                             'img'      => $values["img"]]);
          }
       } else {
          $query  = "SELECT * 
@@ -149,12 +149,12 @@ class PluginPositionsImageItem extends CommonDBTM {
          while ($i < $number) {
             $type_table = $DB->result($result, $i, "id");
             if ($this->GetfromDBbyType($values["itemtype"], $type_table)) {
-               $this->update(array('id'  => $this->fields['id'],
-                                   'img' => $values["img"]));
+               $this->update(['id'  => $this->fields['id'],
+                                   'img' => $values["img"]]);
             } else {
-               $this->add(array('itemtype' => $values["itemtype"],
+               $this->add(['itemtype' => $values["itemtype"],
                                 'type'     => $type_table,
-                                'img'      => $values["img"]));
+                                'img'      => $values["img"]]);
             }
             $i++;
          }
@@ -169,7 +169,7 @@ class PluginPositionsImageItem extends CommonDBTM {
    static function showUploadedFilesDropdown($myname) {
 
       if (is_dir(GLPI_PLUGIN_DOC_DIR . "/positions/pics")) {
-         $uploaded_files = array();
+         $uploaded_files = [];
 
          if ($handle = opendir(GLPI_PLUGIN_DOC_DIR . "/positions/pics")) {
             while (false !== ($file = readdir($handle))) {
@@ -181,7 +181,7 @@ class PluginPositionsImageItem extends CommonDBTM {
          }
 
          if (count($uploaded_files)) {
-            $elements     = array();
+            $elements     = [];
             $elements[-1] = Dropdown::EMPTY_VALUE;
             asort($uploaded_files);
             foreach ($uploaded_files as $key => $val) {
@@ -304,8 +304,9 @@ class PluginPositionsImageItem extends CommonDBTM {
                $typeclass = new $class();
                $typeclass->getFromDB($ligne["type"]);
                $name = $ligne["type"];
-               if (isset($typeclass->fields["name"]))
+               if (isset($typeclass->fields["name"])) {
                   $name = $typeclass->fields["name"];
+               }
                echo "<td>" . $name . "</td>";
                echo "<td>";
                if (!empty($ligne["img"])) {

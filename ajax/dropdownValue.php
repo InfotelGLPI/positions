@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of positions.
 
  positions is free software; you can redistribute it and/or modify
@@ -28,7 +28,7 @@
  */
 
 // Direct access to file
-if (strpos($_SERVER['PHP_SELF'],"dropdownValue.php")) {
+if (strpos($_SERVER['PHP_SELF'], "dropdownValue.php")) {
    include ('../../../inc/includes.php');
    header("Content-Type: text/html; charset=UTF-8");
    Html::header_nocache();
@@ -36,7 +36,7 @@ if (strpos($_SERVER['PHP_SELF'],"dropdownValue.php")) {
 
 Session::checkLoginUser();
 
-if(empty($_GET) && !empty($_POST)){
+if (empty($_GET) && !empty($_POST)) {
    $_GET = $_POST;
 }
 // Security
@@ -61,7 +61,7 @@ if ($_GET['searchText']==$CFG_GLPI["ajax_wildcard"]) {
 
 $where =" WHERE `".$_GET['table']."`.`id` NOT IN ('".$_GET['value2']."'";
 
-$used = array();
+$used = [];
 $dbu = new DbUtils();
 if ($_GET["name"] != "type") {
    $datas = $dbu->getAllDataFromTable("glpi_plugin_positions_positions", "`itemtype` = '".$_GET['itemtype']."'");
@@ -79,7 +79,7 @@ if (!empty($datas)) {
 }
 
 if (count($used)) {
-   $where .= ",'".implode("','",$used)."'";
+   $where .= ",'".implode("','", $used)."'";
 }
 
 $where .= ")";
@@ -88,15 +88,15 @@ $multi = false;
 
  $config = new PluginPositionsConfig();
  $config->getFromDB(1);
-   
+
 if (isset($_GET["name"]) && $_GET["name"] != "type") {
    if (!$config->fields['use_view_all_object']) {
       if ($_GET['locations_id'] != -1) {
          $where .= " AND `locations_id` = '" . $_GET['locations_id'] . "'";
       }
-   }else{
+   } else {
       $locations = getSonsOf('glpi_locations', $_GET['locations_id']);
-      $where .= " AND `locations_id` IN (" . implode(',',$locations). ")";
+      $where .= " AND `locations_id` IN (" . implode(',', $locations). ")";
    }
    if ($item->maybeDeleted()) {
       $where .= " AND `is_deleted` = '0' ";
@@ -125,7 +125,7 @@ if (isset($_GET["name"]) && $_GET["name"] != "type") {
       }
    }
 }
-   
+
 $field = "name";
 
 if ($_GET['searchText']!=$CFG_GLPI["ajax_wildcard"]) {
@@ -137,7 +137,7 @@ $query = "SELECT *
           $where ";
 if ($config->fields['use_view_all_object'] && $_GET["name"] != "type") {
    $query .= "ORDER BY `locations_id`";
-}else{
+} else {
    if ($multi) {
       $query .= " ORDER BY `entities_id`, $field
                  $LIMIT";
@@ -149,17 +149,17 @@ if ($config->fields['use_view_all_object'] && $_GET["name"] != "type") {
 
 $result = $DB->query($query);
 
-$out = array();
+$out = [];
 
 $number = $DB->numrows($result);
 if ($number != 0 && $_GET["locations_id"]== -1) {
-   array_push($out, array('id'   => $_GET['itemtype'].";-1",
-                          'text' => __('All types', 'positions')));
+   array_push($out, ['id'   => $_GET['itemtype'].";-1",
+                          'text' => __('All types', 'positions')]);
 }
-$output = Dropdown::getDropdownName($_GET['table'],$_GET['value2']);
+$output = Dropdown::getDropdownName($_GET['table'], $_GET['value2']);
 if (!empty($output)&&$output!="&nbsp;") {
-   array_push($out, array('id'   => $_GET['value2'],
-                          'text' => $output));
+   array_push($out, ['id'   => $_GET['value2'],
+                          'text' => $output]);
 }
 
 
@@ -168,14 +168,14 @@ if ($number) {
       $current_location = '';
       while ($data =$DB->fetch_array($result)) {
          if (empty($current_location)) {
-            $children = array();
+            $children = [];
             $level = 1;
             $current_location = new Location();
             $current_location->getFromDB($data['locations_id']);
-         } elseif ($current_location->fields['id'] != $data['locations_id']) {
-            array_push($out, array('text' => $current_location->fields['completename'], 'children' => $children));
+         } else if ($current_location->fields['id'] != $data['locations_id']) {
+            array_push($out, ['text' => $current_location->fields['completename'], 'children' => $children]);
 
-            $children = array();
+            $children = [];
             $level = 1;
             $current_location = new Location();
             $current_location->getFromDB($data['locations_id']);
@@ -186,13 +186,13 @@ if ($number) {
          if (empty($output)) {
             $output = "($ID)";
          }
-         array_push($children, array('id' => $_GET['itemtype'].";".$ID, 'text' => $output, 'level' => '1'));
+         array_push($children, ['id' => $_GET['itemtype'].";".$ID, 'text' => $output, 'level' => '1']);
          $level++;
-         
+
       }
-      array_push($out, array('text' => $current_location->fields['completename'], 'children' => $children));
-      
-   }else{
+      array_push($out, ['text' => $current_location->fields['completename'], 'children' => $children]);
+
+   } else {
       while ($data =$DB->fetch_array($result)) {
          $output = $data[$field];
          $ID = $data['id'];
@@ -201,8 +201,8 @@ if ($number) {
             $output = "($ID)";
          }
 
-         array_push($out, array('id'   => $_GET['itemtype'].";".$ID,
-                                'text' => $output));
+         array_push($out, ['id'   => $_GET['itemtype'].";".$ID,
+                                'text' => $output]);
       }
    }
 }
@@ -212,4 +212,3 @@ $ret['count']   = count($out);
 
 echo json_encode($ret);
 
-?>

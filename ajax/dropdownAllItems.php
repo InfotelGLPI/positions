@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of positions.
 
  positions is free software; you can redistribute it and/or modify
@@ -47,7 +47,7 @@ if (isset($_POST["type"]) && $_POST['action']) {
       // Link to user for search only > normal users
       $rand = mt_rand();
 
-      $params = array('searchText'   => '__VALUE__',
+      $params = ['searchText'   => '__VALUE__',
                       'itemtype'     => $itemtype,
                       'table'        => $table,
                       'rand'         => $rand,
@@ -56,7 +56,7 @@ if (isset($_POST["type"]) && $_POST['action']) {
                       'value2'       => isset($_POST['value']) ? $_POST['value'] : 0,
                       'name'         => $_POST["myname"],
                       'width'        => 200,
-                      'locations_id' => $_POST["locations_id"]);
+                      'locations_id' => $_POST["locations_id"]];
 
       if (isset($_POST['value'])) {
          $params['value'] = $_POST['value'];
@@ -79,4 +79,3 @@ if (isset($_POST["type"]) && $_POST['action']) {
       }
    }
 }
-?>

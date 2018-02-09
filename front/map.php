@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of positions.
 
  positions is free software; you can redistribute it and/or modify
@@ -29,13 +29,21 @@
 
 include ('../../../inc/includes.php');
 
-if (!isset($_GET["locations_id"]))  $_GET["locations_id"]  = 0;
-if (!isset($_POST["locations_id"])) $_POST["locations_id"] = $_GET["locations_id"];
+if (!isset($_GET["locations_id"])) {
+   $_GET["locations_id"]  = 0;
+}
+if (!isset($_POST["locations_id"])) {
+   $_POST["locations_id"] = $_GET["locations_id"];
+}
 
-if (isset($_POST["affich"]) && !isset($_POST["itemtype"])) $_POST["itemtype"] = "0";
+if (isset($_POST["affich"]) && !isset($_POST["itemtype"])) {
+   $_POST["itemtype"] = "0";
+}
 
 $types = PluginPositionsPosition::getTypes();
-if (!isset($_POST["itemtype"])) $_POST["itemtype"] = $types;
+if (!isset($_POST["itemtype"])) {
+   $_POST["itemtype"] = $types;
+}
 
 if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
    //from central
@@ -51,12 +59,12 @@ if ($pos->canView() || Session::haveRight("config", UPDATE)) {
    if (!$_POST["locations_id"]) {
       PluginPositionsPosition::showLocationForm($_POST["locations_id"]);
       Html::displayErrorAndDie(__('No location selected', 'positions'), false, ERROR);
-      
+
    } else {
-      $options = array('id'           => 0,
+      $options = ['id'           => 0,
                        'locations_id' => $_POST["locations_id"],
                        'itemtype'     => $_POST['itemtype'],
-                       'target'       => $_SERVER['PHP_SELF']."?locations_id=".$_POST["locations_id"]);
+                       'target'       => $_SERVER['PHP_SELF']."?locations_id=".$_POST["locations_id"]];
       PluginPositionsPosition::showMap($options);
    }
 }
@@ -66,4 +74,3 @@ if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
 } else {
    Html::helpFooter();
 }
-?>

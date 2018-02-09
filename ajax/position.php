@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of positions.
 
  positions is free software; you can redistribute it and/or modify
@@ -34,9 +34,9 @@ Html::header_nocache();
 
 Session::checkLoginUser();
 
-switch($_POST['action']){
+switch ($_POST['action']) {
    case 'setConfig':
-      if(isset($_POST['config']) && !empty($_POST['config'])){
+      if (isset($_POST['config']) && !empty($_POST['config'])) {
          $positions = new PluginPositionsPosition();
          $input = json_decode(stripslashes($_POST['config']), true);
          $input['name']          = $input['label'];

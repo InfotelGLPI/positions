@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of positions.
 
  positions is free software; you can redistribute it and/or modify
@@ -94,7 +94,7 @@ function plugin_positions_install() {
    }
 
    // Update to 4.0.1
-   if(!$DB->fieldExists("glpi_plugin_positions_positions", "width") && !$DB->fieldExists("glpi_plugin_positions_positions", "height")){
+   if (!$DB->fieldExists("glpi_plugin_positions_positions", "width") && !$DB->fieldExists("glpi_plugin_positions_positions", "height")) {
       $DB->runFile(GLPI_ROOT."/plugins/positions/sql/update-4.0.1.sql");
    }
 
@@ -121,14 +121,14 @@ function plugin_positions_install() {
    }
 
    // Update to 4.4.0
-   if(!$DB->fieldExists("glpi_plugin_positions_configs", "default_width")
-      && !$DB->fieldExists("glpi_plugin_positions_configs", "default_height")){
+   if (!$DB->fieldExists("glpi_plugin_positions_configs", "default_width")
+      && !$DB->fieldExists("glpi_plugin_positions_configs", "default_height")) {
       $DB->runFile(GLPI_ROOT."/plugins/positions/sql/update-4.4.0.sql");
    }
 
    if ($DB->tableExists("glpi_plugin_positions_profiles")) {
 
-      $notepad_tables = array('glpi_plugin_positions_positions');
+      $notepad_tables = ['glpi_plugin_positions_positions'];
 
       foreach ($notepad_tables as $t) {
          // Migrate data
@@ -151,12 +151,14 @@ function plugin_positions_install() {
    }
 
    $rep_files_positions = GLPI_PLUGIN_DOC_DIR."/positions";
-   if (!is_dir($rep_files_positions))
+   if (!is_dir($rep_files_positions)) {
       mkdir($rep_files_positions);
+   }
 
    $rep_files_positions_pics = GLPI_PLUGIN_DOC_DIR."/positions/pics";
-   if (!is_dir($rep_files_positions_pics))
+   if (!is_dir($rep_files_positions_pics)) {
       mkdir($rep_files_positions_pics);
+   }
 
    PluginPositionsProfile::initProfile();
    PluginPositionsProfile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
@@ -169,31 +171,33 @@ function plugin_positions_install() {
 function plugin_positions_uninstall() {
    global $DB;
 
-   $tables = array("glpi_plugin_positions_positions",
+   $tables = ["glpi_plugin_positions_positions",
                    "glpi_plugin_positions_positions_items",
                    "glpi_plugin_positions_imageitems",
                    "glpi_plugin_positions_infos",
-                   "glpi_plugin_positions_configs");
+                   "glpi_plugin_positions_configs"];
 
-   foreach($tables as $table)
+   foreach ($tables as $table) {
       $DB->query("DROP TABLE IF EXISTS `$table`;");
+   }
 
    $rep_files_positions = GLPI_PLUGIN_DOC_DIR."/positions";
 
    Toolbox::deleteDir($rep_files_positions);
 
-   $tables_glpi = array("glpi_displaypreferences",
+   $tables_glpi = ["glpi_displaypreferences",
                         "glpi_documents_items",
                         "glpi_savedsearches",
-                        "glpi_logs");
+                        "glpi_logs"];
 
-   foreach($tables_glpi as $table_glpi)
+   foreach ($tables_glpi as $table_glpi) {
       $DB->query("DELETE FROM `$table_glpi` WHERE `itemtype` = 'PluginPositionsPosition' ;");
+   }
 
    //Delete rights associated with the plugin
    $profileRight = new ProfileRight();
    foreach (PluginPositionsProfile::getAllRights() as $right) {
-      $profileRight->deleteByCriteria(array('name' => $right['field']));
+      $profileRight->deleteByCriteria(['name' => $right['field']]);
    }
 
    PluginPositionsMenu::removeRightsFromSession();
@@ -208,19 +212,20 @@ function plugin_positions_getDatabaseRelations() {
 
    $plugin = new Plugin();
 
-   if ($plugin->isActivated("positions"))
-      return array ("glpi_entities"=>array("glpi_plugin_positions_positions"=>"entities_id"));
-                     //"glpi_locations"=>array("glpi_plugin_positions_positions"=>"locations_id"),
+   if ($plugin->isActivated("positions")) {
+      return ["glpi_entities"=>["glpi_plugin_positions_positions"=>"entities_id"]];
+   } //"glpi_locations"=>array("glpi_plugin_positions_positions"=>"locations_id"),
 
-   else
-      return array();
+   else {
+      return [];
+   }
 }
 
 ////// SEARCH FUNCTIONS ///////() {
 
 function plugin_positions_getAddSearchOptions($itemtype) {
 
-   $sopt = array();
+   $sopt = [];
 
    if (in_array($itemtype, PluginPositionsPosition::getTypes(true))) {
       if (Session::haveRight("plugin_positions", READ)) {
@@ -239,7 +244,7 @@ function plugin_positions_getAddSearchOptions($itemtype) {
    return $sopt;
 }
 
-function plugin_positions_addLeftJoin($type,$ref_table,$new_table,$linkfield,&$already_link_tables) {
+function plugin_positions_addLeftJoin($type, $ref_table, $new_table, $linkfield, &$already_link_tables) {
 
    switch ($new_table) {
       case "glpi_plugin_positions_positions" : // From items
@@ -254,7 +259,7 @@ function plugin_positions_addLeftJoin($type,$ref_table,$new_table,$linkfield,&$a
    return "";
 }
 
-function plugin_positions_giveItem($type,$ID,$data,$num) {
+function plugin_positions_giveItem($type, $ID, $data, $num) {
    global $CFG_GLPI, $DB;
 
    $searchopt = &Search::getOptions($type);
@@ -300,7 +305,7 @@ function plugin_positions_giveItem($type,$ID,$data,$num) {
                         }
                         $query.=" ORDER BY `glpi_entities`.`completename`, `".$table_item."`.`$column`";
 
-                        if ($result_linked = $DB->query($query))
+                        if ($result_linked = $DB->query($query)) {
                            if ($DB->numrows($result_linked)) {
                               $item = new $itemtype();
                               while ($val = $DB->fetch_assoc($result_linked)) {
@@ -308,10 +313,13 @@ function plugin_positions_giveItem($type,$ID,$data,$num) {
                                     $out .= $item->getTypeName()." - ".$item->getLink()."<br>";
                                  }
                               }
-                           } else
+                           } else {
                               $out.= ' ';
-                     } else
+                           }
+                        }
+                     } else {
                         $out.=' ';
+                     }
                   }
                }
                return $out;
@@ -343,7 +351,7 @@ function plugin_positions_postinit() {
    global $CFG_GLPI, $PLUGIN_HOOKS;
 
    $plugin = 'positions';
-   foreach (array('add_css', 'add_javascript') as $type) {
+   foreach (['add_css', 'add_javascript'] as $type) {
       if (isset($PLUGIN_HOOKS[$type][$plugin])) {
          foreach ($PLUGIN_HOOKS[$type][$plugin] as $data) {
             if (!empty($PLUGIN_HOOKS[$type])) {
@@ -361,10 +369,10 @@ function plugin_positions_postinit() {
       }
    }
 
-   $PLUGIN_HOOKS['item_purge']['positions'] = array();
+   $PLUGIN_HOOKS['item_purge']['positions'] = [];
 
    foreach (PluginPositionsPosition::getTypes(true) as $type) {
-      $PLUGIN_HOOKS['item_purge']['positions'][$type] = array('PluginPositionsPosition','purgePositions');
+      $PLUGIN_HOOKS['item_purge']['positions'][$type] = ['PluginPositionsPosition','purgePositions'];
       CommonGLPI::registerStandardTab($type, 'PluginPositionsPosition');
    }
 }
@@ -430,7 +438,7 @@ function plugin_positions_postinit() {
 //            }
 //         }
 //         break;
-//      case "plugin_positions_del_item":     
+//      case "plugin_positions_del_item":
 //         foreach ($data["item"] as $key => $val) {
 //            if ($val == 1) {
 //               $restrict = "`items_id` = '".$key."'
@@ -457,4 +465,3 @@ function plugin_positions_postinit() {
 //   return $res;
 //}
 
-?>

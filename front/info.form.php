@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of positions.
 
  positions is free software; you can redistribute it and/or modify
@@ -26,17 +26,19 @@
  along with positions. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
- 
+
 include ('../../../inc/includes.php');
 
-if (!isset($_GET["id"])) $_GET["id"] = "";
+if (!isset($_GET["id"])) {
+   $_GET["id"] = "";
+}
 
 $info = new PluginPositionsInfo();
 
 if (isset($_POST["add"])) {
-   $info->check(-1, CREATE,$_POST);
+   $info->check(-1, CREATE, $_POST);
    $newID = $info->add($_POST);
-   
+
    if ($_SESSION['glpibackcreated']) {
       Html::redirect($info->getFormURL()."?id=".$newID);
    } else {
@@ -46,9 +48,9 @@ if (isset($_POST["add"])) {
 } else if (isset($_POST["update"])) {
    $info->check($_POST['id'], UPDATE);
    $info->update($_POST);
-   Html::back(); 
-   
-}else if (isset($_POST["delete"])) {
+   Html::back();
+
+} else if (isset($_POST["delete"])) {
    $info->check($_POST['id'], DELETE);
    $info->delete($_POST);
    $info->redirectToList();
@@ -57,16 +59,15 @@ if (isset($_POST["add"])) {
    $info->check($_POST['id'], PURGE);
    $info->restore($_POST);
    $info->redirectToList();
-   
+
 } else if (isset($_POST["purge"])) {
-   $info->check($_POST['id'],PURGE);
-   $info->delete($_POST,1);
+   $info->check($_POST['id'], PURGE);
+   $info->delete($_POST, 1);
    $info->redirectToList();
 
 } else {
-   Html::header(PluginPositionsPosition::getTypeName(),'',"tools","pluginpositionsmenu","info");
+   Html::header(PluginPositionsPosition::getTypeName(), '', "tools", "pluginpositionsmenu", "info");
    $info->display($_GET);
    Html::footer();
 }
 
-?>

@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of positions.
 
  positions is free software; you can redistribute it and/or modify
@@ -31,13 +31,15 @@ include ('../../../inc/includes.php');
 
 if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
    //from central
-   Html::header(PluginPositionsPosition::getTypeName(),'', "tools", "pluginpositionsmenu", "positions");
+   Html::header(PluginPositionsPosition::getTypeName(), '', "tools", "pluginpositionsmenu", "positions");
 } else {
    //from helpdesk
    Html::helpHeader(PluginPositionsPosition::getTypeName());
 }
 
-if (!isset($_POST["locations_id"])) $_POST["locations_id"] = 0;
+if (!isset($_POST["locations_id"])) {
+   $_POST["locations_id"] = 0;
+}
 
 PluginPositionsPosition::showLocationForm($_POST["locations_id"]);
 
@@ -47,4 +49,3 @@ if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
    Html::helpFooter();
 }
 
-?>
