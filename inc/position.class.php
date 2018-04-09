@@ -528,6 +528,7 @@ class PluginPositionsPosition extends CommonDBTM {
       $Doc->getFromDB($document_id);
       $path = GLPI_DOC_DIR."/".$Doc->fields["filepath"];
 
+      $tmpfile = GLPI_TMP_DIR."/".$document_id.$name;
       if ($extension=='PNG') {
 
          $srcImg  = imagecreatefrompng($path);
@@ -535,7 +536,7 @@ class PluginPositionsPosition extends CommonDBTM {
 
          imagecopyresampled($newImg, $srcImg, 0, 0, $x1, $y1, $width, $height, $width, $height);
 
-         imagepng($newImg, GLPI_DOC_DIR."/_uploads/".$document_id.$name.'.png');
+         imagepng($newImg, $tmpfile.'.png');
 
       } else if ($extension=='JPG' || $extension=='JPEG') {
 
@@ -544,7 +545,7 @@ class PluginPositionsPosition extends CommonDBTM {
 
          imagecopyresampled($newImg, $srcImg, 0, 0, $x1, $y1, $width, $height, $width, $height);
 
-         imagejpeg($newImg, GLPI_DOC_DIR."/_uploads/".$document_id.$name.'.jpg');
+         imagejpeg($newImg, $tmpfile.'.jpg');
 
       } else if ($extension=='GIF') {
 
@@ -553,7 +554,7 @@ class PluginPositionsPosition extends CommonDBTM {
 
          imagecopyresampled($newImg, $srcImg, 0, 0, $x1, $y1, $width, $height, $width, $height);
 
-         imagegif($newImg, GLPI_DOC_DIR."/_uploads/".$document_id.$name.'.gif');
+         imagegif($newImg, $tmpfile.'.gif');
       }
 
       //on test si l'utilisateur à cocher la case pour continuer l'ajout de sous lieu
@@ -658,12 +659,12 @@ class PluginPositionsPosition extends CommonDBTM {
                                           'items_id' => $newID,
                                           'entities_id' => $opt["entities_id"]]);
                $param = [
-                   "items_id" => $newID,
-                   "entities_id" => $opt["entities_id"],
-                   "locations_id" => $opt["locations_idParent"],
-                   "itemtype" => "Location",
-                   "x_coordinates" => -800,
-                   "y_coordinates" => -150
+                  "items_id"      => $newID,
+                  "entities_id"   => $opt["entities_id"],
+                  "locations_id"  => $opt["locations_idParent"],
+                  "itemtype"      => "Location",
+                  "x_coordinates" => -800,
+                  "y_coordinates" => -150
                ];
 
                $self->add($param);
