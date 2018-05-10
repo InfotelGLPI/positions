@@ -44,7 +44,8 @@ class PluginPositionsPosition extends CommonDBTM {
                           'Printer',
                           'Phone',
                           'Location',
-                          'Netpoint'
+                          'Netpoint',
+                          'User'
    ];
 
    /**
