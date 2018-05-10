@@ -539,7 +539,9 @@ class PluginPositionsInfo extends CommonDBTM {
                                'glpi_phonemodels',
                                'glpi_phonetypes',
                                'glpi_printermodels',
-                               'glpi_printertypes'];
+                               'glpi_printertypes',
+                               'glpi_usercategories',
+                               'glpi_usertitles'];
 
       if (in_array($searchOption['table'], $dropdown_tables)) {
          return "dropdown";
