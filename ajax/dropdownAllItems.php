@@ -35,7 +35,7 @@ Session::checkLoginUser();
 // Make a select box
 if (isset($_POST["type"]) && $_POST['action']) {
    if ($_POST['action'] == 'showType') {
-      $item = getItemForItemtype($_POST['type']."Type");
+      $item = getItemForItemtype($_POST['type'].PluginPositionsPosition::getPartOfClassName($_POST['type']));
    } else {
       $item = getItemForItemtype($_POST['type']);
    }
