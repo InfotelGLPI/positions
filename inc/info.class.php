@@ -569,7 +569,7 @@ class PluginPositionsInfo extends CommonDBTM {
          echo Html::formatNumber($display, 2);
 
       } else if ($searchOption['table'] == 'glpi_users') {
-         echo getUserName($display);
+         echo $display;
 
       } else if ($searchOption['field'] == 'contact_num') {
 
