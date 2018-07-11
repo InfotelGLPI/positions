@@ -115,7 +115,7 @@
    cursor:pointer;
 }
 
-.ui-draggable {
+.ui-draggable-position {
    float: left;
    width: 35px;
    height: 35px;
@@ -124,35 +124,35 @@
    position: absolute;
 }
 
-.ui-draggable .miniclose {
-    background-image:url(pics/miniclose.png);
-    position:absolute;
-    right:-10px;
-    top:-10px;
-    cursor:pointer;
-    height:15px;
-    width:15px;
-    z-index:3000;
-}
+/*.ui-draggable .miniclose {*/
+    /*background-image:url(pics/miniclose.png);*/
+    /*position:absolute;*/
+    /*right:-10px;*/
+    /*top:-10px;*/
+    /*cursor:pointer;*/
+    /*height:15px;*/
+    /*width:15px;*/
+    /*z-index:3000;*/
+/*}*/
 
-.ui-draggable .miniconfig {
-    background-image:url(pics/miniconfig.png);
-    position:absolute;
-    left:-10px;
-    top:-8px;
-    cursor:pointer;
-    height:14px;
-    width:14px;
-    z-index:3000;
-}
+/*.ui-draggable .miniconfig {*/
+    /*background-image:url(pics/miniconfig.png);*/
+    /*position:absolute;*/
+    /*left:-10px;*/
+    /*top:-8px;*/
+    /*cursor:pointer;*/
+    /*height:14px;*/
+    /*width:14px;*/
+    /*z-index:3000;*/
+/*}*/
 
-.ui-draggable-readonly {
-   float: left;
-   width: 35px;
-   height: 35px;
-   font-size: 0.8em;
-   position: absolute;
-}
+/*.ui-draggable-readonly {*/
+   /*float: left;*/
+   /*width: 35px;*/
+   /*height: 35px;*/
+   /*font-size: 0.8em;*/
+   /*position: absolute;*/
+/*}*/
 /*
 .ui-draggable-dragging {
    background: #2EFE2E;
