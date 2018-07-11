@@ -50,72 +50,85 @@ class PluginPositionsInfo extends CommonDBTM {
    }
 
    /**
-    * Get the Search options for the given Type
+    * Provides search options configuration. Do not rely directly
+    * on this, @see CommonDBTM::searchOptions instead.
+    *
+    * @since 9.3
     *
     * This should be overloaded in Class
     *
-    * @return array an *indexed* array of search options
+    * @return array a *not indexed* array of search options
     *
     * @see https://glpi-developer-documentation.rtfd.io/en/master/devapi/search.html
     **/
-   function getSearchOptions() {
-      $tab = [];
+   public function rawSearchOptions() {
 
-      $tab['common'] = self::getTypeName();
+      $tab = parent::rawSearchOptions();
 
-      $tab[1]['table']         = $this->getTable();
-      $tab[1]['field']         = 'name';
-      $tab[1]['name']          = __('Name');
-      $tab[1]['datatype']      = 'itemlink';
-      $tab[1]['itemlink_type'] = $this->getType();
-      $tab[1]['massiveaction'] = false;
+      $tab[] = [
+         'id'                 => '2',
+         'table'              => $this->getTable(),
+         'field'              => 'id',
+         'name'               => __('ID'),
+         'datatype'           => 'number',
+         'massiveaction'      => false
+      ];
 
-      $tab[2]['table']         = $this->getTable();
-      $tab[2]['field']         = 'id';
-      $tab[2]['name']          = __('ID');
-      $tab[2]['datatype']      = 'number';
-      $tab[2]['massiveaction'] = false;
+      $tab[] = [
+         'id'                 => '3',
+         'table'              => $this->getTable(),
+         'field'              => 'fields',
+         'name'               => __('Displayed fields', 'positions'),
+         'massiveaction'      => false,
+         'datatype'           => 'specific',
+         'additionalfields'   => [
+            '0'                  => 'itemtype'
+         ]
+      ];
 
-      $tab[3]['table']            = $this->getTable();
-      $tab[3]['field']            = 'fields';
-      $tab[3]['name']             = __('Displayed fields', 'positions');
-      $tab[3]['massiveaction']    = false;
-      $tab[3]['datatype']         = 'specific';
-      $tab[3]['additionalfields'] = ['itemtype'];
+      $tab[] = [
+         'id'                 => '4',
+         'table'              => $this->getTable(),
+         'field'              => 'itemtype',
+         'name'               => __('Equipment', 'positions'),
+         'massiveaction'      => false,
+         'datatype'           => 'itemtypename',
+         'forcegroupby'       => true
+      ];
 
-      $tab[4]['table']         = $this->getTable();
-      $tab[4]['field']         = 'itemtype';
-      $tab[4]['name']          = __('Equipment', 'positions');
-      $tab[4]['massiveaction'] = false;
-      $tab[4]['datatype']      = 'itemtypename';
-      $tab[4]['forcegroupby']  = true;
+      $tab[] = [
+         'id'                 => '14',
+         'table'              => $this->getTable(),
+         'field'              => 'date_mod',
+         'name'               => __('Last update'),
+         'massiveaction'      => false,
+         'datatype'           => 'datetime'
+      ];
 
-      $tab[86]['table']    = $this->getTable();
-      $tab[86]['field']    = 'is_recursive';
-      $tab[86]['name']     = __('Child entities');
-      $tab[86]['datatype'] = 'bool';
+      $tab[] = [
+         'id'                 => '16',
+         'table'              => $this->getTable(),
+         'field'              => 'comment',
+         'name'               => __('Comments'),
+         'datatype'           => 'text'
+      ];
 
-      $tab[14]['table']         = $this->getTable();
-      $tab[14]['field']         = 'date_mod';
-      $tab[14]['name']          = __('Last update');
-      $tab[14]['massiveaction'] = false;
-      $tab[14]['datatype']      = 'datetime';
+      $tab[] = [
+         'id'                 => '30',
+         'table'              => $this->getTable(),
+         'field'              => 'is_active',
+         'name'               => __('Active'),
+         'datatype'           => 'bool',
+         'massiveaction'      => false
+      ];
 
-      $tab[16]['table']    = $this->getTable();
-      $tab[16]['field']    = 'comment';
-      $tab[16]['name']     = __('Comments');
-      $tab[16]['datatype'] = 'text';
-
-      $tab[30]['table']         = $this->getTable();
-      $tab[30]['field']         = 'is_active';
-      $tab[30]['name']          = __('Active');
-      $tab[30]['datatype']      = 'bool';
-      $tab[30]['massiveaction'] = false;
-
-      $tab[80]['table']    = 'glpi_entities';
-      $tab[80]['field']    = 'completename';
-      $tab[80]['name']     = __('Entity');
-      $tab[80]['datatype'] = 'dropdown';
+      $tab[] = [
+         'id'                 => '80',
+         'table'              => 'glpi_entities',
+         'field'              => 'completename',
+         'name'               => __('Entity'),
+         'datatype'           => 'dropdown'
+      ];
 
       return $tab;
    }

@@ -33,7 +33,7 @@ function plugin_positions_install() {
    include_once (GLPI_ROOT."/plugins/positions/inc/profile.class.php");
 
    if (!$DB->tableExists("glpi_plugin_positions_positions")) {
-      $DB->runFile(GLPI_ROOT."/plugins/positions/sql/empty-4.4.0.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/positions/sql/empty-4.5.0.sql");
    }
 
    //v1.0.0 to V2.0.0
@@ -42,11 +42,11 @@ function plugin_positions_install() {
 
       $query = "ALTER TABLE `glpi_plugin_positions_positions` 
                 ADD `items_id` int(11) NOT NULL default '0' COMMENT 'RELATION to various tables, according to itemtype (id)';";
-      $result = $DB->query($query);
+      $DB->query($query);
 
       $query = "ALTER TABLE `glpi_plugin_positions_positions` 
                 ADD `itemtype` varchar(100) collate utf8_unicode_ci NOT NULL COMMENT 'see .class.php file';";
-      $result = $DB->query($query);
+      $DB->query($query);
 
       $query_ = "SELECT *
                  FROM `glpi_plugin_positions_positions_items` ";
@@ -58,12 +58,12 @@ function plugin_positions_install() {
                       SET `items_id` = '".$data["items_id"]."',
                           `itemtype` = '".$data["itemtype"]."'
                       WHERE `id` = '".$data["id"]."';";
-            $result = $DB->query($query);
+            $DB->query($query);
          }
       }
 
       $query = "DROP TABLE `glpi_plugin_positions_positions_items`;";
-      $result = $DB->query($query);
+      $DB->query($query);
    }
    //v1.0.0 to V2.0.0
    if (!$DB->tableExists("glpi_plugin_positions_infos")) {
@@ -90,7 +90,7 @@ function plugin_positions_install() {
            && $DB->fieldExists("glpi_plugin_positions_positions", "documents_id")) {
 
       $query = "ALTER TABLE `glpi_plugin_positions_positions` DROP `documents_id`;";
-      $result = $DB->query($query);
+      $DB->query($query);
    }
 
    // Update to 4.0.1
@@ -106,7 +106,7 @@ function plugin_positions_install() {
                `use_view_all_object` tinyint(1) NOT NULL default '0',
                PRIMARY KEY  (`id`)
             )ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
-      $result = $DB->query($query);
+      $DB->query($query);
 
       $query = "INSERT INTO `glpi_plugin_positions_configs` (`id`,`use_view_all_object`) VALUES ('1', '0');";
       $DB->query($query);
@@ -114,7 +114,7 @@ function plugin_positions_install() {
       //add fields locations_id
       $query = "ALTER TABLE `glpi_plugin_positions_positions` 
                 ADD `locations_id` int(11) NOT NULL default '0' COMMENT 'RELATION to table glpi_locations';";
-      $result = $DB->query($query);
+      $DB->query($query);
 
       include(GLPI_ROOT . "/plugins/positions/sql/update_421_422.php");
       update421to422();
@@ -260,7 +260,7 @@ function plugin_positions_addLeftJoin($type, $ref_table, $new_table, $linkfield,
 }
 
 function plugin_positions_giveItem($type, $ID, $data, $num) {
-   global $CFG_GLPI, $DB;
+   global $DB;
 
    $searchopt = &Search::getOptions($type);
    $table     = $searchopt[$ID]["table"];
@@ -348,7 +348,7 @@ function plugin_positions_giveItem($type, $ID, $data, $num) {
 }
 
 function plugin_positions_postinit() {
-   global $CFG_GLPI, $PLUGIN_HOOKS;
+   global $PLUGIN_HOOKS;
 
    $plugin = 'positions';
    foreach (['add_css', 'add_javascript'] as $type) {
@@ -376,92 +376,3 @@ function plugin_positions_postinit() {
       CommonGLPI::registerStandardTab($type, 'PluginPositionsPosition');
    }
 }
-
-////// SPECIFIC MODIF MASSIVE FUNCTIONS ///////
-
-//function plugin_positions_MassiveActions($type) {
-
-//   $types = PluginPositionsPosition::getTypes(true);
-//   foreach ($types as $key => $value) {
-//      if ($value == "Location")
-//         unset($types[$key]);
-//   }
-//   if (in_array($type, $types)) {
-//      return array("plugin_positions_add_item" => __('Create coordinates', 'positions'),
-//                     "plugin_positions_del_item" => __('Delete coordinates', 'positions'));
-//   }
-//   return array();
-//}
-
-//function plugin_positions_MassiveActionsDisplay($options = array()) {
-
-//   if (in_array($options['itemtype'], PluginPositionsPosition::getTypes(true))) {
-//      echo "<input type=\"submit\" name=\"massiveaction\" class=\"submit\" value=\"" . _sx('button','Post') . "\" >";
-//   }
-//   return "";
-//}
-
-//function plugin_positions_MassiveActionsProcess($data) {
-
-//   $pos = new PluginPositionsPosition();
-
-//   $res = array('ok' => 0,
-//            'ko' => 0,
-//            'noright' => 0);
-
-//   switch ($data['action']) {
-//      case "plugin_positions_add_item":
-//         $i = 0;
-//         foreach ($data["item"] as $key => $val) {
-//            if ($val == 1) {
-//               $entity=$_SESSION["glpiactive_entity"];
-//               $item = new $data['itemtype'];
-//               $values = array('items_id'      => $key,
-//                              'itemtype'      => $data['itemtype'],
-//                              'entities_id'   => $entity,
-//                              'x_coordinates' => $i,
-//                              'massiveaction' => 1);
-
-//               $restrict = "`items_id` = '".$values["items_id"]."'
-//                     AND `itemtype` = '".$values["itemtype"]."'";
-//               if (countElementsInTable("glpi_plugin_positions_positions",$restrict) == 0) {
-//                  $pos->check(-1,'w',$values);
-//                  if ($pos->add($values)) {
-//                     $res['ok']++;
-//                     $i=$i+35;
-//                  } else {
-//                     $res['ko']++;
-//                  }
-//               } else {
-//                  $res['ko']++;
-//               }
-//            }
-//         }
-//         break;
-//      case "plugin_positions_del_item":
-//         foreach ($data["item"] as $key => $val) {
-//            if ($val == 1) {
-//               $restrict = "`items_id` = '".$key."'
-//                     AND `itemtype` = '".$data["itemtype"]."'";
-//               $items = $dbu->getAllDataFromTable("glpi_plugin_positions_positions", $restrict);
-//               if (!empty($items)) {
-//                  foreach ($items as $item) {
-//                     $values = array('id' => $item["id"],
-//                                    'delete' => 'delete');
-//                  }
-//                  $pos->check($values['id'],'w');
-//                  if ($pos->delete($values,1)) {
-//                     $res['ok']++;
-//                  } else {
-//                     $res['ko']++;
-//                  }
-//               } else {
-//                  $res['ko']++;
-//               }
-//            }
-//         }
-//         break;
-//   }
-//   return $res;
-//}
-

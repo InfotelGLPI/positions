@@ -38,13 +38,13 @@ class PluginPositionsPosition extends CommonDBTM {
    protected $usenotepad              = true;
 
    static $types = ['Computer',
-                          'Monitor',
-                          'NetworkEquipment',
-                          'Peripheral',
-                          'Printer',
-                          'Phone',
-                          'Location',
-                          'Netpoint'
+                    'Monitor',
+                    'NetworkEquipment',
+                    'Peripheral',
+                    'Printer',
+                    'Phone',
+                    'Location',
+                    'Netpoint'
    ];
 
    /**
@@ -185,52 +185,79 @@ class PluginPositionsPosition extends CommonDBTM {
       }
    }
 
-   function getSearchOptions() {
+   /**
+    * Provides search options configuration. Do not rely directly
+    * on this, @see CommonDBTM::searchOptions instead.
+    *
+    * @since 9.3
+    *
+    * This should be overloaded in Class
+    *
+    * @return array a *not indexed* array of search options
+    *
+    * @see https://glpi-developer-documentation.rtfd.io/en/master/devapi/search.html
+    **/
+   public function rawSearchOptions() {
 
-      $tab = [];
+      $tab = parent::rawSearchOptions();
 
-      $tab['common']           = self::getTypeName();
+      $tab = array_merge($tab, Location::rawSearchOptionsToAdd());
 
-      $tab[1]['table']         = $this->getTable();
-      $tab[1]['field']         = 'name';
-      $tab[1]['name']          = __('Name');
-      $tab[1]['datatype']      = 'itemlink';
-      $tab[1]['itemlink_type'] = $this->getType();
+      $tab[] = [
+         'id'                 => '8',
+         'table'              => $this->getTable(),
+         'field'              => 'x_coordinates',
+         'name'               => __('Coordinate x', 'positions')
+      ];
 
-      $tab[3]['table']         = $this->getTable();
-      $tab[3]['field']         = 'x_coordinates';
-      $tab[3]['name']          = __('Coordinate x', 'positions');
+      $tab[] = [
+         'id'                 => '4',
+         'table'              => $this->getTable(),
+         'field'              => 'y_coordinates',
+         'name'               => __('Coordinate y', 'positions')
+      ];
 
-      $tab[4]['table']         = $this->getTable();
-      $tab[4]['field']         = 'y_coordinates';
-      $tab[4]['name']          = __('Coordinate y', 'positions');
+      $tab[] = [
+         'id'                 => '5',
+         'table'              => $this->getTable(),
+         'field'              => 'items_id',
+         'name'               => __('Associated element'),
+         'massiveaction'      => false,
+         'nosearch'           => true
+      ];
 
-      $tab[5]['table']         = $this->getTable();
-      $tab[5]['field']         = 'items_id';
-      $tab[5]['name']          = __('Associated element');
-      $tab[5]['massiveaction'] = false;
-      $tab[5]['nosearch']      = true;
+      $tab[] = [
+         'id'                 => '6',
+         'table'              => $this->getTable(),
+         'field'              => 'date_mod',
+         'name'               => __('Last update'),
+         'massiveaction'      => false,
+         'datatype'           => 'datetime'
+      ];
 
-      $tab[6]['table']         = $this->getTable();
-      $tab[6]['field']         = 'date_mod';
-      $tab[6]['name']          = __('Last update');
-      $tab[6]['massiveaction'] = false;
-      $tab[6]['datatype']      = 'datetime';
+      $tab[] = [
+         'id'                 => '7',
+         'table'              => $this->getTable(),
+         'field'              => 'is_recursive',
+         'name'               => __('Child entities'),
+         'datatype'           => 'bool'
+      ];
 
-      $tab[7]['table']         = $this->getTable();
-      $tab[7]['field']         = 'is_recursive';
-      $tab[7]['name']          = __('Child entities');
-      $tab[7]['datatype']      = 'bool';
+      $tab[] = [
+         'id'                 => '30',
+         'table'              => $this->getTable(),
+         'field'              => 'id',
+         'name'               => __('ID'),
+         'datatype'           => 'number'
+      ];
 
-      $tab[30]['table']        = $this->getTable();
-      $tab[30]['field']        = 'id';
-      $tab[30]['name']         = __('ID');
-      $tab[30]['datatype']     = 'number';
-
-      $tab[80]['table']        = 'glpi_entities';
-      $tab[80]['field']        = 'completename';
-      $tab[80]['name']         = __('Entity');
-      $tab[80]['datatype']     = 'dropdown';
+      $tab[] = [
+         'id'                 => '80',
+         'table'              => 'glpi_entities',
+         'field'              => 'completename',
+         'name'               => __('Entity'),
+         'datatype'           => 'dropdown'
+      ];
 
       return $tab;
    }
@@ -877,7 +904,7 @@ class PluginPositionsPosition extends CommonDBTM {
                $params["hauteur"] = $infos_image[1];
 
                $params["download"] = 1;
-               if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+               if (Session::getCurrentInterface() == 'central') {
                   $params["download"] = 0;
                }
 
@@ -1398,7 +1425,7 @@ class PluginPositionsPosition extends CommonDBTM {
             $text .= $itemclass->fields["name"];
          }
       }
-      if ($_SESSION['glpiactiveprofile']['interface'] != 'central') {
+      if (Session::getCurrentInterface() != 'central') {
          $text .= PluginPositionsInfo::getCallValue($itemclass, true);
       }
       return $text;
@@ -1517,7 +1544,7 @@ class PluginPositionsPosition extends CommonDBTM {
             }
          }
       }
-      if ($_SESSION['glpiactiveprofile']['interface'] == 'central' || $itemclass->getType() == 'Location') {
+      if (Session::getCurrentInterface() == 'central' || $itemclass->getType() == 'Location') {
          PluginPositionsInfo::getDirectLink($itemclass);
       }
 
@@ -1789,7 +1816,8 @@ class PluginPositionsPosition extends CommonDBTM {
       if ($itemtype != 'User'
             && $itemtype != 'PluginResourcesResource') {
          $position = new PluginPositionsPosition();
-         $position->getFromDBByQuery("WHERE itemtype ='" . $itemtype . "' AND items_id = " . $id);
+         $position->getFromDBByCrit(['itemtype' => $itemtype,
+                                     'items_id' => $id]);
          $documents_id = self::getDocument($position->fields['locations_id']);
          $locations_id = $position->fields['locations_id'];
 

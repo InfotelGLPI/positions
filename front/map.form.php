@@ -29,7 +29,7 @@
 
 include ('../../../inc/includes.php');
 
-if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+if (Session::getCurrentInterface() == 'central') {
    //from central
    Html::header(PluginPositionsPosition::getTypeName(), '', "tools", "pluginpositionsmenu", "positions");
 } else {
@@ -43,7 +43,7 @@ if (!isset($_POST["locations_id"])) {
 
 PluginPositionsPosition::showLocationForm($_POST["locations_id"]);
 
-if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+if (Session::getCurrentInterface() == 'central') {
    Html::footer();
 } else {
    Html::helpFooter();

@@ -45,7 +45,7 @@ if (!isset($_POST["itemtype"])) {
    $_POST["itemtype"] = $types;
 }
 
-if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+if (Session::getCurrentInterface() == 'central') {
    //from central
    Html::header(PluginPositionsPosition::getTypeName(), '', "tools", "pluginpositionsmenu", "positions");
 } else {
@@ -69,7 +69,7 @@ if ($pos->canView() || Session::haveRight("config", UPDATE)) {
    }
 }
 
-if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
+if (Session::getCurrentInterface() == 'central') {
    Html::footer();
 } else {
    Html::helpFooter();
