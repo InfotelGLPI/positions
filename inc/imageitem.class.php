@@ -300,7 +300,7 @@ class PluginPositionsImageItem extends CommonDBTM {
                }
                //$item = new $ligne["itemtype"]();
                echo "<td>" . $item->getTypeName() . "</td>";
-               $class     = $ligne["itemtype"] . "Type";
+               $class     = $ligne["itemtype"] . PluginPositionsPosition::getPartOfClassName($ligne["itemtype"]);
                $typeclass = new $class();
                $typeclass->getFromDB($ligne["type"]);
                $name = $ligne["type"];

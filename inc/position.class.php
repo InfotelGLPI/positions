@@ -44,7 +44,8 @@ class PluginPositionsPosition extends CommonDBTM {
                           'Printer',
                           'Phone',
                           'Location',
-                          'Netpoint'
+                          'Netpoint',
+                          'User'
    ];
 
    /**
@@ -56,8 +57,26 @@ class PluginPositionsPosition extends CommonDBTM {
       return _n('Cartography', 'Cartographies', $nb, 'positions');
    }
 
+    /**
+     * Returns the last part of Classname for Type
+     *
+     * @return string
+     **/
+    public static function getPartOfClassName($itemtype) {
+        switch($itemtype)
+        {
+            case 'User':
+                $itemtype = "Category";
+                break;
+            default:
+                $itemtype = "Type";
+        }
 
-   function getRights($interface = 'central') {
+        return $itemtype;
+    }
+
+
+    function getRights($interface = 'central') {
 
       $values = parent::getRights();
 
@@ -1191,7 +1210,7 @@ class PluginPositionsPosition extends CommonDBTM {
                         $objects[$val['id']] = $options;
 
                      } else {
-                        $itemtype = $val['itemtype']."Type";
+                        $itemtype = $val['itemtype'].PluginPositionsPosition::getPartOfClassName($val['itemtype']);
                         $typefield = getForeignKeyFieldForTable(getTableForItemType($itemtype));
                         $imgitem = new PluginPositionsImageItem();
                         if (isset($itemclass->fields[$typefield])) {
