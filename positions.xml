@@ -24,6 +24,10 @@
    </authors>
    <versions>
       <version>
+         <num>4.5.0</num>
+         <compatibility>9.3</compatibility>
+      </version>
+      <version>
          <num>4.4.0</num>
          <compatibility>9.2</compatibility>
       </version>
@@ -53,15 +57,20 @@
       </version>
    </versions>
    <langs>
-      <lang>en_GB</lang>
-      <lang>fr_FR</lang>
+      <lang>cs_CZ</lang>
       <lang>de_DE</lang>
+      <lang>en_GB</lang>
+      <lang>es_AR</lang>
       <lang>es_ES</lang>
+      <lang>fr_FR</lang>
+      <lang>it_IT</lang>
       <lang>pl_PL</lang>
       <lang>pt_BR</lang>
+      <lang>pt_PT</lang>
       <lang>ro_RO</lang>
+      <lang>ru_RU</lang>
       <lang>tr_TR</lang>
-      <lang>es_AR</lang>
+
       <lang>ru_RU</lang>
    </langs>
    <license><![CDATA[GPL v2+]]></license>
