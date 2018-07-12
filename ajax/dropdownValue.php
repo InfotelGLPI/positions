@@ -128,7 +128,7 @@ if (isset($_GET["name"]) && $_GET["name"] != "type") {
 
 $field = "name";
 
-if ($_GET['searchText']!=$CFG_GLPI["ajax_wildcard"]) {
+if ($_GET['searchText'] != '__VALUE__' && $_GET['searchText']!=$CFG_GLPI["ajax_wildcard"]) {
    $where .= " AND $field ".Search::makeTextSearch($_GET['searchText']);
 }
 

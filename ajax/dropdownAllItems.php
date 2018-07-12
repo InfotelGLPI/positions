@@ -67,7 +67,9 @@ if (isset($_POST["type"]) && $_POST['action']) {
 
       $field_id = Html::cleanId("dropdown_".$params['name'].$params['rand']);
 
-      echo Html::jsAjaxDropdown($_POST["myname"], $field_id, $CFG_GLPI['root_doc']."/plugins/positions/ajax/dropdownValue.php", $params);
+      echo Html::jsAjaxDropdown($_POST["myname"], $field_id,
+                                $CFG_GLPI['root_doc']."/plugins/positions/ajax/dropdownValue.php",
+                                $params);
 
       if (isset($_POST['value']) && $_POST['value'] > 0) {
          $params['searchText'] = $CFG_GLPI["ajax_wildcard"];

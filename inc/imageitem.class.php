@@ -69,11 +69,11 @@ class PluginPositionsImageItem extends CommonDBTM {
                                       ['emptylabel' => Dropdown::EMPTY_VALUE, 'width' => 150]);
 
       $params = ['type'            => '__VALUE__',
-                      'value'           => $value,
-                      'myname'          => $myname,
-                      'action'          => $action,
-                      'entity_restrict' => $entity_restrict,
-                      'locations_id'    => $locations_id];
+                 'value'           => $value,
+                 'myname'          => $myname,
+                 'action'          => $action,
+                 'entity_restrict' => $entity_restrict,
+                 'locations_id'    => $locations_id];
 
       Ajax::updateItemOnSelectEvent("dropdown_$myname$rand", "show_$myname$rand",
                                     $CFG_GLPI["root_doc"] ."/plugins/positions/ajax/dropdownAllItems.php", $params);
