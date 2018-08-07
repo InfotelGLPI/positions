@@ -44,19 +44,20 @@ $idpos    = $_GET['id'];
 $pos = new PluginPositionsPosition();
 
 if ($itemtype == 'Location') {
-   PluginPositionsPosition::showGeolocLocation($itemtype, $items_id);
+   PluginPositionsPosition::showGeolocLocation($items_id);
 } else {
 
    $detail   = new PluginPositionsInfo();
    $restrict = "`is_active` = 1 ";
    $pos->getFromDB($idpos);
+   $dbu      = new DbUtils();
+
    $restrict = "`is_active` = '1' AND `is_deleted` = '0'";
-   $restrict .= getEntitiesRestrictRequest(" AND ", "glpi_plugin_positions_infos", '', '', $pos->maybeRecursive());
-   $dbu   = new DbUtils();
-   $infos = $dbu->getAllDataFromTable('glpi_plugin_positions_infos', $restrict);
+   $restrict .= $dbu->getEntitiesRestrictRequest(" AND ", "glpi_plugin_positions_infos", '', '', $pos->maybeRecursive());
+   $infos    = $dbu->getAllDataFromTable('glpi_plugin_positions_infos', $restrict);
 
    $item = new $itemtype();
    $item->getFromDB($items_id);
 
-   PluginPositionsPosition::showOverlay($items_id, $image, $item, $infos);
+   PluginPositionsPosition::showOverlay($image, $item, $infos);
 }

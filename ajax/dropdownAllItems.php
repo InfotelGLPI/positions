@@ -34,10 +34,11 @@ Session::checkLoginUser();
 
 // Make a select box
 if (isset($_POST["type"]) && $_POST['action']) {
+   $dbu = new DbUtils();
    if ($_POST['action'] == 'showType') {
-      $item = getItemForItemtype($_POST['type']."Type");
+      $item = $dbu->getItemForItemtype($_POST['type']."Type");
    } else {
-      $item = getItemForItemtype($_POST['type']);
+      $item = $dbu->getItemForItemtype($_POST['type']);
    }
 
    $itemtype = $_POST['type'];

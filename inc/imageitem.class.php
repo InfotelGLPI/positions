@@ -141,8 +141,9 @@ class PluginPositionsImageItem extends CommonDBTM {
                              'img'      => $values["img"]]);
          }
       } else {
+         $dbu    = new DbUtils();
          $query  = "SELECT * 
-                   FROM `" . getTableForItemType($values["itemtype"] . "Type") . "` ";
+                   FROM `" . $dbu->getTableForItemType($values["itemtype"] . "Type") . "` ";
          $result = $DB->query($query);
          $number = $DB->numrows($result);
          $i      = 0;
@@ -295,7 +296,8 @@ class PluginPositionsImageItem extends CommonDBTM {
                if ($number == 1) {
                   echo "<tr class='tab_bg_1'>";
                }
-               if (!($item = getItemForItemtype($ligne["itemtype"]))) {
+               $dbu = new DbUtils();
+               if (!($item = $dbu->getItemForItemtype($ligne["itemtype"]))) {
                   continue;
                }
                //$item = new $ligne["itemtype"]();

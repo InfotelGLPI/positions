@@ -90,12 +90,13 @@ $multi = false;
  $config->getFromDB(1);
 
 if (isset($_GET["name"]) && $_GET["name"] != "type") {
+   $dbu = new DbUtils();
    if (!$config->fields['use_view_all_object']) {
       if ($_GET['locations_id'] != -1) {
          $where .= " AND `locations_id` = '" . $_GET['locations_id'] . "'";
       }
    } else {
-      $locations = getSonsOf('glpi_locations', $_GET['locations_id']);
+      $locations = $dbu->getSonsOf('glpi_locations', $_GET['locations_id']);
       $where .= " AND `locations_id` IN (" . implode(',', $locations). ")";
    }
    if ($item->maybeDeleted()) {
@@ -109,7 +110,7 @@ if (isset($_GET["name"]) && $_GET["name"] != "type") {
       $multi = $item->maybeRecursive();
 
       if (isset($_GET["entity_restrict"]) && !($_GET["entity_restrict"]<0)) {
-         $where .= getEntitiesRestrictRequest("AND", $_GET['table'], "entities_id",
+         $where .= $dbu->getEntitiesRestrictRequest("AND", $_GET['table'], "entities_id",
                                               $_GET["entity_restrict"], $multi);
 
          if (is_array($_GET["entity_restrict"]) && count($_GET["entity_restrict"])>1) {
@@ -117,7 +118,7 @@ if (isset($_GET["name"]) && $_GET["name"] != "type") {
          }
 
       } else {
-         $where .= getEntitiesRestrictRequest("AND", $_GET['table'], '', '', $multi);
+         $where .= $dbu->getEntitiesRestrictRequest("AND", $_GET['table'], '', '', $multi);
 
          if (count($_SESSION['glpiactiveentities'])>1) {
             $multi = true;

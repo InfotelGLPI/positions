@@ -233,10 +233,10 @@ class PluginPositionsInfo extends CommonDBTM {
       } else {
 
          $possible_types = PluginPositionsPosition::getTypes();
-
-         $restrict = "`is_active` = '1' AND `is_deleted` = '0'";
-         $restrict .= getEntitiesRestrictRequest(" AND ", "glpi_plugin_positions_infos", '', '',
-                                                 $this->maybeRecursive());
+         $dbu            = new DbUtils();
+         $restrict       = "`is_active` = '1' AND `is_deleted` = '0'";
+         $restrict       .= $dbu->getEntitiesRestrictRequest(" AND ", "glpi_plugin_positions_infos", '', '',
+                                                             $this->maybeRecursive());
          $dbu   = new DbUtils();
          $types = $dbu->getAllDataFromTable('glpi_plugin_positions_infos', $restrict);
 
@@ -300,13 +300,15 @@ class PluginPositionsInfo extends CommonDBTM {
       echo "<span id='span_fields' name='span_fields'>";
       echo "<select name='_fields[]' multiple size='15' style='width:400px'>";
 
-      foreach ($DB->list_fields(getTableForItemType($config->fields['itemtype'])) as $field) {
+      $dbu = new DbUtils();
+      foreach ($DB->list_fields($dbu->getTableForItemType($config->fields['itemtype'])) as $field) {
 
-         $searchOption = $item->getSearchOptionByField('field', $field['Field'], getTableForItemType($item->getType()));
+         $searchOption = $item->getSearchOptionByField('field', $field['Field'],
+                                                       $dbu->getTableForItemType($item->getType()));
 
          if (empty($searchOption)) {
-            if ($table = getTableNameForForeignKeyField($field['Field'])) {
-               $crit = getItemForItemtype(getItemTypeForTable($table));
+            if ($table = $dbu->getTableNameForForeignKeyField($field['Field'])) {
+               $crit = $dbu->getItemForItemtype($dbu->getItemTypeForTable($table));
                if ($crit instanceof CommonTreeDropdown) {
                   $searchOption = $item->getSearchOptionByField('field', 'completename', $table);
                } else {
@@ -492,15 +494,16 @@ class PluginPositionsInfo extends CommonDBTM {
 
          $input  = explode(',', $item['fields']);
          $target = new $item['itemtype']();
-         foreach ($DB->list_fields(getTableForItemType($item['itemtype'])) as $field) {
+         $dbu    = new DbUtils();
+         foreach ($DB->list_fields($dbu->getTableForItemType($item['itemtype'])) as $field) {
 
             if (in_array($field['Field'], $input)) {
                $searchOption = $target->getSearchOptionByField('field', $field['Field'],
-                                                             getTableForItemType($target->getType()));
+                                                               $dbu->getTableForItemType($target->getType()));
 
                if (empty($searchOption)) {
-                  if ($table = getTableNameForForeignKeyField($field['Field'])) {
-                     $crit = getItemForItemtype(getItemTypeForTable($table));
+                  if ($table = $dbu->getTableNameForForeignKeyField($field['Field'])) {
+                     $crit = $dbu->getItemForItemtype($dbu->getItemTypeForTable($table));
                      if ($crit instanceof CommonTreeDropdown) {
                         $searchOption = $target->getSearchOptionByField('field', 'completename', $table);
                      } else {
@@ -580,7 +583,8 @@ class PluginPositionsInfo extends CommonDBTM {
          echo Html::formatNumber($display, 2);
 
       } else if ($searchOption['table'] == 'glpi_users') {
-         echo getUserName($display);
+         $dbu = new DbUtils();
+         echo $dbu->getUserName($display);
 
       } else if ($searchOption['field'] == 'contact_num') {
 
@@ -684,7 +688,8 @@ class PluginPositionsInfo extends CommonDBTM {
                            }
                            if (isset($contact_num) && $contact_num != null) {
                               if (!$export) {
-                                 if (countElementsInTable("glpi_phones", $condition) > 1) {
+                                 $dbu = new DbUtils();
+                                 if ($dbu->countElementsInTable("glpi_phones", $condition) > 1) {
                                     echo $location . " : <br>";
                                  }
                                  echo "<span class='title'>" . __('Alternate username number') . " : </span>";

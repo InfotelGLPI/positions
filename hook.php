@@ -281,6 +281,7 @@ function plugin_positions_giveItem($type, $ID, $data, $num) {
                $out           = '';
                $positions_id  = $data['id'];
                if ($number_device > 0) {
+                  $dbu = new DbUtils();
                   for ($i = 0; $i < $number_device; $i++) {
                      $column   = "name";
                      $itemtype = $DB->result($result_device, $i, "itemtype");
@@ -290,7 +291,7 @@ function plugin_positions_giveItem($type, $ID, $data, $num) {
                      }
                      $item = new $itemtype();
                      if ($item->canView()) {
-                        $table_item = getTableForItemType($itemtype);
+                        $table_item = $dbu->getTableForItemType($itemtype);
 
                         $query = "SELECT `".$table_item."`.*, `glpi_plugin_positions_positions`.`id` AS items_id, `glpi_entities`.`id` AS entity "
                                 ."FROM `glpi_plugin_positions_positions`, `".$table_item."` "
@@ -298,7 +299,7 @@ function plugin_positions_giveItem($type, $ID, $data, $num) {
                                 ."WHERE `".$table_item."`.`id` = `glpi_plugin_positions_positions`.`items_id`
                                   AND `glpi_plugin_positions_positions`.`itemtype` = '$itemtype'
                                   AND `glpi_plugin_positions_positions`.`id` = '".$positions_id."' "
-                                .getEntitiesRestrictRequest(" AND ", $table_item, '', '', $item->maybeRecursive());
+                                .$dbu->getEntitiesRestrictRequest(" AND ", $table_item, '', '', $item->maybeRecursive());
 
                         if ($item->maybeTemplate()) {
                            $query.=" AND `".$table_item."`.`is_template` = '0'";
