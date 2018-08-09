@@ -64,9 +64,11 @@ $where =" WHERE `".$_GET['table']."`.`id` NOT IN ('".$_GET['value2']."'";
 $used = [];
 $dbu = new DbUtils();
 if ($_GET["name"] != "type") {
-   $datas = $dbu->getAllDataFromTable("glpi_plugin_positions_positions", "`itemtype` = '".$_GET['itemtype']."'");
+   $datas = $dbu->getAllDataFromTable("glpi_plugin_positions_positions",
+                                      ["itemtype" => $_GET['itemtype']]);
 } else {
-   $datas = $dbu->getAllDataFromTable("glpi_plugin_positions_imageitems", "`itemtype` = '".$_GET['itemtype']."'");
+   $datas = $dbu->getAllDataFromTable("glpi_plugin_positions_imageitems",
+                                      ["itemtype" => $_GET['itemtype']]);
 }
 if (!empty($datas)) {
    foreach ($datas as $data) {

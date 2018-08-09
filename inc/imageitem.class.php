@@ -371,7 +371,7 @@ class PluginPositionsImageItem extends CommonDBTM {
    function displayItemImage($type, $itemtype) {
 
       $image_name = "";
-      $restrict   = "`itemtype` = '$itemtype'";
+      $restrict   = ["itemtype" => $itemtype];
       $dbu        = new DbUtils();
       $datas      = $dbu->getAllDataFromTable($this->getTable(), $restrict);
 

@@ -39,7 +39,8 @@ if (isset($_GET["users_id"])) {
    $plugin = new Plugin();
    if ($plugin->isActivated("resources")) {
       //recherche de la ressource lie a ce user
-      $condition = "`items_id`= '".$_GET["users_id"]."' and `itemtype` = 'User'";
+      $condition = ["items_id" => $_GET["users_id"],
+                    "itemtype" => 'User'];
       $dbu = new DbUtils();
       $infos = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items', $condition);
       if (!empty($infos)) {
@@ -47,10 +48,10 @@ if (isset($_GET["users_id"])) {
             $ressource     = new PluginResourcesResource();
             $ressource->getFromDB($info['plugin_resources_resources_id']);
 
-            $restrict = "`items_id` = '" . $ressource->fields['id'] . "'
-                        AND `is_deleted` = '0' 
-                        AND `entities_id` = '" . $ressource->fields['entities_id'] . "'
-                        AND `itemtype` = '" . $ressource->getType() . "'";
+            $restrict = ["items_id"    => $ressource->fields['id'],
+                         "is_deleted"  => 0,
+                         "entities_id" => $ressource->fields['entities_id'],
+                         "itemtype"    => $ressource->getType()];
             $datas    = $dbu->getAllDataFromTable('glpi_plugin_positions_positions', $restrict);
             if (!empty($datas)) {
                foreach ($datas as $data) {

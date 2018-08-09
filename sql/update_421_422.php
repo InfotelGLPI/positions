@@ -40,7 +40,8 @@ function update421to422() {
    $result_query = $DB->query($query);
    while ($data = $DB->fetch_array($result_query)) {
       $dbu = new DbUtils();
-      if (!($itemclass = $dbu->getAllDataFromTable($dbu->getTableForItemType($data['itemtype']), "`id` = " . $data['items_id']))) {
+      if (!($itemclass = $dbu->getAllDataFromTable($dbu->getTableForItemType($data['itemtype']),
+                                                   ["id" => $data['items_id']]))) {
          $query = "DELETE FROM `glpi_plugin_positions_positions` WHERE `items_id` =" . $data['items_id'] . " AND `itemtype` = '" . $data['itemtype'] . "'";
          $DB->queryOrDie($query);
          continue;

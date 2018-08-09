@@ -853,10 +853,10 @@ class PluginPositionsPosition extends CommonDBTM {
       foreach (self::getTypes() as $key => $item) {
          $table     = $dbu->getTableForItemType($item);
          $itemclass = new $item();
-         $restrict  = "`is_template` = '0' AND `is_deleted` = '0'";
-         $restrict .= " AND `locations_id` = '" . $locations_id . "'";
-         $restrict .= $dbu->getEntitiesRestrictRequest(" AND ", $table, '', '',
-                                                 $itemclass->maybeRecursive());
+         $restrict = ["is_template"  => 0,
+                      "is_deleted"   => 0,
+                      "locations_id" => $locations_id] + $dbu->getEntitiesRestrictCriteria($table, '', '',
+                                                                                           $itemclass->maybeRecursive());
          $dbu   = new DbUtils();
          $datas = $dbu->getAllDataFromTable($table, $restrict);
          if (!empty($datas)) {
@@ -872,9 +872,8 @@ class PluginPositionsPosition extends CommonDBTM {
 
       $itemsMap = [];
       $dbu      = new DbUtils();
-      $restrict = "`locations_id` = $locations_id ";
-      $restrict .= $dbu->getEntitiesRestrictRequest("AND", "glpi_plugin_positions_positions", '', '',
-                                                   true);
+      $restrict = ["locations_id" => $locations_id] +
+                  $dbu->getEntitiesRestrictCriteria("glpi_plugin_positions_positions", '', '', true);
       $datas    = $dbu->getAllDataFromTable("glpi_plugin_positions_positions", $restrict);
       if (!empty($datas)) {
          foreach ($datas as $data) {
@@ -1473,7 +1472,8 @@ class PluginPositionsPosition extends CommonDBTM {
             $height = $height + 80;
          } else if ($itemclass->getType() == 'PluginResourcesResource') {
             $resID    = $itemclass->fields['id'];
-            $restrict = "`plugin_resources_resources_id` = $resID AND `itemtype` = 'User' ";
+            $restrict = ["plugin_resources_resources_id" => $resID,
+                         "itemtype"                      => 'User'];
             $dbu      = new DbUtils();
             $datas    = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items', $restrict);
             if (!empty($datas)) {
@@ -1739,9 +1739,9 @@ class PluginPositionsPosition extends CommonDBTM {
          $item = new $itemtype();
          $item->getFromDB($id);
 
-         $restrict = "`items_id` = '" . $id . "'
-                     AND `is_deleted` = '0' 
-                     AND `itemtype` = '" . $itemtype . "'";
+         $restrict = ["items_id" => $id,
+                     "is_deleted" => 0,
+                     "itemtype" => $itemtype];
          $datas    = $dbu->getAllDataFromTable('glpi_plugin_positions_positions', $restrict);
          if (!empty($datas)) {
             foreach ($datas as $data) {
@@ -1759,7 +1759,8 @@ class PluginPositionsPosition extends CommonDBTM {
             //recherche de la ressource lie a ce user
 
             if ($itemtype != 'PluginResourcesResource') {
-               $condition = "`items_id`= '".$id."' AND `itemtype` = 'User'";
+               $condition = ["items_id" => $id,
+                             "itemtype" => 'User'];
 
                $infos = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items', $condition);
                if (!empty($infos)) {
@@ -1767,10 +1768,10 @@ class PluginPositionsPosition extends CommonDBTM {
                      $ressource     = new PluginResourcesResource();
                      $ressource->getFromDB($info['plugin_resources_resources_id']);
 
-                     $restrict = "`items_id` = '".$ressource->getID()."'
-                                 AND `is_deleted` = '0' 
-                                 AND `entities_id` = '".$ressource->fields['entities_id']."'
-                                 AND `itemtype` = 'PluginResourcesResource'";
+                     $restrict = ["items_id"    => $ressource->getID(),
+                                  "is_deleted"  => 0,
+                                  "entities_id" => $ressource->fields['entities_id'],
+                                  "itemtype"    => 'PluginResourcesResource'];
                      $datas = $dbu->getAllDataFromTable('glpi_plugin_positions_positions', $restrict);
                      if (!empty($datas)) {
                         foreach ($datas as $data) {
@@ -1790,10 +1791,10 @@ class PluginPositionsPosition extends CommonDBTM {
 
                $ressource     = new PluginResourcesResource();
                if ($ressource->getFromDB($id)) {
-                  $restrict = "`items_id` = '".$ressource->fields['id']."'
-                              AND `is_deleted` = '0' 
-                              AND `entities_id` = '".$ressource->fields['entities_id']."'
-                              AND `itemtype` = '".$ressource->getType()."'";
+                  $restrict = ["items_id"    => $ressource->fields['id'],
+                               "is_deleted"  => 0,
+                               "entities_id" => $ressource->fields['entities_id'],
+                               "itemtype"    => $ressource->getType()];
                   $datas = $dbu->getAllDataFromTable('glpi_plugin_positions_positions', $restrict);
                   if (!empty($datas)) {
                      foreach ($datas as $data) {
@@ -1845,7 +1846,8 @@ class PluginPositionsPosition extends CommonDBTM {
             //recherche de la ressource lie a ce user
 
             if ($itemtype != 'PluginResourcesResource') {
-               $condition = "`items_id`= '".$id."' AND `itemtype` = 'User'";
+               $condition = ["items_id" => $id,
+                             "itemtype" => 'User'];
 
                $infos = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items', $condition);
                if (!empty($infos)) {
@@ -1853,10 +1855,10 @@ class PluginPositionsPosition extends CommonDBTM {
                      $ressource     = new PluginResourcesResource();
                      $ressource->getFromDB($info['plugin_resources_resources_id']);
 
-                     $restrict = "`items_id` = '".$ressource->getID()."'
-                                 AND `is_deleted` = '0' 
-                                 AND `entities_id` = '".$ressource->fields['entities_id']."'
-                                 AND `itemtype` = 'PluginResourcesResource'";
+                     $restrict = ["items_id"    => $ressource->getID(),
+                                  "is_deleted"  => 0,
+                                  "entities_id" => $ressource->fields['entities_id'],
+                                  "itemtype"    => 'PluginResourcesResource'];
                      $datas = $dbu->getAllDataFromTable('glpi_plugin_positions_positions', $restrict);
                      if (!empty($datas)) {
                         foreach ($datas as $data) {
@@ -1876,10 +1878,10 @@ class PluginPositionsPosition extends CommonDBTM {
 
                $ressource     = new PluginResourcesResource();
                if ($ressource->getFromDB($id)) {
-                  $restrict = "`items_id` = '".$ressource->fields['id']."'
-                              AND `is_deleted` = '0' 
-                              AND `entities_id` = '".$ressource->fields['entities_id']."'
-                              AND `itemtype` = '".$ressource->getType()."'";
+                  $restrict = ["items_id"    => $ressource->fields['id'],
+                               "is_deleted"  => 0,
+                               "entities_id" => $ressource->fields['entities_id'],
+                               "itemtype"    => $ressource->getType()];
                   $datas = $dbu->getAllDataFromTable('glpi_plugin_positions_positions', $restrict);
                   if (!empty($datas)) {
                      foreach ($datas as $data) {
