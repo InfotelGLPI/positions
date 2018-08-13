@@ -310,8 +310,8 @@ class PluginPositionsPosition extends CommonDBTM {
    static function countForItem(CommonDBTM $item) {
       $dbu = new DbUtils();
       return $dbu->countElementsInTable('glpi_plugin_positions_positions',
-                                  "`itemtype`='".$item->getType()."'
-                                   AND `items_id` = '".$item->getID()."'");
+                                        ["itemtype" => $item->getType(),
+                                         "items_id" => $item->getID()]);
    }
 
    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
@@ -687,7 +687,8 @@ class PluginPositionsPosition extends CommonDBTM {
          // Add new location
          if ($opt["test"] == 'newLocation') {
             // We check if the element already exists
-            $restrict = "`items_id` = '".$newID."' AND `itemtype` = 'Location'";
+            $restrict = ["items_id" => $newID,
+                        "itemtype" => 'Location'];
             $dbu = new DbUtils();
             if ($dbu->countElementsInTable("glpi_plugin_positions_positions", $restrict) != 0) {
                Session::addMessageAfterRedirect(__('This item is already bound to a location', 'positions'), false, ERROR);
@@ -1481,11 +1482,11 @@ class PluginPositionsPosition extends CommonDBTM {
                   if (isset($data['items_id']) && ($data['items_id'] > 0)) {
                      $userid     = $data['items_id'];
                      $entitiesID = $itemclass->fields['entities_id'];
-                     $condition  = "`users_id` = '$userid'
-                                    AND `is_deleted` = '0' 
-                                    AND `is_template` = '0' 
-                                    AND `entities_id` = '$entitiesID'
-                                    AND `contact_num` != 0 ";
+                     $condition = ["users_id"    => $userid,
+                                   "is_deleted"  => 0,
+                                   "is_template" => 0,
+                                   "entities_id" => $entitiesID,
+                                   "NOT"         => ["contact_num" => 0]];
                      $dbu = new DbUtils();
                      if (($number = $dbu->countElementsInTable("glpi_phones", $condition)) > 1) {
                         $addheight = 30 * $number;
