@@ -508,7 +508,6 @@ class PluginPositionsInfo extends CommonDBTM {
                      if ($crit instanceof CommonTreeDropdown) {
                         $searchOption = $target->getSearchOptionByField('field', 'completename', $table);
                      } else {
-                        Toolbox::logDebug($target);
                         $res = new PluginResourcesResource();
                         $searchOption = $target->getSearchOptionByField('field', 'name', $table);
                      }

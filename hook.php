@@ -33,7 +33,7 @@ function plugin_positions_install() {
    include_once (GLPI_ROOT."/plugins/positions/inc/profile.class.php");
 
    if (!$DB->tableExists("glpi_plugin_positions_positions")) {
-      $DB->runFile(GLPI_ROOT."/plugins/positions/sql/empty-4.5.0.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/positions/sql/empty-4.5.1.sql");
    }
 
    //v1.0.0 to V2.0.0
@@ -124,6 +124,12 @@ function plugin_positions_install() {
    if (!$DB->fieldExists("glpi_plugin_positions_configs", "default_width")
       && !$DB->fieldExists("glpi_plugin_positions_configs", "default_height")) {
       $DB->runFile(GLPI_ROOT."/plugins/positions/sql/update-4.4.0.sql");
+   }
+
+   //Update to 4.5.1 change size
+   $list_fields = $DB->list_fields('glpi_plugin_positions_positions');
+   if(isset($list_fields['labelSize']) && $list_fields['labelSize']['Type'] == "int(11)") {
+      $DB->runFile(GLPI_ROOT."/plugins/positions/sql/update-4.5.1.sql");
    }
 
    if ($DB->tableExists("glpi_plugin_positions_profiles")) {
