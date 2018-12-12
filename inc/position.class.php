@@ -462,7 +462,7 @@ class PluginPositionsPosition extends CommonDBTM {
             }
             if (!empty($locations)) {
 
-               $condition = "`id` IN (" . implode(',', $locations) . ")";
+               $condition = ['glpi_locations.id' => $locations];
 
                Dropdown::show('Location', ['value' => $locations_idParent,
                     'entity' => $_SESSION["glpiactive_entity"],
@@ -658,9 +658,9 @@ class PluginPositionsPosition extends CommonDBTM {
       if ($opt["test"] == 'newLocation') {
          if ($newID = $dropdown->add($params)) {
          } else {
-            $locations_found = $dropdown->find("`name` = '".$params['name']."' 
-                                                AND `entities_id` = '".$params['entities_id']."' 
-                                                AND `locations_id` = '".$params['locations_id']."'",
+            $locations_found = $dropdown->find(['name' => $params['name'],
+                                                'entities_id' => $params['entities_id'],
+                                                'locations_id' => $params['locations_id']],
                                                '',
                                                '1');
             $newID = key($locations_found);
@@ -1052,7 +1052,7 @@ class PluginPositionsPosition extends CommonDBTM {
          $locations[] = $data['items_id'];
       }
       if (!empty($locations)) {
-         $condition = "`glpi_locations`.`id` IN (" . implode(',', $locations) . ")";
+         $condition = ['glpi_locations.id' => $locations];
 
          Dropdown::show('Location', ['value'     => $locations_id,
                                           'entity'    => $_SESSION["glpiactiveentities"],
