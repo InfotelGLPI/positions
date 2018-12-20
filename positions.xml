@@ -8,10 +8,12 @@
       <short>
          <fr><![CDATA[Cartographie. Ce plugin permet d’ajouter des coordonnées à des matériels / ressources humaines et ainsi de les positionner sur des cartes]]></fr>
          <en><![CDATA[Cartography. This plugin allows you to add coordinates to any asset / human resources and so the place it on maps.]]></en>
+         <cs><![CDATA[Kartografie. Tento zásuvný modul umožňuje přidávat souřadnice k libovolnému majektu / pracovním místům a umisťovat je tak na mapy.]]></cs>
       </short>
       <long>
          <fr><![CDATA[Ce plugin permet d’ajouter des coordonnées à des matériels / ressources humaines et ainsi de les positionner sur des cartes.<br />Fonctionnalités :<br />- Zoom de la carte<br />- Recherche d’éléments de la carte<br />- Déplacement d’éléments en masse<br />- Personnalisation des informations à visualiser<br />- Gestion d’icônes liés aux types de matériel<br />- Gestion des bureaux (sous-lieux)<br />- ClickAndCall : En cliquant sur le numéro de téléphone, un appel se lancera directement sur le téléphone IP<br />- Utilisable avec le plugin Ressources humaines]]></fr>
          <en><![CDATA[This plugin allows you to add coordinates to any asset / human resources and so the place it on maps..<br />Features :<br />- Zoom on map<br />- Asset seach on map<br />- Massive move of assets<br />- Customizing of information to see<br />- Management of icons related to asset types<br />- Management offices (sub-site)<br />- ClickAndCall : By clicking on the phone number, a call will run directly on the IP phone<br />- Can be used with Human ressources plugin]]></en>
+         <cs><![CDATA[Tento zásuvný modul umožňuje přidávat souřadnice k libovolnému majektu / pracovním místům a umisťovat je tak na mapy.<br />Funkce:<br />- Přiblížit na mapě<br />- Hledání majetku na mapě<br />- Hromadný přesun majetků<br />- Přizpůsobit informace, které zobrazit<br />- Správa ikon souvisejících s typy majetku<br />- Správa kanceláří<br />- Zavolat kliknutím: kliknutím na tel. číslo je na IP telefonu přímo zahájen hovor<br />- Je možné použít se zásuvným modulem Personalistika]]></cs>
       </long>
    </description>
    <homepage>https://github.com/InfotelGLPI/positions</homepage>
@@ -23,6 +25,10 @@
       <author>Infotel</author>
    </authors>
    <versions>
+      <version>
+         <num>4.5.2</num>
+         <compatibility>9.3</compatibility>
+      </version>
       <version>
          <num>4.5.1</num>
          <compatibility>9.3</compatibility>
@@ -36,28 +42,28 @@
          <compatibility>9.2</compatibility>
       </version>
       <version>
-          <num>4.3.0</num>
-          <compatibility>9.1</compatibility>
+         <num>4.3.0</num>
+         <compatibility>9.1</compatibility>
       </version>
       <version>
-          <num>4.2.1</num>
-          <compatibility>0.90</compatibility>
+         <num>4.2.1</num>
+         <compatibility>0.90</compatibility>
       </version>
       <version>
-          <num>4.2.0</num>
-          <compatibility>0.90</compatibility>
+         <num>4.2.0</num>
+         <compatibility>0.90</compatibility>
       </version>
       <version>
-          <num>4.1.0</num>
-          <compatibility>0.85</compatibility>
+         <num>4.1.0</num>
+         <compatibility>0.85</compatibility>
       </version>
       <version>
-          <num>4.0.0</num>
-          <compatibility>0.84</compatibility>
+         <num>4.0.0</num>
+         <compatibility>0.84</compatibility>
       </version>
       <version>
-          <num>3.0.0</num>
-          <compatibility>0.83.3</compatibility>
+         <num>3.0.0</num>
+         <compatibility>0.83.3</compatibility>
       </version>
    </versions>
    <langs>
@@ -74,20 +80,19 @@
       <lang>ro_RO</lang>
       <lang>ru_RU</lang>
       <lang>tr_TR</lang>
-
       <lang>ru_RU</lang>
    </langs>
    <license><![CDATA[GPL v2+]]></license>
-      <tags>
-         <fr>
-            <tag>Architecture</tag>
-            <tag>Cartographie</tag>
-            <tag>Réseau</tag>
-         </fr>
-         <en>
-            <tag>Architecture</tag>
-            <tag>Map</tag>
-            <tag>Network</tag>
-         </en>
+   <tags>
+      <fr>
+         <tag>Architecture</tag>
+         <tag>Cartographie</tag>
+         <tag>Réseau</tag>
+      </fr>
+      <en>
+         <tag>Architecture</tag>
+         <tag>Map</tag>
+         <tag>Network</tag>
+      </en>
    </tags>
 </root>
