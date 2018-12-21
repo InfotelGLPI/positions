@@ -661,7 +661,7 @@ class PluginPositionsPosition extends CommonDBTM {
             $locations_found = $dropdown->find(['name' => $params['name'],
                                                 'entities_id' => $params['entities_id'],
                                                 'locations_id' => $params['locations_id']],
-                                               '',
+                                               [],
                                                '1');
             $newID = key($locations_found);
          }
