@@ -115,7 +115,7 @@ if (isset($locations_id) && !empty($locations_id)) {
 
 } else {
    echo "<div class='center'><br><br>";
-   echo "<img src='" . $CFG_GLPI["root_doc"] . "/pics/warning.png' alt='warning'><br><br>";
+   echo "<i class='fas fa-exclamation-triangle fa-4x' style='color:orange'></i><br><br>";
    echo "<span class='b'>" . __('The selected object is not located on a map', 'positions') . "</span></div>";
 }
 
