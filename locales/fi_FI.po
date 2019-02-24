@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: GLPI Project - positions plugin\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-12 10:50+0200\n"
-"PO-Revision-Date: 2018-08-11 04:26+0000\n"
+"PO-Revision-Date: 2018-08-18 03:04+0000\n"
 "Last-Translator: Markku Vepsä\n"
 "Language-Team: Finnish (Finland) (http://www.transifex.com/tsmr/GLPI_positions/language/fi_FI/)\n"
 "MIME-Version: 1.0\n"
@@ -22,8 +22,8 @@ msgstr ""
 #: inc/profile.class.php:169 inc/profile.class.php:177
 msgid "Cartography"
 msgid_plural "Cartographies"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Karttapiirustus"
+msgstr[1] "Karttapiirustukset"
 
 #: ajax/dropdownValue.php:157
 msgid "All types"
@@ -35,15 +35,15 @@ msgstr "Ole hyvä ja aktivoi liitännäinen"
 
 #: front/geoloc.php:118
 msgid "The selected object is not located on a map"
-msgstr ""
+msgstr "Valittu objekti ei ole kartalla"
 
 #: front/imageitem.form.php:44
 msgid "No picture uploaded"
-msgstr ""
+msgstr "Ei kuvaa ladattuna"
 
 #: front/map.php:61 inc/position.class.php:1003 inc/position.class.php:1958
 msgid "No location selected"
-msgstr ""
+msgstr "Ei valittua sijaintia"
 
 #: inc/config.class.php:53
 msgid "Plugin Setup"
@@ -51,7 +51,7 @@ msgstr "Liitännäisen asetukset"
 
 #: inc/config.class.php:69
 msgid "Add sub-places on the map objects"
-msgstr ""
+msgstr "Lisää osa-alueita karttaobjekteihin"
 
 #: inc/config.class.php:76
 msgid "Default width of images"
@@ -63,15 +63,15 @@ msgstr "Kuvien oletus korkeus"
 
 #: inc/config.class.php:110
 msgid "Association : picture / types of equipment"
-msgstr ""
+msgstr "Liitos: kuva / laitetyyppi"
 
 #: inc/config.class.php:116 inc/position.class.php:1486
 msgid "Configuring the display materials"
-msgstr ""
+msgstr "Näytettävän materiaalin konfigurointi"
 
 #: inc/imageitem.class.php:83
 msgid "Types of materials should be created so that the association can exist"
-msgstr ""
+msgstr "Materiaalityypit olisi luotava, jotta liitos voisi olla olemassa"
 
 #: inc/imageitem.class.php:215
 msgid "Add pictures to use with plugin"
@@ -99,7 +99,7 @@ msgstr "Liitä kuvat laitetyyppeihin"
 
 #: inc/imageitem.class.php:277
 msgid "List of associations"
-msgstr ""
+msgstr "Luettelo liitoksista"
 
 #: inc/imageitem.class.php:280 inc/imageitem.class.php:284
 #: inc/info.class.php:93 inc/info.class.php:195
@@ -121,12 +121,12 @@ msgstr "Ei liitettyä kuvaa"
 #: inc/info.class.php:49
 msgid "Display of equipment"
 msgid_plural "Display of equipments"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Näytettävä laite"
+msgstr[1] "Näytettävät laitteet"
 
 #: inc/info.class.php:81 inc/info.class.php:187
 msgid "Displayed fields"
-msgstr ""
+msgstr "Näytettävät kentät"
 
 #: inc/info.class.php:617 inc/info.class.php:633
 msgid "Direct link"
@@ -139,17 +139,17 @@ msgstr "Karttanäkymä"
 
 #: inc/position.class.php:129
 msgid "No equipment associated"
-msgstr ""
+msgstr "Ei liittyvää laitetta"
 
 #: inc/position.class.php:210 inc/position.class.php:750
 #: inc/position.class.php:1653
 msgid "Coordinate x"
-msgstr ""
+msgstr "Koordinaatti x"
 
 #: inc/position.class.php:217 inc/position.class.php:788
 #: inc/position.class.php:1654
 msgid "Coordinate y"
-msgstr ""
+msgstr "Koordinaatti y"
 
 #: inc/position.class.php:281 inc/position.class.php:1054
 msgid "See the map"
@@ -161,7 +161,7 @@ msgstr "Valitse alue ja klikkaa OK"
 
 #: inc/position.class.php:424
 msgid "Creation of sub-areas on the map"
-msgstr ""
+msgstr "Alialueiden luominen kartalla"
 
 #: inc/position.class.php:431
 msgid "Choose an existing location"
@@ -169,7 +169,7 @@ msgstr "Valitse olemassa oleva sijainti"
 
 #: inc/position.class.php:459
 msgid "No sub-area found"
-msgstr ""
+msgstr "Alialuetta ei löytynyt"
 
 #: inc/position.class.php:469
 msgid "Create a new location"
@@ -181,7 +181,7 @@ msgstr "Lisää ja jatka"
 
 #: inc/position.class.php:678 inc/position.class.php:732
 msgid "This item is already bound to a location"
-msgstr ""
+msgstr "Tämä kohde on jo sidottu sijaintiin"
 
 #: inc/position.class.php:810 inc/position.class.php:955
 msgid "Change the coordinates"
@@ -189,19 +189,19 @@ msgstr "Muuta koordinaatit"
 
 #: inc/position.class.php:960
 msgid "Add a sub-area"
-msgstr ""
+msgstr "Lisää alialue"
 
 #: inc/position.class.php:992 inc/position.class.php:1059
 msgid "No location has a configured map"
-msgstr ""
+msgstr "Sijainnissa ei ole määritettyä karttaa"
 
 #: inc/position.class.php:997
 msgid "The object location does not match a map"
-msgstr ""
+msgstr "Objektin sijainti ei ole vastaava kartalla"
 
 #: inc/position.class.php:1089 inc/position.class.php:1935
 msgid "Create coordinates"
-msgstr ""
+msgstr "Luo koordinaatit"
 
 #: inc/position.class.php:1118
 msgid "Limited view"
@@ -209,17 +209,17 @@ msgstr "Rajoitettu näkymä"
 
 #: inc/position.class.php:1648
 msgid "Associated coordinate"
-msgstr ""
+msgstr "Liitetty koordinaatti"
 
 #: inc/position.class.php:2011
 msgid "Please download a newer version of canvasXpress at"
-msgstr ""
+msgstr "Lataa uudempi canvasXpress-versio osoitteesta"
 
 #: inc/position.class.php:2012
 msgid ""
 "You are using an older version that do not support all the functionality of "
 "this panel"
-msgstr ""
+msgstr "Käytät vanhempaa versiota, joka ei tue kaikkia tämän paneelin toimintoja"
 
 #: inc/position.class.php:2013
 msgid "Delete selected objects"
@@ -227,7 +227,7 @@ msgstr "Poista valitut objektit"
 
 #: inc/position.class.php:2014
 msgid "Informations about"
-msgstr ""
+msgstr "Tietoja"
 
 #: inc/position.class.php:2018
 msgid "Hide"
@@ -235,7 +235,7 @@ msgstr "Piilota"
 
 #: inc/position.class.php:2019
 msgid "informations about selected items"
-msgstr ""
+msgstr "tietoja valituista kohteista"
 
 #: inc/position.class.php:2020
 msgid "All hidden objects"
@@ -243,7 +243,7 @@ msgstr "Kaikki piilotetut objektit"
 
 #: inc/position.class.php:2021
 msgid "See all hidden objects"
-msgstr ""
+msgstr "Näytä kaikki piilotetut objektit"
 
 #: inc/position.class.php:2022
 msgid "cancel last change"
@@ -275,15 +275,15 @@ msgstr "Vie JSON-tiedot"
 
 #: inc/position.class.php:2030
 msgid "Import JSON movie"
-msgstr ""
+msgstr "Tuo JSON-elokuva"
 
 #: inc/position.class.php:2031
 msgid "Export JSON movie"
-msgstr ""
+msgstr "Vie JSON-elokuva"
 
 #: inc/position.class.php:2032
 msgid "Force save the entire network"
-msgstr ""
+msgstr "Pakota koko verkon tallennus"
 
 #: inc/position.class.php:2033
 msgid "Advanced test"
@@ -291,7 +291,7 @@ msgstr "Edistynyt testi"
 
 #: inc/position.class.php:2034
 msgid "Refresh the graph"
-msgstr ""
+msgstr "Päivitä kaavio"
 
 #: inc/position.class.php:2035
 msgid "See as a picture"
@@ -305,71 +305,71 @@ msgstr[1] "Värit"
 
 #: inc/position.class.php:2041
 msgid "Scale Factor"
-msgstr ""
+msgstr "Skaalauskerroin"
 
 #: inc/position.class.php:2042
 msgid "Boxed"
-msgstr ""
+msgstr "Laatikoitu"
 
 #: inc/position.class.php:2043
 msgid "Transpose"
-msgstr ""
+msgstr "Vaihda paikkaa"
 
 #: inc/position.class.php:2044
 msgid "Search on objects"
-msgstr ""
+msgstr "Etsi objekteista"
 
 #: inc/position.class.php:2046
 msgid "Advanced Options"
-msgstr ""
+msgstr "Edistyneet asetukset"
 
 #: inc/position.class.php:2047
 msgid "Search key"
-msgstr ""
+msgstr "Hakuavain"
 
 #: inc/position.class.php:2048
 msgid "Regex accepted"
-msgstr ""
+msgstr "Säännöllinen lauseke hyväksyttiin"
 
 #: inc/position.class.php:2049
 msgid "One line by object"
-msgstr ""
+msgstr "Yksi rivi kohteittain"
 
 #: inc/position.class.php:2050
 msgid "Stop highlighting"
-msgstr ""
+msgstr "Korostus pois"
 
 #: inc/position.class.php:2051
 msgid "Highlight object"
-msgstr ""
+msgstr "Korosta objekti"
 
 #: inc/position.class.php:2052
 msgid "Edit selected object"
-msgstr ""
+msgstr "Muokkaa valittua objektia"
 
 #: inc/position.class.php:2053
 msgid "Selected object"
-msgstr ""
+msgstr "Valittu objekti"
 
 #: inc/position.class.php:2054
 msgid "This object"
-msgstr ""
+msgstr "Tämä objekti"
 
 #: inc/position.class.php:2055
 msgid "Selected objects and all the"
-msgstr ""
+msgstr "Valitut objektit ja kaikki"
 
 #: inc/position.class.php:2056
 msgid "This object and all its"
-msgstr ""
+msgstr "Tämä objekti ja kaikki sen"
 
 #: inc/position.class.php:2057
 msgid "Do you want to delete"
-msgstr ""
+msgstr "Haluatko poistaa"
 
 #: inc/position.class.php:2058
 msgid "Links will be deleted"
-msgstr ""
+msgstr "Linkit poistetaan"
 
 #: inc/position.class.php:2059
 msgid "Tooltip"
@@ -377,11 +377,11 @@ msgstr "Työkaluvihje"
 
 #: inc/position.class.php:2060
 msgid "Object type"
-msgstr ""
+msgstr "Objektityyppi"
 
 #: inc/position.class.php:2061
 msgid "Required selection"
-msgstr ""
+msgstr "Vaadittu valinta"
 
 #: inc/position.class.php:2062
 msgid "Image path"
@@ -389,118 +389,118 @@ msgstr "Kuvan polku"
 
 #: inc/position.class.php:2063
 msgid "The object is fixed"
-msgstr ""
+msgstr "Objekti on kiinteä"
 
 #: inc/position.class.php:2066
 msgid "Object editor"
-msgstr ""
+msgstr "Objektieditori"
 
 #: inc/position.class.php:2067
 msgid "Object id"
-msgstr ""
+msgstr "Objekti id"
 
 #: inc/position.class.php:2069
 msgid "Pattern"
-msgstr ""
+msgstr "Kuvio"
 
 #: inc/position.class.php:2070
 msgid "Edge"
-msgstr ""
+msgstr "Reuna"
 
 #: inc/position.class.php:2071 inc/position.class.php:2072
 msgid "Object"
 msgid_plural "Objects"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Objekti"
+msgstr[1] "Objektit"
 
 #: inc/position.class.php:2074
 msgid "Axes"
-msgstr ""
+msgstr "Akselit"
 
 #: inc/position.class.php:2076
 msgid "Legend"
-msgstr ""
+msgstr "Kuvateksti"
 
 #: inc/position.class.php:2077
 msgid "Indicators"
-msgstr ""
+msgstr "Indikaattorit"
 
 #: inc/position.class.php:2078
 msgid "Decorations"
-msgstr ""
+msgstr "Koristeet"
 
 #: inc/position.class.php:2079
 msgid "Data"
-msgstr ""
+msgstr "Tiedot"
 
 #: inc/position.class.php:2080
 msgid "Font weight"
-msgstr ""
+msgstr "Fontin paino"
 
 #: inc/position.class.php:2081
 msgid "Properties"
-msgstr ""
+msgstr "Ominaisuudet"
 
 #: inc/position.class.php:2082
 msgid "Transform"
-msgstr ""
+msgstr "Muunnos"
 
 #: inc/position.class.php:2083
 msgid "Ticks"
-msgstr ""
+msgstr "Rastit"
 
 #: inc/position.class.php:2084
 msgid "Font"
-msgstr ""
+msgstr "Fontti"
 
 #: inc/position.class.php:2085
 msgid "Layout"
-msgstr ""
+msgstr "Ulkoasu"
 
 #: inc/position.class.php:2086
 msgid "Orientation"
-msgstr ""
+msgstr "Suunta"
 
 #: inc/position.class.php:2087
 msgid "Overlays"
-msgstr ""
+msgstr "Päällekkäiskuvat"
 
 #: inc/position.class.php:2088
 msgid "Background"
-msgstr ""
+msgstr "Tausta"
 
 #: inc/position.class.php:2089
 msgid "Gradient"
-msgstr ""
+msgstr "Liukuväri"
 
 #: inc/position.class.php:2090
 msgid "Solid"
-msgstr ""
+msgstr "Yksiväri"
 
 #: inc/position.class.php:2092
 msgid "Width"
-msgstr ""
+msgstr "Leveys"
 
 #: inc/position.class.php:2093
 msgid "Height"
-msgstr ""
+msgstr "Korkeus"
 
 #: inc/position.class.php:2094
 msgid "Text"
-msgstr ""
+msgstr "Teksti"
 
 #: inc/position.class.php:2096
 msgid "Field searched"
-msgstr ""
+msgstr "Etsitty kenttä"
 
 #: inc/position.class.php:2097
 msgid "Value found"
-msgstr ""
+msgstr "Löydetty arvo"
 
 #: inc/position.class.php:2098
 msgid "Menu"
-msgstr ""
+msgstr "Valikko"
 
 #: inc/position.class.php:2100
 msgid "Subtitle"
-msgstr ""
+msgstr "Alaotsikko"
