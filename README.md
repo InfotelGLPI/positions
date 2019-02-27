@@ -4,10 +4,10 @@ Plugin positions pour GLPI
 Ce plugin permet d'ajouter des coordonnées à des matériels / ressources humaines / baies (GLPI > 0.84) et ainsi de les positionner sur des cartes.
 
 Ce plugin est sur Transifex - Aidez-nous à le traduire :
-https://www.transifex.com/tsmr/GLPI_positions/
+https://www.transifex.com/infotelGLPI/GLPI_positions/
 
 This plugin is on Transifex - Help us to translate :
-https://www.transifex.com/tsmr/GLPI_positions/
+https://www.transifex.com/infotelGLPI/GLPI_positions/
 
 * Fonctionnalités :
 
