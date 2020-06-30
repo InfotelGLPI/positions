@@ -33,7 +33,7 @@ function plugin_positions_install() {
    include_once (GLPI_ROOT."/plugins/positions/inc/profile.class.php");
 
    if (!$DB->tableExists("glpi_plugin_positions_positions")) {
-      $DB->runFile(GLPI_ROOT."/plugins/positions/sql/empty-4.5.1.sql");
+      $DB->runFile(GLPI_ROOT."/plugins/positions/sql/empty-4.7.0.sql");
    }
 
    //v1.0.0 to V2.0.0
@@ -53,7 +53,7 @@ function plugin_positions_install() {
       $result_ = $DB->query($query_);
       if ($DB->numrows($result_) > 0) {
 
-         while ($data = $DB->fetch_array($result_)) {
+         while ($data = $DB->fetchArray($result_)) {
             $query = "UPDATE `glpi_plugin_positions_positions`
                       SET `items_id` = '".$data["items_id"]."',
                           `itemtype` = '".$data["itemtype"]."'
@@ -155,6 +155,14 @@ function plugin_positions_install() {
          }
       }
    }
+
+   // Update to 4.7.0
+   if ($DB->fieldExists("glpi_plugin_positions_infos", "date_mod")
+      && $DB->fieldExists("glpi_plugin_positions_positions", "date_mod")) {
+      $DB->runFile(GLPI_ROOT."/plugins/positions/sql/update-4.7.0.sql");
+   }
+
+
 
    $rep_files_positions = GLPI_PLUGIN_DOC_DIR."/positions";
    if (!is_dir($rep_files_positions)) {
@@ -315,7 +323,7 @@ function plugin_positions_giveItem($type, $ID, $data, $num) {
                         if ($result_linked = $DB->query($query)) {
                            if ($DB->numrows($result_linked)) {
                               $item = new $itemtype();
-                              while ($val = $DB->fetch_assoc($result_linked)) {
+                              while ($val = $DB->fetchAssoc($result_linked)) {
                                  if ($item->getFromDB($val['id'])) {
                                     $out .= $item->getTypeName()." - ".$item->getLink()."<br>";
                                  }

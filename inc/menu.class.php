@@ -58,6 +58,7 @@ class PluginPositionsMenu extends CommonGLPI {
       $menu['title']                                  = self::getMenuName();
       $menu['page']                                   = "/plugins/positions/front/map.form.php";
       $menu['links']['search']                        = PluginPositionsPosition::getSearchURL(false);
+      $menu['icon']                                   = self::getIcon();
 
       $menu['options']['positions']['links']['search'] = PluginPositionsPosition::getSearchURL(false);
       $menu['options']['positions']['links']['config'] = '/plugins/positions/front/config.form.php';
@@ -84,6 +85,10 @@ class PluginPositionsMenu extends CommonGLPI {
       }
 
       return $menu;
+   }
+
+   static function getIcon() {
+      return "fas fa-map-marker-alt";
    }
 
    static function removeRightsFromSession() {

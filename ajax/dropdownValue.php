@@ -169,7 +169,7 @@ if (!empty($output)&&$output!="&nbsp;") {
 if ($number) {
    if ($config->fields['use_view_all_object'] && $_GET["name"] != "type") {
       $current_location = '';
-      while ($data =$DB->fetch_array($result)) {
+      while ($data =$DB->fetchArray($result)) {
          if (empty($current_location)) {
             $children = [];
             $level = 1;
@@ -196,7 +196,7 @@ if ($number) {
       array_push($out, ['text' => $current_location->fields['completename'], 'children' => $children]);
 
    } else {
-      while ($data =$DB->fetch_array($result)) {
+      while ($data =$DB->fetchArray($result)) {
          $output = $data[$field];
          $ID = $data['id'];
 
