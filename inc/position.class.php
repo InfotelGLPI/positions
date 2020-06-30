@@ -1593,7 +1593,7 @@ class PluginPositionsPosition extends CommonDBTM {
 
       if (strstr($tmpfile, "../")
             || strstr($tmpfile, "..\\")) {
-         Event::log($file, "sendFile", 1, "security",
+         \Glpi\Event::log($file, "sendFile", 1, "security",
          $_SESSION["glpiname"] . " try to get a non standard file.");
          die("Security attack !!!");
       }
