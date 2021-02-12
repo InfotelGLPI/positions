@@ -38,7 +38,7 @@ function update421to422() {
 
    $query = "SELECT * FROM `glpi_plugin_positions_positions`";
    $result_query = $DB->query($query);
-   while ($data = $DB->fetch_array($result_query)) {
+   while ($data = $DB->fetchArray($result_query)) {
       $dbu = new DbUtils();
       if (!($itemclass = $dbu->getAllDataFromTable($dbu->getTableForItemType($data['itemtype']),
                                                    ["id" => $data['items_id']]))) {

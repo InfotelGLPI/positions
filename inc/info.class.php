@@ -302,7 +302,7 @@ class PluginPositionsInfo extends CommonDBTM {
       echo "<select name='_fields[]' multiple size='15' style='width:400px'>";
 
       $dbu = new DbUtils();
-      foreach ($DB->list_fields($dbu->getTableForItemType($config->fields['itemtype'])) as $field) {
+      foreach ($DB->listFields($dbu->getTableForItemType($config->fields['itemtype'])) as $field) {
 
          $searchOption = $item->getSearchOptionByField('field', $field['Field'],
                                                        $dbu->getTableForItemType($item->getType()));
@@ -496,7 +496,7 @@ class PluginPositionsInfo extends CommonDBTM {
          $input  = explode(',', $item['fields']);
          $target = new $item['itemtype']();
          $dbu    = new DbUtils();
-         foreach ($DB->list_fields($dbu->getTableForItemType($item['itemtype'])) as $field) {
+         foreach ($DB->listFields($dbu->getTableForItemType($item['itemtype'])) as $field) {
 
             if (in_array($field['Field'], $input)) {
                $searchOption = $target->getSearchOptionByField('field', $field['Field'],

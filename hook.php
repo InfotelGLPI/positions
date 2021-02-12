@@ -53,7 +53,7 @@ function plugin_positions_install() {
       $result_ = $DB->query($query_);
       if ($DB->numrows($result_) > 0) {
 
-         while ($data = $DB->fetch_array($result_)) {
+         while ($data = $DB->fetchArray($result_)) {
             $query = "UPDATE `glpi_plugin_positions_positions`
                       SET `items_id` = '".$data["items_id"]."',
                           `itemtype` = '".$data["itemtype"]."'
@@ -127,8 +127,8 @@ function plugin_positions_install() {
    }
 
    //Update to 4.5.1 change size
-   $list_fields = $DB->list_fields('glpi_plugin_positions_positions');
-   if(isset($list_fields['labelSize']) && $list_fields['labelSize']['Type'] == "int(11)") {
+   $listFields = $DB->listFields('glpi_plugin_positions_positions');
+   if(isset($listFields['labelSize']) && $listFields['labelSize']['Type'] == "int(11)") {
       $DB->runFile(GLPI_ROOT."/plugins/positions/sql/update-4.5.1.sql");
    }
 
@@ -315,7 +315,7 @@ function plugin_positions_giveItem($type, $ID, $data, $num) {
                         if ($result_linked = $DB->query($query)) {
                            if ($DB->numrows($result_linked)) {
                               $item = new $itemtype();
-                              while ($val = $DB->fetch_assoc($result_linked)) {
+                              while ($val = $DB->fetchAssoc($result_linked)) {
                                  if ($item->getFromDB($val['id'])) {
                                     $out .= $item->getTypeName()." - ".$item->getLink()."<br>";
                                  }

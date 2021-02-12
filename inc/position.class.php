@@ -456,7 +456,7 @@ class PluginPositionsPosition extends CommonDBTM {
             $DB->numrows($result);
 
             $locations = [];
-            while ($data = $DB->fetch_assoc($result)) {
+            while ($data = $DB->fetchAssoc($result)) {
 
                 $locations[] = $data['id'];
             }
@@ -633,7 +633,7 @@ class PluginPositionsPosition extends CommonDBTM {
 
          $result = $DB->query($query);
 
-         while ($data = $DB->fetch_assoc($result)) {
+         while ($data = $DB->fetchAssoc($result)) {
             $id = $data['id'];
          }
       } else if ($opt["test"] == "newLocation") {
@@ -841,7 +841,7 @@ class PluginPositionsPosition extends CommonDBTM {
                    AND `itemtype` = 'Location' ";
 
       $result = $DB->query($query);
-      while ($data = $DB->fetch_assoc($result)) {
+      while ($data = $DB->fetchAssoc($result)) {
          $documents_id = $data['documents_id'];
       }
       return $documents_id;
@@ -1048,7 +1048,7 @@ class PluginPositionsPosition extends CommonDBTM {
       $result = $DB->query($query);
       $DB->numrows($result);
 
-      while ($data = $DB->fetch_assoc($result)) {
+      while ($data = $DB->fetchAssoc($result)) {
          $locations[] = $data['items_id'];
       }
       if (!empty($locations)) {
@@ -1676,7 +1676,7 @@ class PluginPositionsPosition extends CommonDBTM {
          echo "</tr>";
          $used = [];
 
-         while ($data = $DB->fetch_array($result)) {
+         while ($data = $DB->fetchArray($result)) {
             $positionsID = $data["id"];
 
             $used[] = $positionsID;

@@ -83,7 +83,13 @@ class PluginPositionsMenu extends CommonGLPI {
          $menu['options']['info']['links']['add'] = '/plugins/positions/front/info.form.php';
       }
 
+      $menu['icon'] = self::getIcon();
+
       return $menu;
+   }
+
+   static function getIcon() {
+      return "fas fa-map";
    }
 
    static function removeRightsFromSession() {
