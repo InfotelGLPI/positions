@@ -567,7 +567,7 @@ class PluginPositionsPosition extends CommonDBTM {
       $Doc->getFromDB($document_id);
       $path = GLPI_DOC_DIR."/".$Doc->fields["filepath"];
 
-      $tmpfile = GLPI_TMP_DIR."/".$document_id.$name;
+      $tmpfile = GLPI_UPLOAD_DIR."/".$document_id.$name;
       if ($extension=='PNG') {
 
          $srcImg  = imagecreatefrompng($path);
