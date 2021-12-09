@@ -40,7 +40,7 @@ if ($plugin->isActivated("positions")) {
 
    } else {
       Html::header(PluginPositionsPosition::getTypeName(), '', "tools", "pluginpositionsmenu", "config");
-      $config->showForm();
+      $config->showConfigForm();
       Html::footer();
    }
 
@@ -48,8 +48,7 @@ if ($plugin->isActivated("positions")) {
 
 } else {
    Html::header(__('Setup'), '', "config", "plugins");
-   echo "<div align='center'><br><br>";
-   echo "<i class='fas fa-exclamation-triangle fa-4x' style='color:orange'></i><br><br>";
+   echo "<div class='alert alert-important alert-warning d-flex'>";
    echo "<b>".__('Please activate the plugin', 'positions')."</b></div>";
    Html::footer();
 }

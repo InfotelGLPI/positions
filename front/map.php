@@ -27,10 +27,10 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+include('../../../inc/includes.php');
 
 if (!isset($_GET["locations_id"])) {
-   $_GET["locations_id"]  = 0;
+   $_GET["locations_id"] = 0;
 }
 if (!isset($_POST["locations_id"])) {
    $_POST["locations_id"] = $_GET["locations_id"];
@@ -62,9 +62,9 @@ if ($pos->canView() || Session::haveRight("config", UPDATE)) {
 
    } else {
       $options = ['id'           => 0,
-                       'locations_id' => $_POST["locations_id"],
-                       'itemtype'     => $_POST['itemtype'],
-                       'target'       => $_SERVER['PHP_SELF']."?locations_id=".$_POST["locations_id"]];
+                  'locations_id' => $_POST["locations_id"],
+                  'itemtype'     => $_POST['itemtype'],
+                  'target'       => $_SERVER['PHP_SELF'] . "?locations_id=" . $_POST["locations_id"]];
       PluginPositionsPosition::showMap($options);
    }
 }

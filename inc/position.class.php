@@ -483,29 +483,30 @@ class PluginPositionsPosition extends CommonDBTM {
 
             echo "<td id=\"newLocation\" class='left' style=\"visibility:hidden\">";
             echo __('Name')." : ";
-            echo "<input type=\"text\" size=\"50\" id=\"name\" name=\"name\" />";
+            echo Html::input('name', ['id' => 'name', 'size' => 40]);
             echo "</td>";
             echo "</tr>";
 
             //Validation
             echo "<tr class='tab_bg_2'>";
             echo "<td class='center' colspan=2>";
-            echo "<input type=\"hidden\" id=\"x1\" name=\"x1\" />";
-            echo "<input type=\"hidden\" id=\"y1\" name=\"y1\" />";
-            echo "<input type=\"hidden\" id=\"x2\" name=\"x2\" />";
-            echo "<input type=\"hidden\" id=\"y2\" name=\"y2\" />";
-            echo "<input type=\"hidden\" id=\"w\" name=\"w\" />";
-            echo "<input type=\"hidden\" id=\"h\" name=\"h\" />";
-            echo "<input type=\"hidden\" id=\"extension\" name=\"extension\" value=\"$extension\" />  ";
-            echo "<input type=\"hidden\" id=\"test\" name=\"test\" value=\"$test\" />";
-            echo "<input type=\"hidden\" id=\"document_id\" name=\"document_id\" />";
-            echo "<input type=\"hidden\" id=\"locations_idParent\" name=\"locations_idParent\" value=\"$locations_idParent\" />";
-            echo "<input type=\"hidden\" id=\"entities_id\" name=\"entities_id\" value=\"$entities_id\" />";
+            echo Html::hidden('x1', ['id' => 'x1','value' => 'x1']);
+            echo Html::hidden('y1', ['id' => 'y1','value' => 'y1']);
+            echo Html::hidden('x2', ['id' => 'x2','value' => 'x2']);
+            echo Html::hidden('y2', ['id' => 'y2','value' => 'y2']);
+            echo Html::hidden('w', ['id' => 'w','value' => 'w']);
+            echo Html::hidden('h', ['id' => 'h','value' => 'h']);
+            echo Html::hidden('document_id', ['id' => 'document_id','value' => 'document_id']);
+            echo Html::hidden('extension', ['id' => 'extension','value' => $extension]);
+            echo Html::hidden('test', ['id' => 'test','value' => $test]);
+            echo Html::hidden('locations_idParent', ['id' => 'locations_idParent','value' => $locations_idParent]);
+            echo Html::hidden('entities_id', ['id' => 'entities_id', 'value' => $entities_id]);
+
 
             //Case à cocher pour continuer l'ajout
             echo "<input type=\"checkbox\" id=\"continueAdd\" name=\"continueAdd\">&nbsp;";
             echo __('Add and continue', 'positions');
-            echo "&nbsp;&nbsp;<input type=\"submit\" name=\"valid\" value='"._sx('button', 'Add')."' class='submit'>";
+            echo Html::submit(_sx('button', 'Add'), ['name' => 'valid', 'class' => 'btn btn-primary']);
             echo "</td>";
             echo "</tr>";
 
@@ -761,13 +762,13 @@ class PluginPositionsPosition extends CommonDBTM {
 
       echo "<td>" . __('Name') . ": </td>";
       echo "<td>";
-      Html::autocompletionTextField($this, "name");
+      echo Html::input('name', ['value' => $this->fields['name'], 'size' => 40]);
       echo "</td>";
 
       echo "<td>" . __('Coordinate x', 'positions') . ": </td>";
       echo "<td>";
       if ($ID > 0) {
-         Html::autocompletionTextField($this, "x_coordinates", ['size' => "10"]);
+         echo Html::input('x_coordinates', ['value' => $this->fields['x_coordinates'], 'size' => 10]);
       }
       echo "</td>";
 
@@ -805,7 +806,7 @@ class PluginPositionsPosition extends CommonDBTM {
       echo "<td>" . __('Coordinate y', 'positions') . ": </td>";
       echo "<td>";
       if ($ID > 0) {
-         Html::autocompletionTextField($this, "y_coordinates", ['size' => "10"]);
+         echo Html::input('y_coordinates', ['value' => $this->fields['y_coordinates'], 'size' => 10]);
       }
       echo "</td>";
 
@@ -823,7 +824,7 @@ class PluginPositionsPosition extends CommonDBTM {
          echo "<div class='center'><table class='tab_cadre_fixe'>";
          echo "<tr class='tab_bg_1'>";
          echo "<td colspan='4' class='center'>";
-         echo "<a href='./coordinates.form.php?id=" . $item->getField('id') . "'>" .
+         echo "<a class='btn btn-primary' href='./coordinates.form.php?id=" . $item->getField('id') . "'>" .
             __('Change the coordinates', 'positions'). "</a>";
          echo "</td>";
          echo "</tr>";
@@ -967,22 +968,19 @@ class PluginPositionsPosition extends CommonDBTM {
                   }
                   echo "<tr class='tab_bg_2'>";
                   echo "<td colspan='2' class='center'>";
-                  echo "<input type='submit' name='update' value=\"" .
-                  __s('Change the coordinates', 'positions') . "\" class='submit'>";
+                  echo Html::submit(__s('Save the coordinates', 'positions'), ['name' => 'update', 'class' => 'btn btn-primary']);
                   echo "</td>";
                   //création d'un nouveau bouton pour la création de nouvelles pièces
                   echo "<td colspan='2' class='center'>";
-                  echo "<input type='submit' name='addLocation' value=\"" .
-                  __s('Add a sub-area', 'positions') . "\" class='submit'>";
+                  echo Html::submit(__s('Add a sub-area', 'positions'), ['name' => 'addLocation', 'class' => 'btn btn-primary']);
                   echo "</td>";
 
-                  echo "<input type='hidden' name='locations_id' value='" .
-                  $options['locations_id'] . "'>";
-                  echo "<input type='hidden' name='id' value='" . $options['id'] . "'>";
-                  echo "<input type='hidden' name ='x_coordinates'>";
-                  echo "<input type='hidden' name ='y_coordinates'>";
-                  echo "<input type='hidden' name ='multi'>";
-                  echo "<input type='hidden' name ='referrer' value='" . $options['id'] . "'>";
+                  echo Html::hidden('locations_id', ['value' => $options['locations_id']]);
+                  echo Html::hidden('id', ['value' => $options['id']]);
+                  echo Html::hidden('x_coordinates', ['value' => 0]);
+                  echo Html::hidden('y_coordinates', ['value' => 0]);
+                  echo Html::hidden('multi', ['value' => 0]);
+                  echo Html::hidden('referrer', ['value' => $options['id']]);
                   echo "</tr>";
                   echo "</table></div>";
                }
@@ -1004,12 +1002,12 @@ class PluginPositionsPosition extends CommonDBTM {
                   Html::closeForm();
                }
             } else {
-               echo "<div class='center'>";
+               echo "<div class='alert alert-important alert-warning d-flex'>";
                echo __('No location has a configured map', 'positions');
                echo "</div>";
             }
          } else {
-            echo "<div class='center'>";
+            echo "<div class='alert alert-important alert-warning d-flex'>";
             echo __('The object location does not match a map', 'positions') . "<br><br>";
             Html::displayBackLink();
             echo "</div>";
@@ -1065,13 +1063,14 @@ class PluginPositionsPosition extends CommonDBTM {
             echo "<tr class='tab_bg_1'>";
          }
          echo "<td class='center'>";
-         echo "<input type='submit' name='export' value=\"" .
-         __s('See the map', 'positions') . "\" class='submit'>";
+         echo Html::submit(__s('See the map', 'positions'), ['name' => 'export', 'class' => 'btn btn-primary']);
          echo "</td></tr>";
          echo "</table>";
          Html::closeForm();
       } else {
+         echo "<div class='alert alert-important alert-warning d-flex'>";
          echo __('No location has a configured map', 'positions');
+         echo "</div>";
          echo "</td></tr>";
          echo "</table>";
          Html::closeForm();
@@ -1107,14 +1106,13 @@ class PluginPositionsPosition extends CommonDBTM {
       echo "<tr class='tab_bg_1'><td>";
       echo _n('Associated item', 'Associated items', 2) . "</td>";
       echo "<td>";
-      PluginPositionsImageItem::showAllItems("items_id", 0, 0, $entities, self::getTypes(), $locations_id);
+      PluginPositionsImageItem::showAllItems("items_id", self::getTypes(), 0, 0, $entities, $locations_id);
       echo "</td>";
 
       echo "<td>";
-      echo "<input type='hidden' name='locations_id' value='" . $locations_id . "'>";
-      echo "<input type='hidden' name='entities_id' value='$entity'>";
-      echo "<input type='submit' name='add' value=\"" . _sx('button', 'Add') .
-      "\" class='submit'>";
+      echo Html::hidden('locations_id', ['value' => $locations_id]);
+      echo Html::hidden('entities_id', ['value' => $entity]);
+      echo Html::submit(_sx('button', 'Add'), ['name' => 'add', 'class' => 'btn btn-primary']);
       echo "</td>";
       echo "</tr>";
       echo "</table>";
@@ -1155,8 +1153,7 @@ class PluginPositionsPosition extends CommonDBTM {
             }
          }
          echo "<td class='center'>";
-         echo "<input type='submit' name='affich' value=\"" . _sx('button', 'Post') .
-         "\" class='submit'>";
+         echo Html::submit(_sx('button', 'Post'), ['name' => 'affich', 'class' => 'btn btn-primary']);
          echo "</td></tr>";
          echo "</table>";
          Html::closeForm();
@@ -1965,14 +1962,13 @@ class PluginPositionsPosition extends CommonDBTM {
          $value = $itemclass->fields["contact_num"];
       }
       $entity = $itemclass->fields["entities_id"];
-      Html::autocompletionTextField($itemclass, "name", ['value' => $value,
-                                                            'entity' => $entity]);
+      echo Html::input('name', ['value' => $value, 'size' => 40]);
       echo "</td>";
       echo "<td>";
       $location = $itemclass->fields["locations_id"];
       if (isset($location)
          && !empty($location)) {
-         echo "<input type='hidden' name='locations_id' value='$location'>";
+         echo Html::hidden('locations_id', ['value' => $location]);
          echo Dropdown::getDropdownName("glpi_locations", $location);
       } else {
          echo "<div class='red'>" . __('No location selected', 'positions') . "</div>";
@@ -1982,11 +1978,10 @@ class PluginPositionsPosition extends CommonDBTM {
       if (empty($ID)) {
          if (Session::haveRight('plugin_positions', UPDATE)) {
             echo "<td>";
-            echo "<input type='hidden' name='items_id' value='$items_id'>";
-            echo "<input type='hidden' name='itemtype' value='$itemtype'>";
-            echo "<input type='hidden' name='entities_id' value='" . $entity . "'>";
-            echo "<input type='submit' name='additem' value=\"" . _sx('button', 'Add') .
-            "\" class='submit'>";
+            echo Html::hidden('items_id', ['value' => $items_id]);
+            echo Html::hidden('itemtype', ['value' => $itemtype]);
+            echo Html::hidden('entities_id', ['value' => $entity]);
+            echo Html::submit(_sx('button', 'Post'), ['name' => 'additem', 'class' => 'btn btn-primary']);
             echo "</td>";
 
          }

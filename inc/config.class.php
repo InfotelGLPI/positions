@@ -54,7 +54,7 @@ class PluginPositionsConfig extends CommonDBTM {
    }
 
 
-   static function showForm() {
+   static function showConfigForm() {
 
       $config = new self();
       $config->getFromDB(1);
@@ -91,9 +91,9 @@ class PluginPositionsConfig extends CommonDBTM {
       echo "</td></tr>";
 
       echo "<tr><th colspan='2'>";
-      echo "<input type='hidden' name='id' value='1'>";
+      echo Html::hidden('id', ['value' => 1]);
       echo "<div align='center'>";
-      echo "<input type='submit' name='update_config' value=\"" . _x('button', 'Post') . "\" class='submit' >";
+      echo Html::submit(_sx('button', 'Post'), ['name' => 'update_config', 'class' => 'btn btn-primary']);
       echo "</div></th></tr>";
       echo "</table></div>";
       Html::closeForm();

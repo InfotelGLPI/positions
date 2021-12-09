@@ -49,7 +49,7 @@ class PluginPositionsImageItem extends CommonDBTM {
     *
     * @return \nothing
     */
-   static function showAllItems($myname, $value_type = 0, $value = 0, $entity_restrict = -1, $types, $locations_id = -1, $action = 'showItem') {
+   static function showAllItems($myname, $types, $value_type = 0, $value = 0, $entity_restrict = -1, $locations_id = -1, $action = 'showItem') {
       global $CFG_GLPI;
 
       $plugin = new Plugin();
@@ -245,17 +245,18 @@ class PluginPositionsImageItem extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'><td>";
       $types = PluginPositionsPosition::getTypes();
-      self::showAllItems("type", 0, 0, $_SESSION["glpiactive_entity"], $types, -1, 'showType');
+      self::showAllItems("type", $types, 0, 0, $_SESSION["glpiactive_entity"], -1, 'showType');
       echo "</td><td>";
 
-      echo "<input type='hidden' name='_glpi_csrf_token' value=''>";
+//      echo Html::hidden('_glpi_csrf_token', ['value' => '']);
       echo "</td><td>";
       self::showUploadedFilesDropdown("img");
       echo "</td><td>";
       echo "<div id=\"imageitemPreview\"></div>";
       echo "</td><td>";
-      echo "<div align='center'><input type='submit' name='add' value=\"" . _sx('button', 'Add') .
-           "\" class='submit' ></div></td></tr>";
+      echo "<div align='center'>";
+      echo Html::submit(_sx('button', 'Add'), ['name' => 'add', 'class' => 'btn btn-primary']);
+      echo "</div></td></tr>";
       echo "</table>";
       Html::closeForm();
 
@@ -323,7 +324,7 @@ class PluginPositionsImageItem extends CommonDBTM {
                echo "</td>";
 
                echo "<td>";
-               echo "<input type='hidden' name='id' value='$ID'>";
+               echo Html::hidden('id', ['value' => $ID]);
                echo "<input type='checkbox' name='item[$ID]' value='1'>";
                echo "</td>";
 
@@ -351,8 +352,7 @@ class PluginPositionsImageItem extends CommonDBTM {
                   href='#'>" . __('Check all') . "</a>";
             echo " - <a onclick= \"if ( unMarkCheckboxes ('massiveaction_form') ) return false;\" 
                   href='#'>" . __('Uncheck all') . "</a> ";
-            echo "<input type='submit' name='delete' value=\"" . _sx('button', 'Delete permanently') .
-                 "\" class='submit'>";
+            echo Html::submit(_sx('button', 'Delete permanently'), ['name' => 'delete', 'class' => 'btn btn-primary']);
             echo "</td></tr>";
             echo "</table>";
             echo "</div>";

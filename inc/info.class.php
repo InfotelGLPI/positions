@@ -171,11 +171,17 @@ class PluginPositionsInfo extends CommonDBTM {
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Name') . "&nbsp;:</td>";
       echo "<td>";
-      Html::autocompletionTextField($this, "name");
+      echo Html::input('name', ['value' => $this->fields['name'], 'size' => 40]);
       echo "</td>";
       echo "<td rowspan='5'>" . __('Comments') . "&nbsp;:</td>";
-      echo "<td rowspan='5'>
-         <textarea cols='45' rows='8' name='comment' >" . $this->fields["comment"] . "</textarea>";
+      echo "<td rowspan='5'>";
+      echo Html::textarea([
+                             'name'    => 'comment',
+                             'value' => $this->fields["comment"],
+                             'cols'    => '45',
+                             'rows'    => '8',
+                             'display' => false,
+                          ]);
       echo "</td>";
       echo "</tr>";
 
@@ -228,7 +234,7 @@ class PluginPositionsInfo extends CommonDBTM {
       if ($ID > 0) {
          $item = new $this->fields['itemtype']();
          echo $item->getTypeName();
-         echo "<input type='hidden' name='itemtype' value='" . $this->fields['itemtype'] . "'";
+         echo Html::hidden('itemtype', ['value' => $this->fields['itemtype']]);
 
       } else {
 

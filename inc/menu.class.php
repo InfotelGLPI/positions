@@ -62,18 +62,15 @@ class PluginPositionsMenu extends CommonGLPI {
       $menu['options']['positions']['links']['search'] = PluginPositionsPosition::getSearchURL(false);
       $menu['options']['positions']['links']['config'] = '/plugins/positions/front/config.form.php';
 
-      $menu['options']['positions']['links']["<img  src='".$CFG_GLPI["root_doc"].
-         "/pics/menu_showall.png' title='".__('Map view', 'positions').
-         "' alt='".__('Map view', 'positions')."'>"] = '/plugins/positions/front/map.form.php';
+//      $menu['options']['positions']['links']["<i class='fas fa-map' title='".__('Map view', 'positions').
+//         "'>"] = '/plugins/positions/front/map.form.php';
 
       //$menu['options']['config']['links']['search'] = PluginPositionsPosition::getSearchURL(false);
       $menu['options']['config']['links']['config'] = '/plugins/positions/front/config.form.php';
 
       $menu['options']['info']['links']['search'] = '/plugins/positions/front/info.php';
 
-      $menu['options']['info']['links']["<img  src='".$CFG_GLPI["root_doc"].
-      "/pics/menu_showall.png' title='".__('Map view', 'positions').
-      "' alt='".__('Map view', 'positions')."'>"] = '/plugins/positions/front/map.form.php';
+//      $menu['options']['info']['links']["<i class='fas fa-map' title='".__('Map view', 'positions')."'>"] = '/plugins/positions/front/map.form.php';
 
       $menu['options']['info']['links']['config'] = '/plugins/positions/front/config.form.php';
 

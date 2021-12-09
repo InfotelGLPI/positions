@@ -27,7 +27,7 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+include('../../../inc/includes.php');
 
 if (!isset($_GET["file"])) {
    $_GET["file"] = "";
@@ -50,11 +50,11 @@ if ($itemtype == 'Location') {
    $detail   = new PluginPositionsInfo();
    $restrict = "`is_active` = 1 ";
    $pos->getFromDB($idpos);
-   $dbu      = new DbUtils();
+   $dbu = new DbUtils();
 
    $restrict = ["is_active"  => 1,
-                "is_deleted" => 0]+$dbu->getEntitiesRestrictCriteria("glpi_plugin_positions_infos",
-                                                                     '', '', $pos->maybeRecursive());
+                "is_deleted" => 0] + $dbu->getEntitiesRestrictCriteria("glpi_plugin_positions_infos",
+                                                                       '', '', $pos->maybeRecursive());
    $infos    = $dbu->getAllDataFromTable('glpi_plugin_positions_infos', $restrict);
 
    $item = new $itemtype();

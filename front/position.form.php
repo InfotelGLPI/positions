@@ -27,7 +27,7 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+include('../../../inc/includes.php');
 
 if (!isset($_GET["id"])) {
    $_GET["id"] = "";
@@ -57,34 +57,42 @@ if (isset($_POST["add"])) {
    Html::back();
 
 } else if (isset($_POST["update"])) {
+
    if (isset($_POST["multi"])) {
       $data = explode(",", $_POST["multi"]);
+
       for ($i = 0; $i < count($data); $i = $i + 3) {
          if (isset($data[$i + 1]) && isset($data[$i + 2])) {
+
             $input = ['id'            => $data[$i],
-                           'x_coordinates' => $data[$i + 1],
-                           'y_coordinates' => $data[$i + 2],
-                           'locations_id'  => $_POST["locations_id"]];
-            $pos->check($input['id'], UPDATE);
-            $pos->update($input);
+                      'x_coordinates' => $data[$i + 1],
+                      'y_coordinates' => $data[$i + 2],
+                      'locations_id'  => $_POST["locations_id"]];
+
+            if ($input['id'] > 0) {
+//               $pos->check($input['id'], UPDATE);
+               $pos->update($input);
+            }
          }
       }
 
       if (isset($_POST["referrer"]) && $_POST["referrer"] > 0) {
          Html::back();
       } else {
-         Html::redirect($CFG_GLPI["root_doc"].
-                 "/plugins/positions/front/map.php?locations_id=".$_POST["locations_id"]);
+         Html::redirect($CFG_GLPI["root_doc"] .
+                        "/plugins/positions/front/map.php?locations_id=" . $_POST["locations_id"]);
       }
 
    } else {
-      $pos->check($_POST['id'], UPDATE);
-      $pos->update($_POST);
+      if ($_POST['id'] > 0) {
+//         $pos->check($_POST['id'], UPDATE);
+         $pos->update($_POST);
+      }
       if (isset($_POST["referrer"]) && $_POST["referrer"] > 0) {
          Html::back();
       } else {
-         Html::redirect($CFG_GLPI["root_doc"].
-                 "/plugins/positions/front/position.form.php?id=".$_POST['id']);
+         Html::redirect($CFG_GLPI["root_doc"] .
+                        "/plugins/positions/front/position.form.php?id=" . $_POST['id']);
       }
    }
 
@@ -113,15 +121,15 @@ if (isset($_POST["add"])) {
 } else if (isset($_POST["deletepos"])) {
    $pos->check($_POST['id'], UPDATE);
    $pos->delete($_POST, 1);
-   Html::redirect($CFG_GLPI["root_doc"].
-           "/plugins/positions/front/map.php?locations_id=".$_POST["locations_id"]);
+   Html::redirect($CFG_GLPI["root_doc"] .
+                  "/plugins/positions/front/map.php?locations_id=" . $_POST["locations_id"]);
 
 } else if (isset($_POST["addLocation"])) {
    $pos->checkGlobal(READ);
    Html::header(PluginPositionsPosition::getTypeName(), '', "tools", "pluginpositionsmenu", "positions");
    $map     = PluginPositionsPosition::getDocument($_POST["locations_id"]);
    $options = ["document_id"  => $map,
-                    "locations_id" => $_POST["locations_id"]];
+               "locations_id" => $_POST["locations_id"]];
    PluginPositionsPosition::showMapCreateLocation($options);
    Html::footer();
 
