@@ -76,7 +76,7 @@ class PluginPositionsImageItem extends CommonDBTM {
                  'locations_id'    => $locations_id];
 
       Ajax::updateItemOnSelectEvent("dropdown_$myname$rand", "show_$myname$rand",
-                                    $CFG_GLPI["root_doc"] ."/plugins/positions/ajax/dropdownAllItems.php", $params);
+                                    PLUGIN_POSITIONS_WEBDIR ."/ajax/dropdownAllItems.php", $params);
 
       echo "</td><td>\n";
       echo "<span id='show_$myname$rand'>&nbsp;</span>\n";
@@ -89,8 +89,8 @@ class PluginPositionsImageItem extends CommonDBTM {
          echo "</script>\n";
 
          $params["typetable"] = $value_type;
-         Ajax::updateItem("show_$myname$rand", $CFG_GLPI["root_doc"] .
-                                               "/plugins/positions/ajax/dropdownAllItems.php", $params);
+         Ajax::updateItem("show_$myname$rand", PLUGIN_POSITIONS_WEBDIR .
+                                               "/ajax/dropdownAllItems.php", $params);
 
       }
 
@@ -314,9 +314,9 @@ class PluginPositionsImageItem extends CommonDBTM {
                echo "<td>";
                if (!empty($ligne["img"])) {
                   $ext = pathinfo($ligne["img"], PATHINFO_EXTENSION);
-                  echo "<object data='" . $CFG_GLPI['root_doc'] . "/plugins/positions/front/map.send.php?file=" . $ligne["img"] . "&type=pics' type='image/$ext'>
-                      <param name='src' value='" . $CFG_GLPI['root_doc'] .
-                       "/plugins/positions/front/map.send.php?file=" . $ligne["img"] . "&type=pics'>
+                  echo "<object data='" . PLUGIN_POSITIONS_WEBDIR . "/front/map.send.php?file=" . $ligne["img"] . "&type=pics' type='image/$ext'>
+                      <param name='src' value='" . PLUGIN_POSITIONS_WEBDIR .
+                       "/front/map.send.php?file=" . $ligne["img"] . "&type=pics'>
                      </object> ";
                } else {
                   echo __('No associated picture', 'positions');

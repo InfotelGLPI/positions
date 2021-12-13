@@ -30,10 +30,10 @@
 function plugin_positions_install() {
    global $DB,$CFG_GLPI;
 
-   include_once (GLPI_ROOT."/plugins/positions/inc/profile.class.php");
+   include_once (PLUGIN_POSITIONS_DIR."/inc/profile.class.php");
 
    if (!$DB->tableExists("glpi_plugin_positions_positions")) {
-      $DB->runFile(GLPI_ROOT."/plugins/positions/sql/empty-4.5.1.sql");
+      $DB->runFile(PLUGIN_POSITIONS_DIR."/sql/empty-4.5.1.sql");
    }
 
    //v1.0.0 to V2.0.0
@@ -95,7 +95,7 @@ function plugin_positions_install() {
 
    // Update to 4.0.1
    if (!$DB->fieldExists("glpi_plugin_positions_positions", "width") && !$DB->fieldExists("glpi_plugin_positions_positions", "height")) {
-      $DB->runFile(GLPI_ROOT."/plugins/positions/sql/update-4.0.1.sql");
+      $DB->runFile(PLUGIN_POSITIONS_DIR."/sql/update-4.0.1.sql");
    }
 
    //to v4.2.2
@@ -116,20 +116,20 @@ function plugin_positions_install() {
                 ADD `locations_id` int(11) NOT NULL default '0' COMMENT 'RELATION to table glpi_locations';";
       $DB->query($query);
 
-      include(GLPI_ROOT . "/plugins/positions/sql/update_421_422.php");
+      include(PLUGIN_POSITIONS_DIR . "/sql/update_421_422.php");
       update421to422();
    }
 
    // Update to 4.4.0
    if (!$DB->fieldExists("glpi_plugin_positions_configs", "default_width")
       && !$DB->fieldExists("glpi_plugin_positions_configs", "default_height")) {
-      $DB->runFile(GLPI_ROOT."/plugins/positions/sql/update-4.4.0.sql");
+      $DB->runFile(PLUGIN_POSITIONS_DIR."/sql/update-4.4.0.sql");
    }
 
    //Update to 4.5.1 change size
    $listFields = $DB->listFields('glpi_plugin_positions_positions');
    if(isset($listFields['labelSize']) && $listFields['labelSize']['Type'] == "int(11)") {
-      $DB->runFile(GLPI_ROOT."/plugins/positions/sql/update-4.5.1.sql");
+      $DB->runFile(PLUGIN_POSITIONS_DIR."/sql/update-4.5.1.sql");
    }
 
    if ($DB->tableExists("glpi_plugin_positions_profiles")) {

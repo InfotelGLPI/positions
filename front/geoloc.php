@@ -115,8 +115,8 @@ if (isset($locations_id) && !empty($locations_id)) {
 
 } else {
    echo "<div class='center'><br><br>";
-   echo "<i class='fas fa-exclamation-triangle fa-4x' style='color:orange'></i><br><br>";
-   echo "<span class='b'>" . __('The selected object is not located on a map', 'positions') . "</span></div>";
+   echo "<div class='alert alert-important alert-warning d-flex'>";
+   echo "<b'>" . __('The selected object is not located on a map', 'positions') . "</b></div>";
 }
 
 if (isset($_GET['from_treeview']) && $plugin->isActivated("treeview")) {

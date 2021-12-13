@@ -31,6 +31,13 @@
 
 define('PLUGIN_POSITIONS_VERSION', '6.0.0');
 
+if (!defined("PLUGIN_POSITIONS_DIR")) {
+   define("PLUGIN_POSITIONS_DIR", Plugin::getPhpDir("positions"));
+   define("PLUGIN_POSITIONS_NOTFULL_DIR", Plugin::getPhpDir("positions",false));
+   define("PLUGIN_POSITIONS_WEBDIR", Plugin::getWebDir("positions"));
+   define("PLUGIN_POSITIONS_NOTFULL_WEBDIR", Plugin::getWebDir("positions",false));
+}
+
 function plugin_init_positions() {
    global $PLUGIN_HOOKS;
 
@@ -66,9 +73,9 @@ function plugin_init_positions() {
          "lib/canvas/color-field.js",
       ];
       $PLUGIN_HOOKS["javascript"]['positions']     = [
-         "/plugins/positions/positions.js",
-      //         "/plugins/positions/geoloc.js",
-         "/plugins/positions/lib/Jcrop/jquery.Jcrop.js",
+         PLUGIN_POSITIONS_NOTFULL_DIR."/positions.js",
+      //         PLUGIN_POSITIONS_NOTFULL_DIR."/geoloc.js",
+         PLUGIN_POSITIONS_NOTFULL_DIR."/lib/Jcrop/jquery.Jcrop.js",
       ];
       //css
       $PLUGIN_HOOKS['add_css']['positions'] = ["positions.css",

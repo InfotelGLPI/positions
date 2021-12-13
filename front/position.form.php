@@ -79,8 +79,8 @@ if (isset($_POST["add"])) {
       if (isset($_POST["referrer"]) && $_POST["referrer"] > 0) {
          Html::back();
       } else {
-         Html::redirect($CFG_GLPI["root_doc"] .
-                        "/plugins/positions/front/map.php?locations_id=" . $_POST["locations_id"]);
+         Html::redirect(PLUGIN_POSITIONS_WEBDIR .
+                        "/front/map.php?locations_id=" . $_POST["locations_id"]);
       }
 
    } else {
@@ -91,8 +91,8 @@ if (isset($_POST["add"])) {
       if (isset($_POST["referrer"]) && $_POST["referrer"] > 0) {
          Html::back();
       } else {
-         Html::redirect($CFG_GLPI["root_doc"] .
-                        "/plugins/positions/front/position.form.php?id=" . $_POST['id']);
+         Html::redirect(PLUGIN_POSITIONS_WEBDIR .
+                        "/front/position.form.php?id=" . $_POST['id']);
       }
    }
 
@@ -121,8 +121,8 @@ if (isset($_POST["add"])) {
 } else if (isset($_POST["deletepos"])) {
    $pos->check($_POST['id'], UPDATE);
    $pos->delete($_POST, 1);
-   Html::redirect($CFG_GLPI["root_doc"] .
-                  "/plugins/positions/front/map.php?locations_id=" . $_POST["locations_id"]);
+   Html::redirect(PLUGIN_POSITIONS_WEBDIR .
+                  "/front/map.php?locations_id=" . $_POST["locations_id"]);
 
 } else if (isset($_POST["addLocation"])) {
    $pos->checkGlobal(READ);

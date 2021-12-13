@@ -272,7 +272,7 @@ class PluginPositionsInfo extends CommonDBTM {
          $params = ['itemtype' => '__VALUE__',
                          'id'       => $ID];
          Ajax::updateItemOnSelectEvent("dropdown_itemtype$rand", "span_fields",
-                                       $CFG_GLPI["root_doc"] . "/plugins/positions/ajax/dropdownInfoFields.php",
+                                       PLUGIN_POSITIONS_WEBDIR . "/ajax/dropdownInfoFields.php",
                                        $params);
       }
 
@@ -598,14 +598,14 @@ class PluginPositionsInfo extends CommonDBTM {
 
       } else if ($searchOption['field'] == 'contact_num') {
 
-         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/positions/pics/miniphones.png' title='" .
+         echo "<img src='" . PLUGIN_POSITIONS_WEBDIR . "/pics/miniphones.png' title='" .
               $display . "'>&nbsp;
          <a href=\"tel:" . $display . "\">" .
               $display . "</a>";
 
       } else if ($searchOption['field'] == 'number_line') {
 
-         echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/positions/pics/miniphones.png' title='" .
+         echo "<img src='" . PLUGIN_POSITIONS_WEBDIR . "/pics/miniphones.png' title='" .
               $display . "'>&nbsp;
          <a href=\"tel:" . $display . "\">" .
               $display . "</a>";
@@ -646,8 +646,8 @@ class PluginPositionsInfo extends CommonDBTM {
       } else {
          echo "<h3>" . __('Direct link', 'positions') . " : ";
 
-         echo "<a href='" . $CFG_GLPI['root_doc'] .
-              "/plugins/positions/front/map.php?locations_id=" . $itemclass->fields["id"] . "'
+         echo "<a href='" . PLUGIN_POSITIONS_WEBDIR .
+              "/front/map.php?locations_id=" . $itemclass->fields["id"] . "'
          target='_blank'>";
          $title = $itemclass->fields["name"];
          echo $title;
@@ -704,7 +704,7 @@ class PluginPositionsInfo extends CommonDBTM {
                                     echo $location . " : <br>";
                                  }
                                  echo "<span class='title'>" . __('Alternate username number') . " : </span>";
-                                 echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/positions/pics/miniphones.png' title='" .
+                                 echo "<img src='" . PLUGIN_POSITIONS_WEBDIR . "/pics/miniphones.png' title='" .
                                       $contact_num . "'>&nbsp;
                                  <a href=\"tel:" . $contact_num . "\">" .
                                       $contact_num . "</a>&nbsp;&nbsp;&nbsp;&nbsp;";
@@ -715,7 +715,7 @@ class PluginPositionsInfo extends CommonDBTM {
                            if (isset($number_line) && $number_line != null) {
                               if (!$export) {
                                  echo "<span class='title'>" . _x('quantity', 'Number of lines') . " : </span>";
-                                 echo "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/positions/pics/miniphones.png' title='" .
+                                 echo "<img src='" . PLUGIN_POSITIONS_WEBDIR . "/pics/miniphones.png' title='" .
                                       $number_line . "'>&nbsp;
                                  <a href=\"tel:" . $number_line . "\">" .
                                       $number_line . "</a>";

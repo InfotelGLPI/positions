@@ -202,17 +202,17 @@
 }
 
 /* styling for elements inside overlay */
-.details {
-   /*position:absolute;*/
-   float: right;
-   top:15px;
-   right:0px;
-   font-size:11px;
-   color:#fff;
-   margin-top: 20px;
-   margin-bottom: 0px;
-   /*width:230px;*/
-}
+/*.details {*/
+/*   !*position:absolute;*!*/
+/*   float: right;*/
+/*   top:15px;*/
+/*   right:0px;*/
+/*   font-size:11px;*/
+/*   !*color:#fff;*!*/
+/*   margin-top: 20px;*/
+/*   margin-bottom: 0px;*/
+/*   !*width:230px;*!*/
+/*}*/
 
 .call {
    /*position:absolute;*/
@@ -227,11 +227,11 @@
    /*width:230px;*/
 }
 
-.details h3 {
-   color:#2D545E;
-   font-size:12px;
-   margin:0 0 -10px 0;
-}
+/*.details h3 {*/
+/*   color:#2D545E;*/
+/*   font-size:12px;*/
+/*   margin:0 0 -10px 0;*/
+/*}*/
 
 .call h3 {
    color:#2D545E;

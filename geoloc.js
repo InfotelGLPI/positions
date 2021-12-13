@@ -34,17 +34,3 @@ Position = {
    }
 }
 
-//Ext.onReady(function() {
-//   Position.init();
-//   Ext.select('a[href*=user.form.php]').each(function(el){
-//      var href = el.getAttribute('href');
-//      var users_id = href.substring(href.lastIndexOf('id=')+3, href.length);
-//      var target = "../plugins/positions/front/geoloc.php?users_id="+users_id;
-//
-//      el.insertHtml(
-//         'afterEnd',
-//         '<a href=\"#\" onclick=\"Position.openWindow(\''+target+'\')\"><img src="../plugins/positions/pics/sm_globe.png" /></a>'
-//      );
-//   });
-//});
-

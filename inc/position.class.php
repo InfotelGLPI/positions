@@ -193,8 +193,8 @@ class PluginPositionsPosition extends CommonDBTM {
 
       if (!isset($this->input["massiveaction"])) {
 
-         Html::redirect($CFG_GLPI["root_doc"] .
-                 "/plugins/positions/front/coordinates.form.php?id=" . $this->getField('id'));
+         Html::redirect(PLUGIN_POSITIONS_WEBDIR .
+                 "/front/coordinates.form.php?id=" . $this->getField('id'));
       }
    }
 
@@ -420,7 +420,7 @@ class PluginPositionsPosition extends CommonDBTM {
 
          $entities_id = $Doc->fields["entities_id"];
          $path = GLPI_DOC_DIR . "/" . $Doc->fields["filepath"];
-         $img = $CFG_GLPI['root_doc'] . "/plugins/positions/front/map.send.php?docid=" . $document_id;
+         $img = PLUGIN_POSITIONS_WEBDIR . "/front/map.send.php?docid=" . $document_id;
          $dim = getimagesize($path);
          $extension = pathinfo($path, PATHINFO_EXTENSION);
 
@@ -529,8 +529,8 @@ class PluginPositionsPosition extends CommonDBTM {
          }
       } else {
 
-         Html::redirect($CFG_GLPI["root_doc"] .
-             "/plugins/positions/front/map.php?locations_id=" . $locations_idParent);
+         Html::redirect(PLUGIN_POSITIONS_WEBDIR .
+             "/front/map.php?locations_id=" . $locations_idParent);
       }
    }
 
@@ -694,8 +694,8 @@ class PluginPositionsPosition extends CommonDBTM {
             $dbu = new DbUtils();
             if ($dbu->countElementsInTable("glpi_plugin_positions_positions", $restrict) != 0) {
                Session::addMessageAfterRedirect(__('This item is already bound to a location', 'positions'), false, ERROR);
-               Html::redirect($CFG_GLPI["root_doc"] .
-                    "/plugins/positions/front/map.php?locations_id=" . $opt["locations_idParent"]);
+               Html::redirect(PLUGIN_POSITIONS_WEBDIR .
+                    "/front/map.php?locations_id=" . $opt["locations_idParent"]);
 
                // If not we can add its position and picture
             } else {
@@ -717,8 +717,8 @@ class PluginPositionsPosition extends CommonDBTM {
                if ($opt["checked"] == 'on') {
                   self::showMapCreateLocation($opt);
                } else if ($opt["checked"] == 'off') {
-                   Html::redirect($CFG_GLPI["root_doc"] .
-                       "/plugins/positions/front/map.php?locations_id=" . $opt["locations_id"]);
+                   Html::redirect(PLUGIN_POSITIONS_WEBDIR .
+                       "/front/map.php?locations_id=" . $opt["locations_id"]);
                }
             }
 
@@ -742,14 +742,14 @@ class PluginPositionsPosition extends CommonDBTM {
             if ($opt["checked"] == 'on') {
                self::showMapCreateLocation($opt);
             } else if ($opt["checked"] == 'off') {
-                Html::redirect($CFG_GLPI["root_doc"] .
-                    "/plugins/positions/front/map.php?locations_id=" . $opt["locations_id"]);
+                Html::redirect(PLUGIN_POSITIONS_WEBDIR .
+                    "/front/map.php?locations_id=" . $opt["locations_id"]);
             }
          }
       } else {
          Session::addMessageAfterRedirect(__('This item is already bound to a location', 'positions'), false, ERROR);
-         Html::redirect($CFG_GLPI["root_doc"] .
-                    "/plugins/positions/front/map.php?locations_id=" . $opt["locations_id"]);
+         Html::redirect(PLUGIN_POSITIONS_WEBDIR .
+                    "/front/map.php?locations_id=" . $opt["locations_id"]);
       }
    }
 
@@ -1028,8 +1028,8 @@ class PluginPositionsPosition extends CommonDBTM {
 
       $locations = [];
 
-      $target = $CFG_GLPI["root_doc"] .
-      "/plugins/positions/front/map.php";
+      $target = PLUGIN_POSITIONS_WEBDIR .
+      "/front/map.php";
       echo "<form method='post' id='locationform' action='$target'>";
       if ($display) {
          echo "<table>";
@@ -1085,8 +1085,8 @@ class PluginPositionsPosition extends CommonDBTM {
       }
 
       echo "<div align='center'>";
-      echo "<form method='post' action=\"" . $CFG_GLPI["root_doc"] .
-      "/plugins/positions/front/position.form.php\" name='addfromplugin' id='addfromplugin'>";
+      echo "<form method='post' action=\"" . PLUGIN_POSITIONS_WEBDIR .
+      "/front/position.form.php\" name='addfromplugin' id='addfromplugin'>";
 
       $entity = $_SESSION["glpiactive_entity"];
       $loc = new Location();
@@ -1216,18 +1216,18 @@ class PluginPositionsPosition extends CommonDBTM {
 
                      if ($plugin->isActivated("resources") && ($val['itemtype'] == 'PluginResourcesResource')) {
                         $val['picture'] = $itemclass->fields['picture'];
-                        $options['img'] = $CFG_GLPI['url_base'].'/plugins/resources/pics/nobody.png';
+                        $options['img'] = $CFG_GLPI['url_base'].PLUGIN_RESOURCES_NOTFULL_DIR.'/pics/nobody.png';
                         if (!($val['picture'] == null)) {
-                           $options['img'] = $CFG_GLPI['url_base'].'/plugins/resources/front/picture.send.php?file='.$val['picture'];
+                           $options['img'] = $CFG_GLPI['url_base'].PLUGIN_RESOURCES_NOTFULL_DIR.'/front/picture.send.php?file='.$val['picture'];
                         }
                         $objects[$val['id']] = $options;
 
                      } else if (($val['itemtype'] == 'Location')) {
-                        $options['img'] = $CFG_GLPI['url_base'].'/plugins/positions/pics/door.png';
+                        $options['img'] = $CFG_GLPI['url_base'].PLUGIN_POSITIONS_NOTFULL_DIR.'/pics/door.png';
                         $objects[$val['id']] = $options;
 
                      } else if (($val['itemtype'] == 'Netpoint')) {
-                        $options['img'] = $CFG_GLPI['url_base'].'/plugins/positions/pics/socket.png';
+                        $options['img'] = $CFG_GLPI['url_base'].PLUGIN_POSITIONS_NOTFULL_DIR.'/pics/socket.png';
                         $objects[$val['id']] = $options;
 
                      } else {
@@ -1238,9 +1238,9 @@ class PluginPositionsPosition extends CommonDBTM {
                         if (isset($itemclass->fields[$typefield])) {
                            $val['img'] = $imgitem->displayItemImage($itemclass->fields[$typefield], $classe);
                         }
-                        $options['img'] = $CFG_GLPI['url_base'].'/plugins/positions/pics/nothing.png';
+                        $options['img'] = $CFG_GLPI['url_base'].PLUGIN_POSITIONS_NOTFULL_DIR.'/pics/nothing.png';
                         if (!($val['img'] == null)) {
-                           $options['img'] = $CFG_GLPI['url_base'].'/plugins/positions/front/map.send.php?type=pics&file='.$val['img'];
+                           $options['img'] = $CFG_GLPI['url_base'].PLUGIN_POSITIONS_NOTFULL_DIR.'/front/map.send.php?type=pics&file='.$val['img'];
                         }
 
                         $objects[$val['id']] = $options;
@@ -1270,7 +1270,7 @@ class PluginPositionsPosition extends CommonDBTM {
                             'y_coordinates'  => 80,
                             'testEvent'      => $eventless,
                             'hideLabel'      => true,
-                            'img'            => $CFG_GLPI['url_base'].'/plugins/positions/pics/nothing.png'];
+                            'img'            => $CFG_GLPI['url_base']. PLUGIN_POSITIONS_NOTFULL_DIR . '/pics/nothing.png'];
          self::drawCanvas($objects, $params);
       }
    }
@@ -1298,7 +1298,7 @@ class PluginPositionsPosition extends CommonDBTM {
          $input['eventless'] = true;
          $input['width']     = $params['largeur'];
          $input['height']    = $params['hauteur'];
-         $input['imagePath'] = $CFG_GLPI['url_base'] . '/plugins/positions/front/map.send.php?docid=' . $params['docid'];
+         $input['imagePath'] = $CFG_GLPI['url_base'] . PLUGIN_POSITIONS_NOTFULL_DIR. '/front/map.send.php?docid=' . $params['docid'];
          $input['color']     = 'black';
          $input['testEvent'] = $eventless;
          $input['x']         = 250;
@@ -1335,7 +1335,7 @@ class PluginPositionsPosition extends CommonDBTM {
                               'gradient'                 => false, //dégradé
                               'networkFreezeOnLoad'      => true,
                               'nodeFontColor'            => 'rgb(29,34,43)', //couleur des Noeuds
-                              'imageDir'                 => $CFG_GLPI['url_base'] . "/plugins/positions/lib/canvas/images/",
+                              'imageDir'                 => $CFG_GLPI['url_base'] . PLUGIN_POSITIONS_NOTFULL_DIR . "/lib/canvas/images/",
                               //'zoom'                   => 1.0, //zoom de depart
                               //'zoomStep'               => 0.5, //coefficient pour le zoom
                               'calculateLayout'          => false,
@@ -1500,8 +1500,8 @@ class PluginPositionsPosition extends CommonDBTM {
 
       if (Session::haveRight('plugin_positions', UPDATE) && $itemclass->canView()) {
          echo "<a class='config' target='_blank' title=\"" . __('Configuring the display materials', 'positions') . "\"
-                              href='" . $CFG_GLPI["root_doc"] .
-             "/plugins/positions/front/info.php'></a>";
+                              href='" . PLUGIN_POSITIONS_WEBDIR .
+             "/front/info.php'></a>";
       }
          $width = 450;
 
@@ -1509,7 +1509,7 @@ class PluginPositionsPosition extends CommonDBTM {
            && $itemclass->getType() != 'Location'
               && $itemclass->getType() != 'Netpoint') {
 
-         $img = "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/positions/pics/nothing.png' width='30' height='30'>";
+         $img = "<img src='" . PLUGIN_POSITIONS_WEBDIR . "/pics/nothing.png' width='30' height='30'>";
 
          if (!preg_match("/nothing.png/", $srcimg)) {
              $path = GLPI_PLUGIN_DOC_DIR . "/positions/pics/" . $srcimg;
@@ -1517,9 +1517,9 @@ class PluginPositionsPosition extends CommonDBTM {
              $largeur = $sizes[0];
              $hauteur = $sizes[1];
              $ext = pathinfo($srcimg, PATHINFO_EXTENSION);
-             $img = "<object width='" . $largeur . "' height='" . $hauteur . "' data='" . $CFG_GLPI['root_doc'] . "/plugins/positions/front/map.send.php?file=" . $srcimg . "&type=pics' type='image/$ext'>
-             <param name='src' value='" . $CFG_GLPI['root_doc'] .
-                 "/plugins/positions/front/map.send.php?file=" . $srcimg . "&type=pics'>
+             $img = "<object width='" . $largeur . "' height='" . $hauteur . "' data='" . PLUGIN_POSITIONS_WEBDIR . "/front/map.send.php?file=" . $srcimg . "&type=pics' type='image/$ext'>
+             <param name='src' value='" . PLUGIN_POSITIONS_WEBDIR .
+                 "/front/map.send.php?file=" . $srcimg . "&type=pics'>
             </object> ";
          }
       } else {
@@ -1527,7 +1527,7 @@ class PluginPositionsPosition extends CommonDBTM {
          if ($plugin->isActivated("resources")
             && $itemclass->getType() == 'PluginResourcesResource') {
 
-             $img = "<img src='" . $CFG_GLPI["root_doc"] . "/plugins/resources/pics/nobody.png' width='90' height='90'>";
+             $img = "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/nobody.png' width='90' height='90'>";
              $res = new PluginResourcesResource();
             if ($res->getFromDB($itemclass->fields["id"])) {
                if (isset($res->fields["picture"])) {
@@ -1537,9 +1537,9 @@ class PluginPositionsPosition extends CommonDBTM {
                       $largeur = $sizes[0];
                       $hauteur = $sizes[1];
                       $ext = pathinfo($srcimg, PATHINFO_EXTENSION);
-                      $img = "<object width='" . $largeur . "' height='" . $hauteur . "' data='" . $CFG_GLPI['root_doc'] . "/plugins/resources/front/picture.send.php?file=" . $res->fields["picture"] . "' type='image/$ext'>
-                <param name='src' value='" . $CFG_GLPI['root_doc'] .
-                          "/plugins/resources/front/picture.send.php?file=" . $res->fields["picture"] . "'>
+                      $img = "<object width='" . $largeur . "' height='" . $hauteur . "' data='" . PLUGIN_RESOURCES_WEBDIR . "/front/picture.send.php?file=" . $res->fields["picture"] . "' type='image/$ext'>
+                <param name='src' value='" . PLUGIN_RESOURCES_WEBDIR .
+                          "/front/picture.send.php?file=" . $res->fields["picture"] . "'>
                </object> ";
                   }
                }
@@ -1657,8 +1657,8 @@ class PluginPositionsPosition extends CommonDBTM {
          $colsup = 1;
       }
       if ($number) {
-         echo "<form method='post' action=\"" . $CFG_GLPI["root_doc"] .
-                "/plugins/positions/front/position.form.php\" name='pointform' id='pointform'>";
+         echo "<form method='post' action=\"" . PLUGIN_POSITIONS_WEBDIR .
+                "/front/position.form.php\" name='pointform' id='pointform'>";
          echo "<div align='center'><table class='tab_cadre_fixe'>";
          echo "<tr><th colspan='" . (4 + $colsup) . "'>" . __('Associated coordinate', 'positions') . ":</th></tr>";
          echo "<tr><th>" . __('Name') . "</th>";
@@ -1683,8 +1683,8 @@ class PluginPositionsPosition extends CommonDBTM {
                   && (in_array($data['entities_id'], $_SESSION['glpiactiveentities'])
                      || $data["is_recursive"])) {
 
-               echo "<td class='center'><a href='" . $CFG_GLPI["root_doc"] .
-                     "/plugins/positions/front/position.form.php?id=" . $data["id"] . "'>" . $data["name"];
+               echo "<td class='center'><a href='" . PLUGIN_POSITIONS_WEBDIR .
+                     "/front/position.form.php?id=" . $data["id"] . "'>" . $data["name"];
 
                if (($_SESSION["glpiis_ids_visible"]) || (empty($data["name"]))) {
                   echo " (" . $data["id"] . ")";
@@ -1710,7 +1710,7 @@ class PluginPositionsPosition extends CommonDBTM {
                && $withtemplate < 2) {
                if ($data["is_deleted"] != 1) {
                   echo "<td class='center tab_bg_2'>";
-                  Html::showSimpleForm($CFG_GLPI['root_doc'].'/plugins/positions/front/position.form.php',
+                  Html::showSimpleForm(PLUGIN_POSITIONS_WEBDIR.'/front/position.form.php',
                                        'delete_item',
                                        _x('button', 'Delete permanently'),
                                        ['id' => $positionsID]);
@@ -1903,13 +1903,13 @@ class PluginPositionsPosition extends CommonDBTM {
       $Doc  = new Document();
       if (isset($documents_id) && $Doc->getFromDB($documents_id)) {
 
-         $out.="&nbsp;<a href='#' onClick=\"var w = window.open('".$CFG_GLPI['root_doc'].
-            "/plugins/positions/front/geoloc.php?positions_id=".
+         $out.="&nbsp;<a href='#' onClick=\"var w = window.open('".PLUGIN_POSITIONS_WEBDIR.
+            "/front/geoloc.php?positions_id=".
          $positions_id."&amp;download=1&amp;locations_id=".$locations_id.
             "' ,'glpipopup', 
             'height=650, width=1400, top=100, left=100, scrollbars=yes' );
-            w.focus();\" ><img src='".$CFG_GLPI["root_doc"].
-            "/plugins/positions/pics/sm_globe.png'></a>&nbsp;";
+            w.focus();\" ><img src='".PLUGIN_POSITIONS_WEBDIR.
+            "/pics/sm_globe.png'></a>&nbsp;";
       }
 
       return $out;
@@ -1925,7 +1925,7 @@ class PluginPositionsPosition extends CommonDBTM {
       if (isset($documents_id)
             && $Doc->getFromDB($documents_id)) {
 
-         $target = $CFG_GLPI["root_doc"]."/plugins/positions/front/geoloc.php?positions_id=" .
+         $target = PLUGIN_POSITIONS_WEBDIR."/front/geoloc.php?positions_id=" .
          $positions_id . "&amp;download=1&amp;locations_id=" . $locations_id;
          echo "<script type='text/javascript'>
          Position.openWindow('$target');
@@ -1945,8 +1945,8 @@ class PluginPositionsPosition extends CommonDBTM {
       $itemclass->getFromDB($items_id);
 
       echo "<div align='center'>";
-      echo "<form method='post' action=\"" . $CFG_GLPI["root_doc"] .
-      "/plugins/positions/front/position.form.php\" name='pointform' id='pointform'>";
+      echo "<form method='post' action=\"" . PLUGIN_POSITIONS_WEBDIR .
+      "/front/position.form.php\" name='pointform' id='pointform'>";
 
       echo "<table class='tab_cadre_fixe'>";
       echo "<tr><th colspan='4'>" . __('Create coordinates', 'positions'). " :</th></tr>";
@@ -2006,7 +2006,7 @@ class PluginPositionsPosition extends CommonDBTM {
 
       $out = self::showGeolocInfos($params['itemtype'], $params['id']);
       if (!empty($out["positions_id"])) {
-         $params['url'] = $CFG_GLPI['root_doc']."/plugins/positions/front/geoloc.php?positions_id=".
+         $params['url'] = PLUGIN_POSITIONS_WEBDIR."/front/geoloc.php?positions_id=".
             $out["positions_id"]."&amp;download=".$out["download"].
             "&amp;locations_id=".$out["locations_id"]."&amp;from_treeview=".$out["from_treeview"];
 
