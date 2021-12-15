@@ -28,7 +28,7 @@
       <version>
          <num>6.0.0-rc1</num>
          <compatibility>~10.0</compatibility>
-         <download_url>https://github.com/InfotelGLPI/positions/releases/download/6.0.0-rc1/glpi-positions-6.0.0-rc1.tar.gz</download_url>
+         <download_url>https://github.com/InfotelGLPI/positions/releases/download/6.0.0-rc1/glpi-positions-6.0.0-rc1.tar.bz2</download_url>
       </version>
       <version>
          <num>5.0.0</num>
