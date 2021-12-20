@@ -55,7 +55,7 @@ function plugin_init_positions() {
       }
 
       if (Session::haveRight("plugin_positions", READ)) {
-         $PLUGIN_HOOKS['helpdesk_menu_entry']['positions'] = '/front/map.form.php';
+         $PLUGIN_HOOKS['helpdesk_menu_entry']['positions'] = PLUGIN_POSITIONS_NOTFULL_DIR.'/front/map.form.php';
          $PLUGIN_HOOKS['menu_toadd']['positions']          = ['tools' => 'PluginPositionsMenu'];
       }
 

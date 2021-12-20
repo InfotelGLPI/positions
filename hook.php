@@ -33,7 +33,7 @@ function plugin_positions_install() {
    include_once (PLUGIN_POSITIONS_DIR."/inc/profile.class.php");
 
    if (!$DB->tableExists("glpi_plugin_positions_positions")) {
-      $DB->runFile(PLUGIN_POSITIONS_DIR."/sql/empty-4.5.1.sql");
+      $DB->runFile(PLUGIN_POSITIONS_DIR."/sql/empty-6.0.0.sql");
    }
 
    //v1.0.0 to V2.0.0
