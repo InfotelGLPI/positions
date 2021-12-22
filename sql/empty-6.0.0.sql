@@ -33,7 +33,7 @@ CREATE TABLE `glpi_plugin_positions_positions` (
    `pattern` varchar(255) DEFAULT NULL,
    `labelSize` decimal(11,2) NOT NULL DEFAULT '1',
    `notepad` longtext collate utf8mb4_unicode_ci,
-   `date_mod` datetime default NULL,
+   `date_mod` timestamp NULL DEFAULT NULL,
    `is_deleted` tinyint(1) NOT NULL default '0',
    PRIMARY KEY  (`id`),
    KEY `name` (`name`),
