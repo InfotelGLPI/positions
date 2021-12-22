@@ -61,7 +61,7 @@ CREATE TABLE `glpi_plugin_positions_infos` (
    `fields` text collate utf8mb4_unicode_ci NOT NULL,
    `comment` text collate utf8mb4_unicode_ci,
    `notepad` longtext collate utf8mb4_unicode_ci,
-   `date_mod` datetime NULL default NULL,
+   `date_mod` timestamp NULL DEFAULT NULL,
    `is_active` tinyint(1) NOT NULL DEFAULT '0',
    `is_deleted` tinyint(1) NOT NULL default '0',
    PRIMARY KEY  (`id`)
