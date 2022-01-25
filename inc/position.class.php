@@ -824,7 +824,7 @@ class PluginPositionsPosition extends CommonDBTM {
          echo "<div class='center'><table class='tab_cadre_fixe'>";
          echo "<tr class='tab_bg_1'>";
          echo "<td colspan='4' class='center'>";
-         echo "<a class='btn btn-primary' href='./coordinates.form.php?id=" . $item->getField('id') . "'>" .
+         echo "<a class='submit btn btn-primary' href='./coordinates.form.php?id=" . $item->getField('id') . "'>" .
             __('Change the coordinates', 'positions'). "</a>";
          echo "</td>";
          echo "</tr>";
