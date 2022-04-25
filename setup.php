@@ -29,7 +29,7 @@
 
 // Init the hooks of the plugins -Needed
 
-define('PLUGIN_POSITIONS_VERSION', '6.0.0-rc2');
+define('PLUGIN_POSITIONS_VERSION', '6.0.0');
 
 if (!defined("PLUGIN_POSITIONS_DIR")) {
    define("PLUGIN_POSITIONS_DIR", Plugin::getPhpDir("positions"));
