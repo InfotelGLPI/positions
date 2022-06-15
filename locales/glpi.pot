@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Positions plugin 4.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-25 09:04+0000\n"
+"POT-Creation-Date: 2022-06-15 10:34+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -77,20 +77,8 @@ msgstr ""
 msgid "Add pictures to use with plugin"
 msgstr ""
 
-#: inc/imageitem.class.php:224 inc/imageitem.class.php:225
-msgid "Select pictures to upload (gif, jpg, png)"
-msgstr ""
-
-#: inc/imageitem.class.php:229 inc/imageitem.class.php:231
-msgid "upload pictures to the server"
-msgstr ""
-
-#: inc/imageitem.class.php:230 inc/imageitem.class.php:236
-msgid "Then"
-msgstr ""
-
-#: inc/imageitem.class.php:235 inc/imageitem.class.php:237
-msgid "refresh this form"
+#: inc/imageitem.class.php:220
+msgid "Upload yours pics into files/_plugins/positions/pics/ folder"
 msgstr ""
 
 #: inc/imageitem.class.php:243
