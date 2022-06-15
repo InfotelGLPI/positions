@@ -29,7 +29,7 @@
 
 // Init the hooks of the plugins -Needed
 
-define('PLUGIN_POSITIONS_VERSION', '6.0.0');
+define('PLUGIN_POSITIONS_VERSION', '6.0.1');
 
 if (!defined("PLUGIN_POSITIONS_DIR")) {
    define("PLUGIN_POSITIONS_DIR", Plugin::getPhpDir("positions"));
@@ -63,10 +63,10 @@ function plugin_init_positions() {
       // Add specific files to add to the header : javascript or css
       $PLUGIN_HOOKS['add_javascript']['positions'] = [
          //file upload
-         "lib/plupload/plupload.full.js",
+//         "lib/plupload/plupload.full.js",
          "lib/extjs/adapter/ext/ext-base.js",
          "lib/extjs/ext-all.js",
-         "upload.js",
+//         "upload.js",
          "positions.js",
          "geoloc.js",
          "lib/canvas/canvasXpress.min.js",

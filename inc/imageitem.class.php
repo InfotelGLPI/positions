@@ -76,7 +76,7 @@ class PluginPositionsImageItem extends CommonDBTM {
                  'locations_id'    => $locations_id];
 
       Ajax::updateItemOnSelectEvent("dropdown_$myname$rand", "show_$myname$rand",
-                                    PLUGIN_POSITIONS_WEBDIR ."/ajax/dropdownAllItems.php", $params);
+                                    PLUGIN_POSITIONS_WEBDIR . "/ajax/dropdownAllItems.php", $params);
 
       echo "</td><td>\n";
       echo "<span id='show_$myname$rand'>&nbsp;</span>\n";
@@ -134,11 +134,11 @@ class PluginPositionsImageItem extends CommonDBTM {
       if ($values["type"] != '-1') {
          if ($this->GetfromDBbyType($values["itemtype"], $values["type"])) {
             $this->update(['id'  => $this->fields['id'],
-                                'img' => $values["img"]]);
+                           'img' => $values["img"]]);
          } else {
             $this->add(['itemtype' => $values["itemtype"],
-                             'type'     => $values["type"],
-                             'img'      => $values["img"]]);
+                        'type'     => $values["type"],
+                        'img'      => $values["img"]]);
          }
       } else {
          $dbu    = new DbUtils();
@@ -151,11 +151,11 @@ class PluginPositionsImageItem extends CommonDBTM {
             $type_table = $DB->result($result, $i, "id");
             if ($this->GetfromDBbyType($values["itemtype"], $type_table)) {
                $this->update(['id'  => $this->fields['id'],
-                                   'img' => $values["img"]]);
+                              'img' => $values["img"]]);
             } else {
                $this->add(['itemtype' => $values["itemtype"],
-                                'type'     => $type_table,
-                                'img'      => $values["img"]]);
+                           'type'     => $type_table,
+                           'img'      => $values["img"]]);
             }
             $i++;
          }
@@ -217,25 +217,25 @@ class PluginPositionsImageItem extends CommonDBTM {
       echo "</th></tr>";
 
       echo "<tr class='tab_bg_1'><td colspan='2'>";
-
-      echo "<span class='upload' id='plugin_position_container'></span>";
-
-      echo "<img src='../pics/select.png' id='pickfiles'
-            title=\"" . __('Select pictures to upload (gif, jpg, png)', 'positions') . "\">&nbsp;";
-      echo __('Select pictures to upload (gif, jpg, png)', 'positions');
-      echo "</td><td>";
-      echo "<span class='upload' id='filelist'></span>";
-      echo "<img src='../pics/upload.png' id='uploadfiles'
-            title=\"" . __('upload pictures to the server', 'positions') . "\">&nbsp;";
-      echo __('Then', 'positions') . "&nbsp;";
-      echo __('upload pictures to the server', 'positions');
-      echo "</td><td colspan='2'>";
-
-      echo "<a href='" . $_SERVER['PHP_SELF'] . "'><img src='../pics/refresh.png' 
-            title=\"" . __s('refresh this form', 'positions') . "\"></a>&nbsp;";
-      echo __('Then', 'positions') . "&nbsp;";
-      echo __('refresh this form', 'positions');
-      echo "</span>";
+      echo __('Upload yours pics into files/_plugins/positions/pics/ folder', 'positions');
+      //      echo "<span class='upload' id='plugin_position_container'></span>";
+      //
+      //      echo "<img src='../pics/select.png' id='pickfiles'
+      //            title=\"" . __('Select pictures to upload (gif, jpg, png)', 'positions') . "\">&nbsp;";
+      //      echo __('Select pictures to upload (gif, jpg, png)', 'positions');
+      //      echo "</td><td>";
+      //      echo "<span class='upload' id='filelist'></span>";
+      //      echo "<img src='../pics/upload.png' id='uploadfiles'
+      //            title=\"" . __('upload pictures to the server', 'positions') . "\">&nbsp;";
+      //      echo __('Then', 'positions') . "&nbsp;";
+      //      echo __('upload pictures to the server', 'positions');
+      //      echo "</td><td colspan='2'>";
+      //
+      //      echo "<a href='" . $_SERVER['PHP_SELF'] . "'><img src='../pics/refresh.png'
+      //            title=\"" . __s('refresh this form', 'positions') . "\"></a>&nbsp;";
+      //      echo __('Then', 'positions') . "&nbsp;";
+      //      echo __('refresh this form', 'positions');
+      //      echo "</span>";
 
       echo "</td></tr>";
 
@@ -248,7 +248,7 @@ class PluginPositionsImageItem extends CommonDBTM {
       self::showAllItems("type", $types, 0, 0, $_SESSION["glpiactive_entity"], -1, 'showType');
       echo "</td><td>";
 
-//      echo Html::hidden('_glpi_csrf_token', ['value' => '']);
+      //      echo Html::hidden('_glpi_csrf_token', ['value' => '']);
       echo "</td><td>";
       self::showUploadedFilesDropdown("img");
       echo "</td><td>";
