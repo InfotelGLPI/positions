@@ -5,16 +5,16 @@
 # 
 # Translators:
 # Xavier CAILLAUD <thetsmr@gmail.com>, 2020
-# Kaya Zeren <kayazeren@gmail.com>, 2021
+# Kaya Zeren <kayazeren@gmail.com>, 2022
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Positions plugin 4.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-09 15:01+0000\n"
+"POT-Creation-Date: 2022-06-15 10:34+0000\n"
 "PO-Revision-Date: 2020-11-02 16:14+0000\n"
-"Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2021\n"
+"Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2022\n"
 "Language-Team: Turkish (Turkey) (https://www.transifex.com/infotelGLPI/teams/12367/tr_TR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Language: tr_TR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: hook.php:241 setup.php:92 inc/menu.class.php:44 inc/position.class.php:60
+#: hook.php:241 setup.php:100 inc/menu.class.php:44 inc/position.class.php:60
 #: inc/profile.class.php:169 inc/profile.class.php:177
 msgid "Cartography"
 msgid_plural "Cartographies"
@@ -81,21 +81,9 @@ msgstr "Atama için malzeme türleri oluşturulmuş olmalıdır"
 msgid "Add pictures to use with plugin"
 msgstr "Uygulama eki ile kullanılacak görselleri yükleyin"
 
-#: inc/imageitem.class.php:224 inc/imageitem.class.php:225
-msgid "Select pictures to upload (gif, jpg, png)"
-msgstr "Yüklenecek görselleri seçin (gif, jpg, png)"
-
-#: inc/imageitem.class.php:229 inc/imageitem.class.php:231
-msgid "upload pictures to the server"
-msgstr "görselleri sunucuya yükleyin"
-
-#: inc/imageitem.class.php:230 inc/imageitem.class.php:236
-msgid "Then"
-msgstr "Ardından"
-
-#: inc/imageitem.class.php:235 inc/imageitem.class.php:237
-msgid "refresh this form"
-msgstr "bu formu yenileyin"
+#: inc/imageitem.class.php:220
+msgid "Upload yours pics into files/_plugins/positions/pics/ folder"
+msgstr "Görsellerinizi files/_plugins/positions/pics/ klasörüne yükleyin"
 
 #: inc/imageitem.class.php:243
 msgid "Associate images with types of equipment"
