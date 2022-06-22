@@ -4,29 +4,30 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Xavier CAILLAUD <thetsmr@gmail.com>, 2021
+# Xavier CAILLAUD <thetsmr@gmail.com>, 2022
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Positions plugin 4.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-09 15:01+0000\n"
+"POT-Creation-Date: 2022-06-15 10:34+0000\n"
 "PO-Revision-Date: 2020-11-02 16:14+0000\n"
-"Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2021\n"
+"Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2022\n"
 "Language-Team: French (France) (https://www.transifex.com/infotelGLPI/teams/12367/fr_FR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: fr_FR\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
-#: hook.php:241 setup.php:92 inc/menu.class.php:44 inc/position.class.php:60
+#: hook.php:241 setup.php:100 inc/menu.class.php:44 inc/position.class.php:60
 #: inc/profile.class.php:169 inc/profile.class.php:177
 msgid "Cartography"
 msgid_plural "Cartographies"
 msgstr[0] "Cartographie"
 msgstr[1] "Cartographies"
+msgstr[2] "Cartographies"
 
 #: ajax/dropdownValue.php:160
 msgid "All types"
@@ -82,21 +83,9 @@ msgstr ""
 msgid "Add pictures to use with plugin"
 msgstr "Ajout des images à utiliser avec le plugin"
 
-#: inc/imageitem.class.php:224 inc/imageitem.class.php:225
-msgid "Select pictures to upload (gif, jpg, png)"
-msgstr "Sélectionner les images à transférer (gif, jpg, png)"
-
-#: inc/imageitem.class.php:229 inc/imageitem.class.php:231
-msgid "upload pictures to the server"
-msgstr "chargement des images sur le serveur"
-
-#: inc/imageitem.class.php:230 inc/imageitem.class.php:236
-msgid "Then"
-msgstr "Puis"
-
-#: inc/imageitem.class.php:235 inc/imageitem.class.php:237
-msgid "refresh this form"
-msgstr "rafraichir ce formulaire"
+#: inc/imageitem.class.php:220
+msgid "Upload yours pics into files/_plugins/positions/pics/ folder"
+msgstr "Téléchargez vos images dans le dossier files/_plugins/positions/pics/"
 
 #: inc/imageitem.class.php:243
 msgid "Associate images with types of equipment"
@@ -128,6 +117,7 @@ msgid "Display of equipment"
 msgid_plural "Display of equipments"
 msgstr[0] "Visualisation de l'équipement"
 msgstr[1] "Visualisation des équipements"
+msgstr[2] "Visualisation des équipements"
 
 #: inc/info.class.php:81 inc/info.class.php:193
 msgid "Displayed fields"
@@ -308,6 +298,7 @@ msgid "Color"
 msgid_plural "Colors"
 msgstr[0] "Couleur"
 msgstr[1] "Couleurs"
+msgstr[2] "Couleurs"
 
 #: inc/position.class.php:2056
 msgid "Scale Factor"
@@ -418,6 +409,7 @@ msgid "Object"
 msgid_plural "Objects"
 msgstr[0] "Objet"
 msgstr[1] "Objets"
+msgstr[2] "Objets"
 
 #: inc/position.class.php:2089
 msgid "Axes"
