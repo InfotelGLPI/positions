@@ -52,14 +52,13 @@ class PluginPositionsImageItem extends CommonDBTM {
    static function showAllItems($myname, $types, $value_type = 0, $value = 0, $entity_restrict = -1, $locations_id = -1, $action = 'showItem') {
       global $CFG_GLPI;
 
-      $plugin = new Plugin();
       echo "<table border='0'><tr><td>\n";
 
       if ($myname == 'type') {
          $newtypes = array_flip($types);
          unset($newtypes['Location']);
          unset($newtypes['Netpoint']);
-         if ($plugin->isActivated("resources")) {
+         if (Plugin::isPluginActive("resources")) {
             unset($newtypes['PluginResourcesResource']);
          }
          $types = array_flip($newtypes);

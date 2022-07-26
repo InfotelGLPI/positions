@@ -514,8 +514,7 @@ class PluginPositionsInfo extends CommonDBTM {
                      if ($crit instanceof CommonTreeDropdown) {
                         $searchOption = $target->getSearchOptionByField('field', 'completename', $table);
                      } else {
-                        $plugin = new Plugin();
-                        if($plugin->isActivated('resources')) {
+                        if(Plugin::isPluginActive('resources')) {
                            $searchOption = $target->getSearchOptionByField('field', 'name', $table);
                         }
                      }
@@ -633,8 +632,7 @@ class PluginPositionsInfo extends CommonDBTM {
          echo "<a href='" . Toolbox::getItemTypeFormURL($itemclass->getType()) .
               "?id=" . $itemclass->fields["id"] . "' target='_blank'>";
          $title  = $itemclass->fields["name"];
-         $plugin = new Plugin();
-         if ($plugin->isActivated("resources")
+         if (Plugin::isPluginActive("resources")
              && $itemclass->getType() == 'PluginResourcesResource') {
             $title = $itemclass->fields["firstname"] . " " . $itemclass->fields["name"];
          }

@@ -36,8 +36,7 @@ if (!isset($_GET["id"])) {
 if (isset($_GET["users_id"])) {
 
    //si plugin ressource active
-   $plugin = new Plugin();
-   if ($plugin->isActivated("resources")) {
+   if (Plugin::isPluginActive("resources")) {
       //recherche de la ressource lie a ce user
       $condition = ["items_id" => $_GET["users_id"],
                     "itemtype" => 'User'];
@@ -91,9 +90,7 @@ if (isset($_GET["users_id"])) {
    $download      = $_POST['download'];
 }
 
-$plugin = new Plugin();
-
-if (isset($_GET['from_treeview']) && $plugin->isActivated("treeview")) {
+if (isset($_GET['from_treeview']) && Plugin::isPluginActive("treeview")) {
    Html::header(PluginPositionsPosition::getTypeName(), '', "tools", "pluginpositionsmenu", "positions");
 } else {
    //TODO
@@ -119,7 +116,7 @@ if (isset($locations_id) && !empty($locations_id)) {
    echo "<b'>" . __('The selected object is not located on a map', 'positions') . "</b></div>";
 }
 
-if (isset($_GET['from_treeview']) && $plugin->isActivated("treeview")) {
+if (isset($_GET['from_treeview']) && Plugin::isPluginActive("treeview")) {
    Html::footer();
 } else {
    Html::popFooter();

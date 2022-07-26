@@ -1178,8 +1178,6 @@ class PluginPositionsPosition extends CommonDBTM {
          }
       }
 
-      $plugin = new Plugin();
-
       $objects = [];
       if (!empty($items)) {
          foreach ($items as $classe => $ids) {
@@ -1214,7 +1212,7 @@ class PluginPositionsPosition extends CommonDBTM {
                                       "labelSize"     => $val['labelSize'],
                                       "shape"         => $val['shape']];
 
-                     if ($plugin->isActivated("resources") && ($val['itemtype'] == 'PluginResourcesResource')) {
+                     if (Plugin::isPluginActive("resources") && ($val['itemtype'] == 'PluginResourcesResource')) {
                         $val['picture'] = $itemclass->fields['picture'];
                         $options['img'] = $CFG_GLPI['url_base'].PLUGIN_RESOURCES_NOTFULL_DIR.'/pics/nobody.png';
                         if (!($val['picture'] == null)) {
@@ -1431,8 +1429,7 @@ class PluginPositionsPosition extends CommonDBTM {
       if (isset($itemclass->fields["name"])
          && !empty($itemclass->fields["name"])) {
 
-         $plugin = new Plugin();
-         if ($plugin->isActivated("resources")
+         if (Plugin::isPluginActive("resources")
                && $itemclass->getType() == 'PluginResourcesResource') {
             $text .= PluginResourcesResource::getResourceName($itemclass->getID());
          } else {
@@ -1523,8 +1520,8 @@ class PluginPositionsPosition extends CommonDBTM {
             </object> ";
          }
       } else {
-         $plugin = new Plugin();
-         if ($plugin->isActivated("resources")
+
+         if (Plugin::isPluginActive("resources")
             && $itemclass->getType() == 'PluginResourcesResource') {
 
              $img = "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/nobody.png' width='90' height='90'>";
@@ -1752,9 +1749,7 @@ class PluginPositionsPosition extends CommonDBTM {
 
       } else {
 
-         //si plugin ressource active
-         $plugin = new Plugin();
-         if ($plugin->isActivated("resources")) {
+         if (Plugin::isPluginActive("resources")) {
             //recherche de la ressource lie a ce user
 
             if ($itemtype != 'PluginResourcesResource') {
@@ -1840,8 +1835,7 @@ class PluginPositionsPosition extends CommonDBTM {
       } else {
 
          //si plugin ressource active
-         $plugin = new Plugin();
-         if ($plugin->isActivated("resources")) {
+         if (Plugin::isPluginActive("resources")) {
             //recherche de la ressource lie a ce user
 
             if ($itemtype != 'PluginResourcesResource') {

@@ -29,8 +29,7 @@
 
 include ('../../../inc/includes.php');
 
-$plugin = new Plugin();
-if ($plugin->isActivated("positions")) {
+if (Plugin::isPluginActive("positions")) {
    $config = new PluginPositionsConfig();
 
    if (isset($_POST["update_config"])) {

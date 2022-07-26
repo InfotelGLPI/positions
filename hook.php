@@ -216,9 +216,7 @@ function plugin_positions_uninstall() {
 // Define dropdown relations
 function plugin_positions_getDatabaseRelations() {
 
-   $plugin = new Plugin();
-
-   if ($plugin->isActivated("positions")) {
+   if (Plugin::isPluginActive("positions")) {
       return ["glpi_entities"=>["glpi_plugin_positions_positions"=>"entities_id"]];
    } //"glpi_locations"=>array("glpi_plugin_positions_positions"=>"locations_id"),
 
