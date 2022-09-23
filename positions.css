@@ -238,19 +238,19 @@
    font-size:12px;
 }
 
-.info {
-   width: 75px;
-   height: 35px;
-   font-size: 1em;
-   position: absolute;
-}
+/*.info {*/
+/*   width: 75px;*/
+/*   height: 35px;*/
+/*   font-size: 1em;*/
+/*   position: absolute;*/
+/*}*/
 
-.info h3 {
-   color:#2D545E;
-   font-size:10px;
-   margin:0 0 -10px 0;
-   border:1px solid #CCC;
-}
+/*.info h3 {*/
+/*   color:#2D545E;*/
+/*   font-size:10px;*/
+/*   margin:0 0 -10px 0;*/
+/*   border:1px solid #CCC;*/
+/*}*/
 
 .title {
    color:#000000;
