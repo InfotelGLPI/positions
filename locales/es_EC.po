@@ -25,9 +25,9 @@ msgstr ""
 #: inc/profile.class.php:169 inc/profile.class.php:177
 msgid "Cartography"
 msgid_plural "Cartographies"
-msgstr[0] "Cartographies"
-msgstr[1] "Cartographies"
-msgstr[2] "Cartographies"
+msgstr[0] "Cartografía"
+msgstr[1] "Cartografías"
+msgstr[2] "Cartografías"
 
 #: ajax/dropdownValue.php:160
 msgid "All types"
@@ -35,7 +35,7 @@ msgstr "Todos los tipos"
 
 #: front/config.form.php:51
 msgid "Please activate the plugin"
-msgstr "Por favor, active el plugin"
+msgstr "Por favor, active el complemento"
 
 #: front/geoloc.php:116
 msgid "The selected object is not located on a map"
@@ -51,7 +51,7 @@ msgstr "No se ha seleccionado ninguna ubicación"
 
 #: inc/config.class.php:53
 msgid "Plugin Setup"
-msgstr "Configuración de plugins"
+msgstr "Configuración del complemento"
 
 #: inc/config.class.php:69
 msgid "Add sub-places on the map objects"
@@ -71,20 +71,20 @@ msgstr "Asociación : foto / tipos de equipos"
 
 #: inc/config.class.php:116 inc/position.class.php:1499
 msgid "Configuring the display materials"
-msgstr "Configuración de los materiales de visualización"
+msgstr "Configuración de la visualización de los materiales"
 
 #: inc/imageitem.class.php:82
 msgid "Types of materials should be created so that the association can exist"
 msgstr ""
-"Deben crearse tipos de materiales para que la asociación pueda existir"
+"Deben crearse tipos de materiales para que pueda existir la asociación"
 
 #: inc/imageitem.class.php:215
 msgid "Add pictures to use with plugin"
-msgstr "Añadir imágenes para usar con el plugin"
+msgstr "Añadir imágenes para usar con el complemento"
 
 #: inc/imageitem.class.php:219
 msgid "Upload yours pics into files/_plugins/positions/pics/ folder"
-msgstr "Sube tus fotos a la carpeta files/_plugins/positions/pics/."
+msgstr "Sube tus fotos a la carpeta files/_plugins/positions/pics/"
 
 #: inc/imageitem.class.php:242
 msgid "Associate images with types of equipment"
@@ -105,7 +105,7 @@ msgstr "Tipo de equipo"
 
 #: inc/imageitem.class.php:283 inc/imageitem.class.php:287
 msgid "Picture"
-msgstr "Fotografía"
+msgstr "Imagen"
 
 #: inc/imageitem.class.php:321
 msgid "No associated picture"
@@ -114,13 +114,13 @@ msgstr "Ninguna imagen asociada"
 #: inc/info.class.php:49
 msgid "Display of equipment"
 msgid_plural "Display of equipments"
-msgstr[0] "Visualización de equipos"
+msgstr[0] "Visualización de equipo"
 msgstr[1] "Visualización de equipos"
 msgstr[2] "Visualización de equipos"
 
 #: inc/info.class.php:81 inc/info.class.php:193
 msgid "Displayed fields"
-msgstr "Campos visualizados"
+msgstr "Campos mostrados"
 
 #: inc/info.class.php:630 inc/info.class.php:645
 msgid "Direct link"
@@ -226,11 +226,11 @@ msgstr "Información sobre"
 
 #: inc/position.class.php:2027
 msgid "Hide"
-msgstr "ocultar"
+msgstr "Ocultar"
 
 #: inc/position.class.php:2028
 msgid "informations about selected items"
-msgstr "Información sobre los elementos seleccionados"
+msgstr "información sobre los elementos seleccionados"
 
 #: inc/position.class.php:2029
 msgid "All hidden objects"
@@ -238,11 +238,11 @@ msgstr "Todos los objetos ocultos"
 
 #: inc/position.class.php:2030
 msgid "See all hidden objects"
-msgstr "See all hidden objects"
+msgstr "Ver todos los objetos ocultos"
 
 #: inc/position.class.php:2031
 msgid "cancel last change"
-msgstr "Cancelar último cambio"
+msgstr "cancelar último cambio"
 
 #: inc/position.class.php:2032
 msgid "Replay the last change"
@@ -254,7 +254,7 @@ msgstr "Guardar como nueva red"
 
 #: inc/position.class.php:2035
 msgid "Save the network now"
-msgstr "Salvar la red ahora"
+msgstr "Guardar la red ahora"
 
 #: inc/position.class.php:2036
 msgid "Simple search"
@@ -274,7 +274,7 @@ msgstr "Importar película JSON"
 
 #: inc/position.class.php:2040
 msgid "Export JSON movie"
-msgstr "Exportar películas JSON"
+msgstr "Exportar película JSON"
 
 #: inc/position.class.php:2041
 msgid "Force save the entire network"
@@ -295,7 +295,7 @@ msgstr "Ver como imagen"
 #: inc/position.class.php:2048 inc/position.class.php:2049
 msgid "Color"
 msgid_plural "Colors"
-msgstr[0] "Colores"
+msgstr[0] "Color"
 msgstr[1] "Colores"
 msgstr[2] "Colores"
 
