@@ -30,35 +30,40 @@
 include('../../../inc/includes.php');
 
 if (!isset($_GET["file"])) {
-   $_GET["file"] = "";
-   $image        = $_GET['img'];
+    $_GET["file"] = "";
+    $image = $_GET['img'];
 } else {
-   $image = $_GET['file'];
+    $image = $_GET['file'];
 }
 
 $items_id = $_GET['items_id'];
-$name     = $_GET['name'];
+$name = $_GET['name'];
 $itemtype = $_GET['itemtype'];
-$idpos    = $_GET['id'];
+$idpos = $_GET['id'];
 
 $pos = new PluginPositionsPosition();
 
 if ($itemtype == 'Location') {
-   PluginPositionsPosition::showGeolocLocation($items_id);
+    PluginPositionsPosition::showGeolocLocation($items_id);
 } else {
 
-   $detail   = new PluginPositionsInfo();
-   $restrict = "`is_active` = 1 ";
-   $pos->getFromDB($idpos);
-   $dbu = new DbUtils();
+    $detail = new PluginPositionsInfo();
+    $restrict = "`is_active` = 1 ";
+    $pos->getFromDB($idpos);
+    $dbu = new DbUtils();
 
-   $restrict = ["is_active"  => 1,
-                "is_deleted" => 0] + $dbu->getEntitiesRestrictCriteria("glpi_plugin_positions_infos",
-                                                                       '', '', $pos->maybeRecursive());
-   $infos    = $dbu->getAllDataFromTable('glpi_plugin_positions_infos', $restrict);
+    $restrict = ["is_active" => 1,
+            "is_deleted" => 0] + $dbu->getEntitiesRestrictCriteria("glpi_plugin_positions_infos",
+            '', '', $pos->maybeRecursive());
+    $infos = $dbu->getAllDataFromTable('glpi_plugin_positions_infos', $restrict);
 
-   $item = new $itemtype();
-   $item->getFromDB($items_id);
+    if ($itemtype == "Socket") {
+        $item = new \Glpi\Socket();
+    } else {
+        $item = new $itemtype();
+    }
 
-   PluginPositionsPosition::showOverlay($image, $item, $infos);
+    $item->getFromDB($items_id);
+
+    PluginPositionsPosition::showOverlay($image, $item, $infos);
 }

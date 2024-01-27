@@ -56,19 +56,19 @@ class PluginPositionsMenu extends CommonGLPI {
 
       $menu                                           = [];
       $menu['title']                                  = self::getMenuName();
-      $menu['page']                                   = PLUGIN_POSITIONS_NOTFULL_WEBDIR."/front/map.form.php";
+      $menu['page']                                   = PLUGIN_POSITIONS_NOTFULL_DIR."/front/map.form.php";
       $menu['links']['search']                        = PluginPositionsPosition::getSearchURL(false);
 
       $menu['options']['positions']['links']['search'] = PluginPositionsPosition::getSearchURL(false);
-      $menu['options']['positions']['links']['config'] = PLUGIN_POSITIONS_NOTFULL_WEBDIR.'/front/config.form.php';
-      $menu['options']['config']['links']['config'] = PLUGIN_POSITIONS_NOTFULL_WEBDIR.'/config.form.php';
-      $menu['options']['info']['links']['search'] = PLUGIN_POSITIONS_NOTFULL_WEBDIR.'/front/info.php';
-      $menu['options']['info']['links']['config'] = PLUGIN_POSITIONS_NOTFULL_WEBDIR.'/front/config.form.php';
+      $menu['options']['positions']['links']['config'] = PLUGIN_POSITIONS_NOTFULL_DIR.'/front/config.form.php';
+      $menu['options']['config']['links']['config'] = PLUGIN_POSITIONS_NOTFULL_DIR.'/front/config.form.php';
+      $menu['options']['info']['links']['search'] = PLUGIN_POSITIONS_NOTFULL_DIR.'/front/info.php';
+      $menu['options']['info']['links']['config'] = PLUGIN_POSITIONS_NOTFULL_DIR.'/front/config.form.php';
 
       if (PluginPositionsPosition::canCreate()) {
          $menu['links']['add']                        = PluginPositionsPosition::getFormURL(false);
          $menu['options']['positions']['links']['add'] = PluginPositionsPosition::getFormURL(false);
-         $menu['options']['info']['links']['add'] = PLUGIN_POSITIONS_NOTFULL_WEBDIR.'/front/info.form.php';
+         $menu['options']['info']['links']['add'] = PLUGIN_POSITIONS_NOTFULL_DIR.'/front/info.form.php';
       }
 
       $menu['icon'] = self::getIcon();

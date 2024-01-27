@@ -25,6 +25,11 @@
       <author>Infotel</author>
    </authors>
    <versions>
+      <version>
+         <num>6.0.3</num>
+         <compatibility>~10.0</compatibility>
+         <download_url>https://github.com/InfotelGLPI/positions/releases/download/6.0.3/glpi-positions-6.0.3.tar.bz2</download_url>
+      </version>
        <version>
          <num>6.0.2</num>
          <compatibility>~10.0</compatibility>

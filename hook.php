@@ -132,6 +132,8 @@ function plugin_positions_install() {
       $DB->runFile(PLUGIN_POSITIONS_DIR."/sql/update-4.5.1.sql");
    }
 
+   $DB->runFile(PLUGIN_POSITIONS_DIR."/sql/update-6.0.3.sql");
+
    if ($DB->tableExists("glpi_plugin_positions_profiles")) {
 
       $notepad_tables = ['glpi_plugin_positions_positions'];

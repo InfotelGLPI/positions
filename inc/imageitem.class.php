@@ -57,7 +57,7 @@ class PluginPositionsImageItem extends CommonDBTM {
       if ($myname == 'type') {
          $newtypes = array_flip($types);
          unset($newtypes['Location']);
-         unset($newtypes['Netpoint']);
+         unset($newtypes['Socket']);
          if (Plugin::isPluginActive("resources")) {
             unset($newtypes['PluginResourcesResource']);
          }
