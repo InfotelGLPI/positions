@@ -151,6 +151,8 @@ class PluginPositionsPosition extends CommonDBTM
             return [];
         }
 
+        $input['itemtype'] = str_replace('\\\\', '\\', $input['itemtype']);
+
         //      if (isset ($input["items_id"])
         //            && isset($input["itemtype"])) {
         //         $restrict = "`items_id` = '" . $input["items_id"] . "'
