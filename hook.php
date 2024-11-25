@@ -186,7 +186,7 @@ function plugin_positions_uninstall() {
                    "glpi_plugin_positions_configs"];
 
    foreach ($tables as $table) {
-      $DB->query("DROP TABLE IF EXISTS `$table`;");
+      $DB->dropTable($table);
    }
 
    $rep_files_positions = GLPI_PLUGIN_DOC_DIR."/positions";
@@ -199,7 +199,7 @@ function plugin_positions_uninstall() {
                         "glpi_logs"];
 
    foreach ($tables_glpi as $table_glpi) {
-      $DB->query("DELETE FROM `$table_glpi` WHERE `itemtype` = 'PluginPositionsPosition' ;");
+       $DB->delete($table_glpi, ['itemtype' => ['LIKE' => 'PluginPositionsPosition%']]);
    }
 
    //Delete rights associated with the plugin
