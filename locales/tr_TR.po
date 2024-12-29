@@ -79,7 +79,7 @@ msgstr "Atama için malzeme türleri oluşturulmuş olmalıdır"
 
 #: inc/imageitem.class.php:215
 msgid "Add pictures to use with plugin"
-msgstr "Uygulama eki ile kullanılacak görselleri yükleyin"
+msgstr "Eklenti ile kullanılacak görselleri yükleyin"
 
 #: inc/imageitem.class.php:219
 msgid "Upload yours pics into files/_plugins/positions/pics/ folder"
