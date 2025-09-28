@@ -27,14 +27,26 @@
  --------------------------------------------------------------------------
  */
 
+namespace GlpiPlugin\Positions;
+
+use Ajax;
+use CommonDBTM;
+use CommonTreeDropdown;
+use DbUtils;
+use Dropdown;
+use Html;
+use Plugin;
+use Session;
+use Toolbox;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
 /**
- * Class PluginPositionsInfo
+ * Class Info
  */
-class PluginPositionsInfo extends CommonDBTM {
+class Info extends CommonDBTM {
 
    public    $dohistory  = true;
    static    $rightname  = "plugin_positions";
@@ -238,7 +250,7 @@ class PluginPositionsInfo extends CommonDBTM {
 
       } else {
 
-         $possible_types = PluginPositionsPosition::getTypes();
+         $possible_types = Position::getTypes();
          $dbu            = new DbUtils();
          $restrict       = ["is_active"  => 1,
                             "is_deleted" => 0]+$dbu->getEntitiesRestrictCriteria("glpi_plugin_positions_infos",
@@ -281,9 +293,9 @@ class PluginPositionsInfo extends CommonDBTM {
    /**
     * Display a list of available fields for widget fields
     *
-    * @param $widget an instance of CommonDBTM class
+    * @param $widget CommonDBTM class
     *
-    * @return nothing
+    * @return
     **/
    static function selectCriterias(CommonDBTM $config) {
       global $DB;

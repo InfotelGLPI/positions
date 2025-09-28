@@ -27,16 +27,18 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+use Glpi\Exception\Http\BadRequestHttpException;
+use GlpiPlugin\Positions\Menu;
+use GlpiPlugin\Positions\Position;
 
-Html::header(PluginPositionsPosition::getTypeName(), '', "tools", "pluginpositionsmenu", "positions");
+Html::header(Position::getTypeName(), '', "tools", Menu::class, "positions");
 
-$pos = new PluginPositionsPosition();
+$pos = new Position();
 
 if ($pos->canView() || Session::haveRight("config", UPDATE)) {
-   Search::show("PluginPositionsPosition");
+   Search::show(Position::class);
 } else {
-   Html::displayRightError();
+    throw new BadRequestHttpException();
 }
 
 Html::footer();

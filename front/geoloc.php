@@ -27,7 +27,8 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+use GlpiPlugin\Positions\Position;
+use GlpiPlugin\Positions\Menu;
 
 if (!isset($_GET["id"])) {
    $_GET["id"] = "";
@@ -78,7 +79,7 @@ if (isset($_GET["users_id"])) {
       $_POST["download"] = $_GET["download"];
    }
 
-   $types = PluginPositionsPosition::getTypes();
+   $types = Position::getTypes();
    if (!isset($_POST["itemtype"])) {
       $_POST["itemtype"] = $types;
    }
@@ -91,11 +92,11 @@ if (isset($_GET["users_id"])) {
 }
 
 if (isset($_GET['from_treeview']) && Plugin::isPluginActive("treeview")) {
-   Html::header(PluginPositionsPosition::getTypeName(), '', "tools", "pluginpositionsmenu", "positions");
+   Html::header(Position::getTypeName(), '', "tools", Menu::class, "positions");
 } else {
    //TODO
    //Use modal
-   Html::popHeader(PluginPositionsPosition::getTypeName(), $_SERVER['PHP_SELF']);
+   Html::popHeader(Position::getTypeName(), $_SERVER['PHP_SELF']);
 }
 
 if (isset($locations_id) && !empty($locations_id)) {
@@ -108,7 +109,7 @@ if (isset($locations_id) && !empty($locations_id)) {
                     'menuoff'      => $menuoff,
                     'download'     => $download];
 
-   PluginPositionsPosition::showMap($options);
+    Position::showMap($options);
 
 } else {
    echo "<div class='center'><br><br>";

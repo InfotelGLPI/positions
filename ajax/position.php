@@ -27,7 +27,7 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+use GlpiPlugin\Positions\Position;
 
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
@@ -37,7 +37,7 @@ Session::checkLoginUser();
 switch ($_POST['action']) {
    case 'setConfig':
       if (isset($_POST['config']) && !empty($_POST['config'])) {
-         $positions = new PluginPositionsPosition();
+         $positions = new Position();
          $input = json_decode(stripslashes($_POST['config']), true);
          $input['name']          = $input['label'];
          $input['x_coordinates'] = $input['x'];

@@ -27,20 +27,20 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Positions\Info;
+
 if (strpos($_SERVER['PHP_SELF'], "dropdownInfoFields.php")) {
-   include ('../../../inc/includes.php');
-   header("Content-Type: text/html; charset=UTF-8");
-   Html::header_nocache();
+    header("Content-Type: text/html; charset=UTF-8");
+    Html::header_nocache();
 }
 Session::checkLoginUser();
 
-$config = new PluginPositionsInfo();
+$config = new Info();
 if ($_POST['id'] > 0) {
-   $config->getFromDB($_POST['id']);
+    $config->getFromDB($_POST['id']);
 } else {
-   $config->getEmpty();
-   $config->fields['itemtype'] = $_POST['itemtype'];
+    $config->getEmpty();
+    $config->fields['itemtype'] = $_POST['itemtype'];
 }
 
-PluginPositionsInfo::selectCriterias($config);
-
+Info::selectCriterias($config);

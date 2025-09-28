@@ -27,9 +27,10 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+use GlpiPlugin\Positions\Position;
+use GlpiPlugin\Positions\Menu;
 
-Html::header(PluginPositionsPosition::getTypeName(), '', "tools", "pluginpositionsmenu", "positions");
+Html::header(Position::getTypeName(), '', "tools", Menu::class, "positions");
 
 if (!isset($_GET["id"])) {
    $_GET["id"] = "";
@@ -37,7 +38,7 @@ if (!isset($_GET["id"])) {
 if (isset($_POST["affich"]) && !isset($_POST["itemtype"])) {
    $_POST["itemtype"] = "0";
 }
-$types = PluginPositionsPosition::getTypes();
+$types = Position::getTypes();
 if (!isset($_POST["itemtype"])) {
    $_POST["itemtype"] = $types;
 }
@@ -47,7 +48,7 @@ $options = ['id'           => $_GET["id"],
                  'itemtype'     => $_POST['itemtype'],
                  'target'       => $_SERVER['PHP_SELF']."?id=".$_GET["id"]];
 
-PluginPositionsPosition::showMap($options);
+Position::showMap($options);
 
 Html::footer();
 

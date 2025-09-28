@@ -27,7 +27,8 @@
  --------------------------------------------------------------------------
  */
 
-include('../../../inc/includes.php');
+use Glpi\Exception\Http\BadRequestHttpException;
+use GlpiPlugin\Positions\Position;
 
 Session::checkLoginUser();
 
@@ -35,30 +36,30 @@ $doc = new Document();
 
 if (isset($_GET['docid'])) { // docid for document
    if (!$doc->getFromDB($_GET['docid'])) {
-      Html::displayErrorAndDie(__('Unknown file'), true);
+       throw new BadRequestHttpException(__('Unknown file'));
    }
 
    if (!file_exists(GLPI_DOC_DIR . "/" . $doc->fields['filepath'])) {
-      Html::displayErrorAndDie(__('File not found'), true); // Not found
+       throw new BadRequestHttpException(__('File not found')); // Not found
    }
    if ($doc->fields['sha1sum'] && $doc->fields['sha1sum'] != sha1_file(GLPI_DOC_DIR . "/" . $doc->fields['filepath'])) {
-      Html::displayErrorAndDie(__('File is altered (bad checksum)'), true); // Doc alterated
+       throw new BadRequestHttpException(__('File is altered (bad checksum)')); // Doc alterated
    } else {
-      $doc->send();
+      return $doc->getAsResponse();
    }
 
 } else if (isset($_GET["file"]) && isset($_GET["type"])) {
-   PluginPositionsPosition::sendFile(GLPI_PLUGIN_DOC_DIR . "/positions/" . $_GET["type"] . "/" . $_GET["file"], $_GET["file"], $_GET["type"]);
+   Position::sendFile(GLPI_PLUGIN_DOC_DIR . "/positions/" . $_GET["type"] . "/" . $_GET["file"], $_GET["file"], $_GET["type"]);
 
 } else if (isset($_GET["file"])) { // for other file
    $splitter = explode("/", $_GET["file"]);
    if (count($splitter) == 2) {
       if (file_exists(GLPI_DOC_DIR . "/" . $_GET["file"])) {
-         Toolbox::sendFile(GLPI_DOC_DIR . "/" . $_GET["file"], $splitter[1]);
+          return Toolbox::getFileAsResponse(GLPI_DOC_DIR . "/" . $_GET["file"], $splitter[1]);
       } else {
-         Html::displayErrorAndDie(__('Unauthorized access to this file'), true);
+          throw new BadRequestHttpException(__('Unauthorized access to this file'));
       }
    } else {
-      Html::displayErrorAndDie(__('Invalid filename'), true);
+       throw new BadRequestHttpException(__('Invalid filename'));
    }
 }

@@ -27,7 +27,8 @@
  --------------------------------------------------------------------------
  */
 
-include('../../../inc/includes.php');
+use GlpiPlugin\Positions\Info;
+use GlpiPlugin\Positions\Position;
 
 if (!isset($_GET["file"])) {
     $_GET["file"] = "";
@@ -41,13 +42,13 @@ $name = $_GET['name'];
 $itemtype = $_GET['itemtype'];
 $idpos = $_GET['id'];
 
-$pos = new PluginPositionsPosition();
+$pos = new Position();
 
 if ($itemtype == 'Location') {
-    PluginPositionsPosition::showGeolocLocation($items_id);
+    Position::showGeolocLocation($items_id);
 } else {
 
-    $detail = new PluginPositionsInfo();
+    $detail = new Info();
     $restrict = "`is_active` = 1 ";
     $pos->getFromDB($idpos);
     $dbu = new DbUtils();
@@ -65,5 +66,5 @@ if ($itemtype == 'Location') {
 
     $item->getFromDB($items_id);
 
-    PluginPositionsPosition::showOverlay($image, $item, $infos);
+    Position::showOverlay($image, $item, $infos);
 }

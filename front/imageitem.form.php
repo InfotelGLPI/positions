@@ -27,9 +27,11 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+use GlpiPlugin\Positions\ImageItem;
+use GlpiPlugin\Positions\Position;
+use GlpiPlugin\Positions\Menu;
 
-$img = new PluginPositionsImageItem();
+$img = new ImageItem();
 
 if (isset($_POST["add"]) && isset($_POST['type'])) {
    $test = explode(";", $_POST['type']);
@@ -58,7 +60,7 @@ if (isset($_POST["add"]) && isset($_POST['type'])) {
 
 } else {
    $img->checkGlobal(READ);
-   Html::header(PluginPositionsPosition::getTypeName(), '', "tools", "pluginpositionsmenu", "config");
+   Html::header(Position::getTypeName(), '', "tools", Menu::class, "config");
    $img->showConfigForm();
    Html::footer();
 }

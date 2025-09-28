@@ -37,18 +37,18 @@ function update421to422() {
    $migration = new Migration('422');
 
    $query = "SELECT * FROM `glpi_plugin_positions_positions`";
-   $result_query = $DB->query($query);
+   $result_query = $DB->doQuery($query);
    while ($data = $DB->fetchArray($result_query)) {
       $dbu = new DbUtils();
       if (!($itemclass = $dbu->getAllDataFromTable($dbu->getTableForItemType($data['itemtype']),
                                                    ["id" => $data['items_id']]))) {
          $query = "DELETE FROM `glpi_plugin_positions_positions` WHERE `items_id` =" . $data['items_id'] . " AND `itemtype` = '" . $data['itemtype'] . "'";
-         $DB->queryOrDie($query);
+         $DB->doQueryOrDie($query);
          continue;
       }
       $itemclass = reset($itemclass);
       $query = "UPDATE `glpi_plugin_positions_positions` SET `locations_id` = " . $itemclass['locations_id'] . " WHERE `items_id` =" . $data['items_id'] . " AND `itemtype` = '" . $data['itemtype'] . "'";
-      $DB->queryOrDie($query, "ADD fields locations_ids for glpi_plugin_positions_positions");
+      $DB->doQueryOrDie($query, "ADD fields locations_ids for glpi_plugin_positions_positions");
    }
 
    $migration->executeMigration();

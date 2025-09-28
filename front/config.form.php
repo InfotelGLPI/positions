@@ -27,10 +27,12 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+use GlpiPlugin\Positions\Config;
+use GlpiPlugin\Positions\Position;
+use GlpiPlugin\Positions\Menu;
 
 if (Plugin::isPluginActive("positions")) {
-   $config = new PluginPositionsConfig();
+   $config = new Config();
 
    if (isset($_POST["update_config"])) {
         Session::checkRight("config", UPDATE);
@@ -38,7 +40,7 @@ if (Plugin::isPluginActive("positions")) {
         Html::back();
 
    } else {
-      Html::header(PluginPositionsPosition::getTypeName(), '', "tools", "pluginpositionsmenu", "config");
+      Html::header(Position::getTypeName(), '', "tools", Menu::class, "config");
       $config->showConfigForm();
       Html::footer();
    }

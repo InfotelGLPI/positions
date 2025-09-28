@@ -27,7 +27,8 @@
  --------------------------------------------------------------------------
  */
 
-include('../../../inc/includes.php');
+use GlpiPlugin\Positions\Menu;
+use GlpiPlugin\Positions\Position;
 
 if (!isset($_GET["id"])) {
    $_GET["id"] = "";
@@ -36,7 +37,7 @@ if (!isset($_GET["withtemplate"])) {
    $_GET["withtemplate"] = "";
 }
 
-$pos = new PluginPositionsPosition();
+$pos = new Position();
 
 if (isset($_POST["add"])) {
    $test = explode(";", $_POST['items_id']);
@@ -126,16 +127,16 @@ if (isset($_POST["add"])) {
 
 } else if (isset($_POST["addLocation"])) {
    $pos->checkGlobal(READ);
-   Html::header(PluginPositionsPosition::getTypeName(), '', "tools", "pluginpositionsmenu", "positions");
-   $map     = PluginPositionsPosition::getDocument($_POST["locations_id"]);
+   Html::header(Position::getTypeName(), '', "tools", Menu::class, "positions");
+   $map     = Position::getDocument($_POST["locations_id"]);
    $options = ["document_id"  => $map,
                "locations_id" => $_POST["locations_id"]];
-   PluginPositionsPosition::showMapCreateLocation($options);
+    Position::showMapCreateLocation($options);
    Html::footer();
 
 } else {
    $pos->checkGlobal(READ);
-   Html::header(PluginPositionsPosition::getTypeName(), '', "tools", "pluginpositionsmenu", "positions");
+   Html::header(Position::getTypeName(), '', "tools", Menu::class, "positions");
    $pos->display($_GET);
    Html::footer();
 }

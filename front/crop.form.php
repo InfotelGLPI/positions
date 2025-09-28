@@ -27,16 +27,15 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+use GlpiPlugin\Positions\Position;
+use GlpiPlugin\Positions\Menu;
 
-if (isset ($_POST['valid'])
+if (isset($_POST['valid'])
       && (isset($_POST['locations_id'])
          || isset($_POST['locations_idParent']) )) {
+    $options = Position::cropPicture($_POST);
 
-   $options = PluginPositionsPosition::cropPicture($_POST);
-
-   Html::header(PluginPositionsPosition::getTypeName(), '', "tools", "pluginpositionsmenu", "positions");
-   PluginPositionsPosition::showFormResCreateLocation($options);
-   Html::footer();
+    Html::header(Position::getTypeName(), '', "tools", Menu::class, "positions");
+    Position::showFormResCreateLocation($options);
+    Html::footer();
 }
-

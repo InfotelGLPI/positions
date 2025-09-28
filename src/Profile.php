@@ -27,17 +27,28 @@
  --------------------------------------------------------------------------
  */
 
+namespace GlpiPlugin\Positions;
+
+use CommonGLPI;
+use DbUtils;
+use Html;
+use ProfileRight;
+use Session;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
 /**
- * Class PluginPositionsProfile
+ * Class Profile
  */
-class PluginPositionsProfile extends CommonDBTM {
+class Profile extends \Profile {
 
    static $rightname = "profile";
 
+    static function getIcon() {
+        return "ti ti-map";
+    }
    /**
     * Get Tab Name used for itemtype
     *
@@ -54,7 +65,7 @@ class PluginPositionsProfile extends CommonDBTM {
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
 
       if ($item->getType()=='Profile') {
-         return PluginPositionsPosition::getTypeName();
+         return self::createTabEntry(Position::getTypeName());
       }
       return '';
    }
@@ -123,18 +134,18 @@ class PluginPositionsProfile extends CommonDBTM {
     * @param $items_id integer id of the profile
     * @param $target value url of target
     *
-    * @return nothing
+    * @return
     **/
    function showForm($profiles_id = 0, $openform = true, $closeform = true) {
 
       echo "<div class='firstbloc'>";
       if (($canedit = Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE]))
           && $openform) {
-         $profile = new Profile();
+         $profile = new \Profile();
          echo "<form method='post' action='".$profile->getFormURL()."'>";
       }
 
-      $profile = new Profile();
+      $profile = new \Profile();
       $profile->getFromDB($profiles_id);
       if ($profile->fields['interface'] == 'central') {
          $rights = $this->getAllRights();
@@ -165,7 +176,7 @@ class PluginPositionsProfile extends CommonDBTM {
 
       if ($all == false) {
          $rights = [
-             ['itemtype'  => 'PluginPositionsPosition',
+             ['itemtype'  => Position::class,
                    'label'     => _n('Cartography', 'Cartographies', 2, 'positions'),
                    'field'     => 'plugin_positions',
                    'rights' => [READ    => __('Read'),UPDATE  => __('Update'), DELETE  => __('Delete'), CREATE  => __('Create')]
@@ -173,7 +184,7 @@ class PluginPositionsProfile extends CommonDBTM {
          ];
       } else {
          $rights = [
-             ['itemtype'  => 'PluginPositionsPosition',
+             ['itemtype'  => Position::class,
                    'label'     => _n('Cartography', 'Cartographies', 2, 'positions'),
                    'field'     => 'plugin_positions'
              ],

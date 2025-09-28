@@ -27,41 +27,48 @@
  --------------------------------------------------------------------------
  */
 
-// Init the hooks of the plugins -Needed
+use GlpiPlugin\Positions\Menu;
+use GlpiPlugin\Positions\Position;
+use GlpiPlugin\Positions\Profile;
 
-define('PLUGIN_POSITIONS_VERSION', '6.0.3');
+// Init the hooks of the plugins -Needed
+global $CFG_GLPI;
+
+define('PLUGIN_POSITIONS_VERSION', '7.0.0');
 
 if (!defined("PLUGIN_POSITIONS_DIR")) {
-   define("PLUGIN_POSITIONS_DIR", Plugin::getPhpDir("positions"));
-   define("PLUGIN_POSITIONS_NOTFULL_DIR", Plugin::getPhpDir("positions",false));
-   define("PLUGIN_POSITIONS_WEBDIR", Plugin::getWebDir("positions"));
-   define("PLUGIN_POSITIONS_NOTFULL_WEBDIR", Plugin::getWebDir("positions",false));
+    define("PLUGIN_POSITIONS_DIR", Plugin::getPhpDir("positions"));
+    define("PLUGIN_POSITIONS_NOTFULL_DIR", Plugin::getPhpDir("positions", false));
+    $root = $CFG_GLPI['root_doc'] . '/plugins/positions';
+    define("PLUGIN_POSITIONS_WEBDIR", $root);
 }
 
-function plugin_init_positions() {
-   global $PLUGIN_HOOKS;
+function plugin_init_positions()
+{
+    global $PLUGIN_HOOKS;
 
-   $PLUGIN_HOOKS['csrf_compliant']['positions'] = true;
-   $PLUGIN_HOOKS['change_profile']['positions'] = ['PluginPositionsProfile', 'initProfile'];
+    $PLUGIN_HOOKS['csrf_compliant']['positions'] = true;
+    $PLUGIN_HOOKS['change_profile']['positions'] = [Profile::class, 'initProfile'];
 
-   if (Session::getLoginUserID()) {
+    if (Session::getLoginUserID()) {
+        Plugin::registerClass(
+            Profile::class,
+            ['addtabon' => 'Profile']
+        );
 
-      Plugin::registerClass('PluginPositionsProfile',
-                            ['addtabon' => 'Profile']);
+        if (Session::haveRight("plugin_positions", UPDATE)) {
+            $PLUGIN_HOOKS['use_massive_action']['positions'] = 1;
+            $PLUGIN_HOOKS['config_page']['positions']        = 'front/config.form.php';
+        }
 
-      if (Session::haveRight("plugin_positions", UPDATE)) {
-         $PLUGIN_HOOKS['use_massive_action']['positions'] = 1;
-         $PLUGIN_HOOKS['config_page']['positions']        = 'front/config.form.php';
-      }
+        if (Session::haveRight("plugin_positions", READ)) {
+            $PLUGIN_HOOKS['helpdesk_menu_entry']['positions'] = PLUGIN_POSITIONS_NOTFULL_DIR.'/front/map.form.php';
+            $PLUGIN_HOOKS['helpdesk_menu_entry_icon']['positions'] = Position::getIcon();
+            $PLUGIN_HOOKS['menu_toadd']['positions']          = ['tools' => Menu::class];
+        }
 
-      if (Session::haveRight("plugin_positions", READ)) {
-         $PLUGIN_HOOKS['helpdesk_menu_entry']['positions'] = PLUGIN_POSITIONS_NOTFULL_DIR.'/front/map.form.php';
-         $PLUGIN_HOOKS['helpdesk_menu_entry_icon']['positions'] = PluginPositionsPosition::getIcon();
-         $PLUGIN_HOOKS['menu_toadd']['positions']          = ['tools' => 'PluginPositionsMenu'];
-      }
-
-      // Add specific files to add to the header : javascript or css
-      $PLUGIN_HOOKS['add_javascript']['positions'] = [
+       // Add specific files to add to the header : javascript or css
+        $PLUGIN_HOOKS['add_javascript']['positions'] = [
          //file upload
 //         "lib/plupload/plupload.full.js",
          "lib/extjs/adapter/ext/ext-base.js",
@@ -72,31 +79,32 @@ function plugin_init_positions() {
          "lib/canvas/canvasXpress.min.js",
          "lib/canvas/ext-canvasXpress.js",
          "lib/canvas/color-field.js",
-      ];
-      $PLUGIN_HOOKS["javascript"]['positions']     = [
+        ];
+        $PLUGIN_HOOKS["javascript"]['positions']     = [
          PLUGIN_POSITIONS_NOTFULL_DIR."/positions.js",
-      //         PLUGIN_POSITIONS_NOTFULL_DIR."/geoloc.js",
+       //         PLUGIN_POSITIONS_NOTFULL_DIR."/geoloc.js",
          PLUGIN_POSITIONS_NOTFULL_DIR."/lib/Jcrop/jquery.Jcrop.js",
-      ];
-      //css
-      $PLUGIN_HOOKS['add_css']['positions'] = ["positions.css",
+        ];
+       //css
+        $PLUGIN_HOOKS['add_css']['positions'] = ["positions.css",
                                                     "lib/canvas/color-field.css",
                                                     "lib/extjs/resources/css/ext-all.css",
                                                     //"lib/Jcrop/jquery.Jcrop.min.css",
-      ];
+        ];
 
-      if (class_exists('PluginTreeviewConfig')) {
-         $PLUGIN_HOOKS['treeview_params']['positions'] = ['PluginPositionsPosition', 'showPositionTreeview'];
-      }
-   }
+        if (class_exists('PluginTreeviewConfig')) {
+            $PLUGIN_HOOKS['treeview_params']['positions'] = [Position::class, 'showPositionTreeview'];
+        }
+    }
    // End init, when all types are registered
-   $PLUGIN_HOOKS['post_init']['positions'] = 'plugin_positions_postinit';
+    $PLUGIN_HOOKS['post_init']['positions'] = 'plugin_positions_postinit';
 }
 
 // Get the name and the version of the plugin - Needed
-function plugin_version_positions() {
+function plugin_version_positions()
+{
 
-   return [
+    return [
       'name'           => _n('Cartography', 'Cartographies', 1, 'positions'),
       'version'        => PLUGIN_POSITIONS_VERSION,
       'license'        => 'GPLv2+',
@@ -104,11 +112,10 @@ function plugin_version_positions() {
       'homepage'       => 'https://github.com/InfotelGLPI/positions',
       'requirements'   => [
          'glpi' => [
-            'min' => '10.0',
-            'max' => '11.0',
+            'min' => '11.0',
+            'max' => '12.0',
             'dev' => false
          ]
       ]
-   ];
-
+    ];
 }

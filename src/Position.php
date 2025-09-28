@@ -27,14 +27,28 @@
  --------------------------------------------------------------------------
  */
 
+namespace GlpiPlugin\Positions;
+
+use CommonDBTM;
+use CommonGLPI;
+use DbUtils;
+use Document;
+use Document_Item;
+use Dropdown;
+use Html;
+use Location;
+use Plugin;
+use Session;
+use Toolbox;
+
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
 }
 
 /**
- * Class PluginPositionsPosition
+ * Class Position
  */
-class PluginPositionsPosition extends CommonDBTM
+class Position extends CommonDBTM
 {
 
     public $dohistory = true;
@@ -121,9 +135,7 @@ class PluginPositionsPosition extends CommonDBTM
         $plugin = new Plugin();
         if ($plugin->isActivated('genericobject') &&
             method_exists('PluginGenericobjectType', 'getTypes')) {
-
             foreach (array_keys(PluginGenericobjectType::getTypes()) as $go_itemtype) {
-
                 if (!class_exists($go_itemtype)) {
                     continue;
                 }
@@ -158,7 +170,7 @@ class PluginPositionsPosition extends CommonDBTM
 
     function prepareInputForAdd($input)
     {
-        if (!isset ($input["items_id"])
+        if (!isset($input["items_id"])
             || !isset($input["itemtype"])) {
             Session::addMessageAfterRedirect(__('No equipment associated', 'positions'), false, ERROR);
             return [];
@@ -176,7 +188,7 @@ class PluginPositionsPosition extends CommonDBTM
         //         }
         //      }
 
-        if (!isset ($input["name"])
+        if (!isset($input["name"])
             || empty($input["name"])) {
             $item = new $input['itemtype'];
             if ($item->getFromDB($input['items_id'])) {
@@ -184,16 +196,16 @@ class PluginPositionsPosition extends CommonDBTM
             }
         }
 
-        if (!isset ($input["x_coordinates"])
+        if (!isset($input["x_coordinates"])
             || empty($input["x_coordinates"])
-            || !isset ($input["y_coordinates"])
+            || !isset($input["y_coordinates"])
             || empty($input["y_coordinates"])) {
             $input["x_coordinates"] = '-1000';
             $input["y_coordinates"] = '-225';
         }
 
         //default size
-        $config = new PluginPositionsConfig();
+        $config = new Config();
         $config->getFromDB(1);
 
         $input['width'] = $config->fields['default_width'];
@@ -217,7 +229,6 @@ class PluginPositionsPosition extends CommonDBTM
         global $CFG_GLPI;
 
         if (!isset($this->input["massiveaction"])) {
-
             Html::redirect(PLUGIN_POSITIONS_WEBDIR .
                 "/front/coordinates.form.php?id=" . $this->getField('id'));
         }
@@ -301,6 +312,10 @@ class PluginPositionsPosition extends CommonDBTM
         return $tab;
     }
 
+    static function getIcon() {
+        return "ti ti-map";
+    }
+
     function defineTabs($options = [])
     {
 
@@ -318,30 +333,30 @@ class PluginPositionsPosition extends CommonDBTM
 
         if (!$withtemplate) {
             if ($item->getType() == __CLASS__) {
-
-                return __('See the map', 'positions');
-
-            } else if (in_array($item->getType(), self::getTypes(true))
+                return self::createTabEntry(__('See the map', 'positions'));
+            } elseif (in_array($item->getType(), self::getTypes(true))
                 && Session::haveRight('plugin_positions', READ)) {
-
                 if ($_SESSION['glpishow_count_on_tabs']) {
-                    return self::createTabEntry(self::getTypeName(Session::getPluralNumber()),
-                        self::countForItem($item));
+                    return self::createTabEntry(
+                        self::getTypeName(Session::getPluralNumber()),
+                        self::countForItem($item)
+                    );
                 }
-                return self::getTypeName(Session::getPluralNumber());
+                return self::createTabEntry(self::getTypeName(Session::getPluralNumber()));
             }
         }
 
         return '';
-
     }
 
     static function countForItem(CommonDBTM $item)
     {
         $dbu = new DbUtils();
-        return $dbu->countElementsInTable('glpi_plugin_positions_positions',
+        return $dbu->countElementsInTable(
+            'glpi_plugin_positions_positions',
             ["itemtype" => $item->getType(),
-                "items_id" => $item->getID()]);
+            "items_id" => $item->getID()]
+        );
     }
 
     static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
@@ -350,13 +365,9 @@ class PluginPositionsPosition extends CommonDBTM
         $self = new self();
 
         if ($item->getType() == __CLASS__) {
-
             self::showAddPosition($item);
-
-        } else if (in_array($item->getType(), self::getTypes(true))) {
-
+        } elseif (in_array($item->getType(), self::getTypes(true))) {
             $self->showPluginFromItems(get_class($item), $item->getField('id'));
-
         }
         return true;
     }
@@ -449,7 +460,6 @@ class PluginPositionsPosition extends CommonDBTM
 
         $Doc = new Document();
         if ($Doc->getFromDB($document_id)) {
-
             $entities_id = $Doc->fields["entities_id"];
             $path = GLPI_DOC_DIR . "/" . $Doc->fields["filepath"];
             $img = PLUGIN_POSITIONS_WEBDIR . "/front/map.send.php?docid=" . $document_id;
@@ -460,7 +470,6 @@ class PluginPositionsPosition extends CommonDBTM
                 || $extension == 'JPEG'
                 || $extension == 'JPG'
                 || $extension == 'GIF') {
-
                 echo "<form action=\"crop.form.php\" method=\"post\" onsubmit=\"return checkCoords();\" >";
 
                 //Liste des lieux existants
@@ -471,7 +480,7 @@ class PluginPositionsPosition extends CommonDBTM
 
                 echo "<tr class='tab_bg_1'>";
                 echo "<td>";
-                echo "<input type=\"radio\" name=\"choice\" value=\"existLocation\" 
+                echo "<input type=\"radio\" name=\"choice\" value=\"existLocation\"
                      onclick=\"showlist('existLocation','visible')\">";
                 echo __('Choose an existing location', 'positions');
                 echo "</td>";
@@ -484,16 +493,14 @@ class PluginPositionsPosition extends CommonDBTM
                                 ( SELECT `name` FROM `glpi_documents`
                                  )
                                 ";
-                $result = $DB->query($query);
+                $result = $DB->doQuery($query);
                 $DB->numrows($result);
 
                 $locations = [];
                 while ($data = $DB->fetchAssoc($result)) {
-
                     $locations[] = $data['id'];
                 }
                 if (!empty($locations)) {
-
                     $condition = ['glpi_locations.id' => $locations];
 
                     Dropdown::show('Location', ['value' => $locations_idParent,
@@ -508,7 +515,7 @@ class PluginPositionsPosition extends CommonDBTM
                 //Ajout d'un nouveau lieu
                 echo "<tr class='tab_bg_1'>";
                 echo "<td>";
-                echo "<input type=\"radio\" checked name=\"choice\" value=\"newLocation\" 
+                echo "<input type=\"radio\" checked name=\"choice\" value=\"newLocation\"
                      onclick=\"showlist('newLocation','visible')\">";
                 echo __('Create a new location', 'positions');
                 echo "</td>";
@@ -560,7 +567,6 @@ class PluginPositionsPosition extends CommonDBTM
                 Html::closeForm();
             }
         } else {
-
             Html::redirect(PLUGIN_POSITIONS_WEBDIR .
                 "/front/map.php?locations_id=" . $locations_idParent);
         }
@@ -575,10 +581,8 @@ class PluginPositionsPosition extends CommonDBTM
         $height = $input['h'];
 
         if ($input['test'] == "newLocation") {
-
             $name = $input['name'];
-
-        } else if ($input['test'] == "existLocation") {
+        } elseif ($input['test'] == "existLocation") {
             $loc = new Location();
             $loc->getFromDB($input['locations_id']);
             $name = $loc->fields['name'];
@@ -603,25 +607,20 @@ class PluginPositionsPosition extends CommonDBTM
 
         $tmpfile = GLPI_UPLOAD_DIR . "/" . $document_id . $name;
         if ($extension == 'PNG') {
-
             $srcImg = imagecreatefrompng($path);
             $newImg = imagecreatetruecolor($width, $height);
 
             imagecopyresampled($newImg, $srcImg, 0, 0, $x1, $y1, $width, $height, $width, $height);
 
             imagepng($newImg, $tmpfile . '.png');
-
-        } else if ($extension == 'JPG' || $extension == 'JPEG') {
-
+        } elseif ($extension == 'JPG' || $extension == 'JPEG') {
             $srcImg = imagecreatefromjpeg($path);
             $newImg = imagecreatetruecolor($width, $height);
 
             imagecopyresampled($newImg, $srcImg, 0, 0, $x1, $y1, $width, $height, $width, $height);
 
             imagejpeg($newImg, $tmpfile . '.jpg');
-
-        } else if ($extension == 'GIF') {
-
+        } elseif ($extension == 'GIF') {
             $srcImg = imagecreatefromgif($path);
             $newImg = imagecreatetruecolor($width, $height);
 
@@ -666,12 +665,12 @@ class PluginPositionsPosition extends CommonDBTM
                   FROM `glpi_locations`
                   WHERE `id` = '" . $opt["locations_id"] . "'";
 
-            $result = $DB->query($query);
+            $result = $DB->doQuery($query);
 
             while ($data = $DB->fetchAssoc($result)) {
                 $id = $data['id'];
             }
-        } else if ($opt["test"] == "newLocation") {
+        } elseif ($opt["test"] == "newLocation") {
             $locations_id = $opt["locations_idParent"];
         }
 
@@ -693,11 +692,13 @@ class PluginPositionsPosition extends CommonDBTM
         if ($opt["test"] == 'newLocation') {
             if ($newID = $dropdown->add($params)) {
             } else {
-                $locations_found = $dropdown->find(['name' => $params['name'],
+                $locations_found = $dropdown->find(
+                    ['name' => $params['name'],
                     'entities_id' => $params['entities_id'],
                     'locations_id' => $params['locations_id']],
                     [],
-                    '1');
+                    '1'
+                );
                 $newID = key($locations_found);
             }
             $opt["locations_id"] = $newID;
@@ -750,15 +751,14 @@ class PluginPositionsPosition extends CommonDBTM
 
                     if ($opt["checked"] == 'on') {
                         self::showMapCreateLocation($opt);
-                    } else if ($opt["checked"] == 'off') {
+                    } elseif ($opt["checked"] == 'off') {
                         Html::redirect(PLUGIN_POSITIONS_WEBDIR .
                             "/front/map.php?locations_id=" . $opt["locations_id"]);
                     }
                 }
 
                 // Add existing location
-            } else if ($opt["test"] == 'existLocation') {
-
+            } elseif ($opt["test"] == 'existLocation') {
                 $documentitem->add(['documents_id' => $newdoc,
                     'itemtype' => 'Location',
                     'items_id' => $id]);
@@ -775,7 +775,7 @@ class PluginPositionsPosition extends CommonDBTM
 
                 if ($opt["checked"] == 'on') {
                     self::showMapCreateLocation($opt);
-                } else if ($opt["checked"] == 'off') {
+                } elseif ($opt["checked"] == 'off') {
                     Html::redirect(PLUGIN_POSITIONS_WEBDIR .
                         "/front/map.php?locations_id=" . $opt["locations_id"]);
                 }
@@ -878,7 +878,7 @@ class PluginPositionsPosition extends CommonDBTM
              WHERE `items_id` = '" . $locations_id . "'
                    AND `itemtype` = 'Location' ";
 
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
         while ($data = $DB->fetchAssoc($result)) {
             $documents_id = $data['documents_id'];
         }
@@ -896,8 +896,12 @@ class PluginPositionsPosition extends CommonDBTM
             $itemclass = new $item();
             $restrict = ["is_template" => 0,
                     "is_deleted" => 0,
-                    "locations_id" => $locations_id] + $dbu->getEntitiesRestrictCriteria($table, '', '',
-                    $itemclass->maybeRecursive());
+                    "locations_id" => $locations_id] + $dbu->getEntitiesRestrictCriteria(
+                        $table,
+                        '',
+                        '',
+                        $itemclass->maybeRecursive()
+                    );
             $dbu = new DbUtils();
             $datas = $dbu->getAllDataFromTable($table, $restrict);
             if (!empty($datas)) {
@@ -941,12 +945,10 @@ class PluginPositionsPosition extends CommonDBTM
         }
 
         if ($options['locations_id']) {
-
             $documents_id = self::getDocument($options['locations_id']);
 
             $Doc = new Document();
             if (isset($documents_id) && $Doc->getFromDB($documents_id)) {
-
                 $params = ["locations_id" => $options['locations_id'],
                     "id" => $options['id'],
                     "itemtype" => $options['itemtype'],
@@ -1084,7 +1086,7 @@ class PluginPositionsPosition extends CommonDBTM
                FROM `glpi_documents_items`
                WHERE `itemtype` = 'Location' ";
 
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
         $DB->numrows($result);
 
         while ($data = $DB->fetchAssoc($result)) {
@@ -1148,7 +1150,7 @@ class PluginPositionsPosition extends CommonDBTM
         echo "<tr class='tab_bg_1'><td>";
         echo _n('Associated item', 'Associated items', 2) . "</td>";
         echo "<td>";
-        PluginPositionsImageItem::showAllItems("items_id", self::getTypes(), 0, 0, $entities, $locations_id);
+        ImageItem::showAllItems("items_id", self::getTypes(), 0, 0, $entities, $locations_id);
         echo "</td>";
 
         echo "<td>";
@@ -1231,7 +1233,6 @@ class PluginPositionsPosition extends CommonDBTM
             foreach ($items as $classe => $ids) {
                 foreach ($ids as $key => $val) {
                     if (($val['locations_id'] == $params['locations_id'])) {
-
                         if ($val['itemtype'] == "Socket") {
                             $itemclass = new \Glpi\Socket();
                         } else {
@@ -1239,7 +1240,6 @@ class PluginPositionsPosition extends CommonDBTM
                         }
 
                         if ($itemclass->getFromDB($val['items_id'])) {
-
                             $val['picture'] = null;
                             $val['img'] = null;
 
@@ -1273,20 +1273,17 @@ class PluginPositionsPosition extends CommonDBTM
                                     $options['img'] = $CFG_GLPI['url_base'] . PLUGIN_RESOURCES_NOTFULL_DIR . '/front/picture.send.php?file=' . $val['picture'];
                                 }
                                 $objects[$val['id']] = $options;
-
-                            } else if (($val['itemtype'] == 'Location')) {
+                            } elseif (($val['itemtype'] == 'Location')) {
                                 $options['img'] = $CFG_GLPI['url_base'] . PLUGIN_POSITIONS_NOTFULL_DIR . '/pics/door.png';
                                 $objects[$val['id']] = $options;
-
-                            } else if (($val['itemtype'] == 'Glpi\Socket')) {
+                            } elseif (($val['itemtype'] == 'Glpi\Socket')) {
                                 $options['img'] = $CFG_GLPI['url_base'] . PLUGIN_POSITIONS_NOTFULL_DIR . '/pics/socket.png';
                                 $objects[$val['id']] = $options;
-
                             } else {
                                 $itemtype = $val['itemtype'] . "Type";
                                 $dbu = new DbUtils();
                                 $typefield = $dbu->getForeignKeyFieldForTable($dbu->getTableForItemType($itemtype));
-                                $imgitem = new PluginPositionsImageItem();
+                                $imgitem = new ImageItem();
                                 if (isset($itemclass->fields[$typefield])) {
                                     $val['img'] = $imgitem->displayItemImage($itemclass->fields[$typefield], $classe);
                                 }
@@ -1303,7 +1300,6 @@ class PluginPositionsPosition extends CommonDBTM
                 }
             }
             self::drawCanvas($objects, $params);
-
         } else {
             // Tests sur les droits
             $eventless = false;
@@ -1475,7 +1471,6 @@ class PluginPositionsPosition extends CommonDBTM
       </script>";
 
         echo "<div id='Carte'></div>";
-
     }
 
     static function displayItemTitle($itemclass)
@@ -1484,7 +1479,6 @@ class PluginPositionsPosition extends CommonDBTM
         $text = "";
         if (isset($itemclass->fields["name"])
             && !empty($itemclass->fields["name"])) {
-
             if (Plugin::isPluginActive("resources")
                 && $itemclass->getType() == 'PluginResourcesResource') {
                 $text .= PluginResourcesResource::getResourceName($itemclass->getID());
@@ -1493,7 +1487,7 @@ class PluginPositionsPosition extends CommonDBTM
             }
         }
         if (Session::getCurrentInterface() != 'central') {
-            $text .= PluginPositionsInfo::getCallValue($itemclass, true);
+            $text .= Info::getCallValue($itemclass, true);
         }
         return $text;
     }
@@ -1523,7 +1517,7 @@ class PluginPositionsPosition extends CommonDBTM
             $height = $defaultheight + $height;
             if ($itemclass->getType() == 'Phone') {
                 $height = $height + 80;
-            } else if ($itemclass->getType() == 'PluginResourcesResource') {
+            } elseif ($itemclass->getType() == 'PluginResourcesResource') {
                 $resID = $itemclass->fields['id'];
                 $restrict = ["plugin_resources_resources_id" => $resID,
                     "itemtype" => 'User'];
@@ -1562,7 +1556,6 @@ class PluginPositionsPosition extends CommonDBTM
         if ($itemclass->getType() != 'PluginResourcesResource'
             && $itemclass->getType() != 'Location'
             && $itemclass->getType() != 'Glpi\Socket') {
-
             $img = "<img src='" . PLUGIN_POSITIONS_WEBDIR . "/pics/nothing.png' width='30' height='30'>";
 
             if (!preg_match("/nothing.png/", $srcimg)) {
@@ -1577,10 +1570,8 @@ class PluginPositionsPosition extends CommonDBTM
             </object> ";
             }
         } else {
-
             if (Plugin::isPluginActive("resources")
                 && $itemclass->getType() == 'PluginResourcesResource') {
-
                 $img = "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/nobody.png' width='90' height='90'>";
                 $res = new PluginResourcesResource();
                 if ($res->getFromDB($itemclass->fields["id"])) {
@@ -1610,19 +1601,19 @@ class PluginPositionsPosition extends CommonDBTM
         if (!empty($infos)) {
             foreach ($infos as $info) {
                 if ($itemclass->getType() == $info['itemtype']) {
-                    PluginPositionsInfo::showFields($info, $itemclass);
+                    Info::showFields($info, $itemclass);
                 }
             }
         }
         if (Session::getCurrentInterface() == 'central' || $itemclass->getType() == 'Location') {
-            PluginPositionsInfo::getDirectLink($itemclass);
+            Info::getDirectLink($itemclass);
         }
 
         //end details
         echo "</div>";
 
         echo "<div class='call' style='width:480px;'>";
-        PluginPositionsInfo::getCallValue($itemclass);
+        Info::getCallValue($itemclass);
         //end call
         echo "</div>";
         echo "</td></tr></table>";
@@ -1645,8 +1636,13 @@ class PluginPositionsPosition extends CommonDBTM
 
         if (strstr($tmpfile, "../")
             || strstr($tmpfile, "..\\")) {
-            Event::log($file, "sendFile", 1, "security",
-                $_SESSION["glpiname"] . " try to get a non standard file.");
+            Event::log(
+                $file,
+                "sendFile",
+                1,
+                "security",
+                $_SESSION["glpiname"] . " try to get a non standard file."
+            );
             die("Security attack !!!");
         }
 
@@ -1658,17 +1654,17 @@ class PluginPositionsPosition extends CommonDBTM
 
         if (preg_match('/\.(....?)$/', $file, $regs)) {
             switch ($regs[1]) {
-                case "png" :
+                case "png":
                     $mime = "image/png";
                     break;
-                case "jpeg" :
+                case "jpeg":
                     $mime = "image/jpeg";
                     break;
 
-                case "jpg" :
+                case "jpg":
                     $mime = "image/jpg";
                     break;
-                case "gif" :
+                case "gif":
                     $mime = "image/gif";
                     break;
             }
@@ -1681,7 +1677,7 @@ class PluginPositionsPosition extends CommonDBTM
         header("Content-disposition: filename=\"$filename\"");
         header("Content-type: " . $mime);
 
-        readfile($file) or die ("Error opening file $file");
+        readfile($file) or die("Error opening file $file");
     }
 
     //from items
@@ -1701,11 +1697,16 @@ class PluginPositionsPosition extends CommonDBTM
                         `glpi_plugin_positions_positions`.`entities_id`) "
             . " WHERE `glpi_plugin_positions_positions`.`items_id` = '" . $ID . "'
                   AND `glpi_plugin_positions_positions`.`itemtype` = '" . $itemtype . "' "
-            . $dbu->getEntitiesRestrictRequest(" AND ", "glpi_plugin_positions_positions", '', '',
-                $self->maybeRecursive());
+            . $dbu->getEntitiesRestrictRequest(
+                " AND ",
+                "glpi_plugin_positions_positions",
+                '',
+                '',
+                $self->maybeRecursive()
+            );
         $query .= " ORDER BY `glpi_plugin_positions_positions`.`name` ";
 
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
         $number = $DB->numrows($result);
 
         $colsup = 0;
@@ -1738,7 +1739,6 @@ class PluginPositionsPosition extends CommonDBTM
                 if ($withtemplate != 3 && $canread
                     && (in_array($data['entities_id'], $_SESSION['glpiactiveentities'])
                         || $data["is_recursive"])) {
-
                     echo "<td class='center'><a href='" . PLUGIN_POSITIONS_WEBDIR .
                         "/front/position.form.php?id=" . $data["id"] . "'>" . $data["name"];
 
@@ -1756,8 +1756,10 @@ class PluginPositionsPosition extends CommonDBTM
                     echo "</td>";
                 }
                 if (Session::isMultiEntitiesMode()) {
-                    echo "<td class='center'>" . Dropdown::getDropdownName("glpi_entities",
-                            $data['entities_id']) . "</td>";
+                    echo "<td class='center'>" . Dropdown::getDropdownName(
+                        "glpi_entities",
+                        $data['entities_id']
+                    ) . "</td>";
                 }
                 echo "<td class='center'>" . $data["x_coordinates"] . "</td>";
                 echo "<td class='center'>" . $data["y_coordinates"] . "</td>";
@@ -1766,10 +1768,12 @@ class PluginPositionsPosition extends CommonDBTM
                     && $withtemplate < 2) {
                     if ($data["is_deleted"] != 1) {
                         echo "<td class='center tab_bg_2'>";
-                        Html::showSimpleForm(PLUGIN_POSITIONS_WEBDIR . '/front/position.form.php',
+                        Html::showSimpleForm(
+                            PLUGIN_POSITIONS_WEBDIR . '/front/position.form.php',
                             'delete_item',
                             _x('button', 'Delete permanently'),
-                            ['id' => $positionsID]);
+                            ['id' => $positionsID]
+                        );
                         echo "</td>";
                     } else {
                         echo "<td class='tab_bg_2 center'></td>";
@@ -1806,9 +1810,7 @@ class PluginPositionsPosition extends CommonDBTM
             }
             $documents_id = self::getDocument($item->fields['locations_id']);
             $locations_id = $item->fields['locations_id'];
-
         } else {
-
             if (Plugin::isPluginActive("resources")) {
                 //recherche de la ressource lie a ce user
 
@@ -1842,7 +1844,6 @@ class PluginPositionsPosition extends CommonDBTM
                         }
                     }
                 } else {
-
                     $ressource = new PluginResourcesResource();
                     if ($ressource->getFromDB($id)) {
                         $restrict = ["items_id" => $ressource->fields['id'],
@@ -1869,7 +1870,6 @@ class PluginPositionsPosition extends CommonDBTM
         $out = [];
         $Doc = new Document();
         if (isset($documents_id) && $Doc->getFromDB($documents_id)) {
-
             $out["positions_id"] = $positions_id;
             $out["download"] = 1;
             $out["locations_id"] = $locations_id;
@@ -1887,14 +1887,12 @@ class PluginPositionsPosition extends CommonDBTM
         $dbu = new DbUtils();
         if ($itemtype != 'User'
             && $itemtype != 'PluginResourcesResource') {
-            $position = new PluginPositionsPosition();
+            $position = new Position();
             $position->getFromDBByCrit(['itemtype' => $itemtype,
                 'items_id' => $id]);
             $documents_id = self::getDocument($position->fields['locations_id']);
             $locations_id = $position->fields['locations_id'];
-
         } else {
-
             //si plugin ressource active
             if (Plugin::isPluginActive("resources")) {
                 //recherche de la ressource lie a ce user
@@ -1929,7 +1927,6 @@ class PluginPositionsPosition extends CommonDBTM
                         }
                     }
                 } else {
-
                     $ressource = new PluginResourcesResource();
                     if ($ressource->getFromDB($id)) {
                         $restrict = ["items_id" => $ressource->fields['id'],
@@ -1945,7 +1942,6 @@ class PluginPositionsPosition extends CommonDBTM
                                         $documents_id = self::getDocument($data['locations_id']);
                                         $positions_id = $data['id'];
                                         $locations_id = $data['locations_id'];
-
                                     }
                                 }
                             }
@@ -1957,11 +1953,10 @@ class PluginPositionsPosition extends CommonDBTM
         $out = "";
         $Doc = new Document();
         if (isset($documents_id) && $Doc->getFromDB($documents_id)) {
-
             $out .= "&nbsp;<a href='#' onClick=\"var w = window.open('" . PLUGIN_POSITIONS_WEBDIR .
                 "/front/geoloc.php?positions_id=" .
                 $positions_id . "&amp;download=1&amp;locations_id=" . $locations_id .
-                "' ,'glpipopup', 
+                "' ,'glpipopup',
             'height=650, width=1400, top=100, left=100, scrollbars=yes' );
             w.focus();\" ><i class='fa-1x fas fa-map-location-dot'></i></a>&nbsp;";
         }
@@ -1979,7 +1974,6 @@ class PluginPositionsPosition extends CommonDBTM
         $Doc = new Document();
         if (isset($documents_id)
             && $Doc->getFromDB($documents_id)) {
-
             $target = PLUGIN_POSITIONS_WEBDIR . "/front/geoloc.php?positions_id=" .
                 $positions_id . "&amp;download=1&amp;locations_id=" . $locations_id;
             echo "<script type='text/javascript'>
@@ -2039,14 +2033,12 @@ class PluginPositionsPosition extends CommonDBTM
                 echo Html::hidden('entities_id', ['value' => $entity]);
                 echo Html::submit(_sx('button', 'Post'), ['name' => 'additem', 'class' => 'btn btn-primary']);
                 echo "</td>";
-
             }
         }
         echo "</tr>";
         echo "</table>";
         Html::closeForm();
         echo "</div>";
-
     }
 
 
@@ -2174,6 +2166,4 @@ class PluginPositionsPosition extends CommonDBTM
 
         return $languages;
     }
-
 }
-

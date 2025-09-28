@@ -27,14 +27,23 @@
  --------------------------------------------------------------------------
  */
 
+namespace GlpiPlugin\Positions;
+
+use Ajax;
+use CommonDBTM;
+use DbUtils;
+use Dropdown;
+use Html;
+use Plugin;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
 /**
- * Class PluginPositionsImageItem
+ * Class ImageItem
  */
-class PluginPositionsImageItem extends CommonDBTM {
+class ImageItem extends CommonDBTM {
 
    static $rightname = "plugin_positions";
 
@@ -97,41 +106,14 @@ class PluginPositionsImageItem extends CommonDBTM {
    }
 
    /**
-    * @param $itemtype
-    * @param $type
-    *
-    * @return bool
-    */
-   function getFromDBbyType($itemtype, $type) {
-      global $DB;
-
-      $query = "SELECT *
-                FROM `" . $this->getTable() . "`
-                WHERE `itemtype` = '$itemtype'
-                      AND `type` = '$type'";
-
-      if ($result = $DB->query($query)) {
-         if ($DB->numrows($result) != 1) {
-            return false;
-         }
-         $this->fields = $DB->fetchAssoc($result);
-         if (is_array($this->fields) && count($this->fields)) {
-            return true;
-         }
-         return false;
-      }
-      return false;
-   }
-
-
-   /**
     * @param $values
     */
    function addItemImage($values) {
       global $DB;
 
       if ($values["type"] != '-1') {
-         if ($this->GetfromDBbyType($values["itemtype"], $values["type"])) {
+         if ($this->getFromDBByCrit(['itemtype' => $values["itemtype"],
+             'type'     => $values["type"]])) {
             $this->update(['id'  => $this->fields['id'],
                            'img' => $values["img"]]);
          } else {
@@ -141,14 +123,15 @@ class PluginPositionsImageItem extends CommonDBTM {
          }
       } else {
          $dbu    = new DbUtils();
-         $query  = "SELECT * 
+         $query  = "SELECT *
                    FROM `" . $dbu->getTableForItemType($values["itemtype"] . "Type") . "` ";
-         $result = $DB->query($query);
+         $result = $DB->doQuery($query);
          $number = $DB->numrows($result);
          $i      = 0;
          while ($i < $number) {
             $type_table = $DB->result($result, $i, "id");
-            if ($this->GetfromDBbyType($values["itemtype"], $type_table)) {
+            if ($this->getFromDBByCrit(['itemtype' => $values["itemtype"],
+                'type'     => $type_table])) {
                $this->update(['id'  => $this->fields['id'],
                               'img' => $values["img"]]);
             } else {
@@ -243,7 +226,7 @@ class PluginPositionsImageItem extends CommonDBTM {
       echo "</th></tr>";
 
       echo "<tr class='tab_bg_1'><td>";
-      $types = PluginPositionsPosition::getTypes();
+      $types = Position::getTypes();
       self::showAllItems("type", $types, 0, 0, $_SESSION["glpiactive_entity"], -1, 'showType');
       echo "</td><td>";
 
@@ -259,11 +242,11 @@ class PluginPositionsImageItem extends CommonDBTM {
       echo "</table>";
       Html::closeForm();
 
-      $query = "SELECT * 
-                FROM `" . $this->getTable() . "` 
+      $query = "SELECT *
+                FROM `" . $this->getTable() . "`
                 ORDER BY `itemtype`,`type` ASC;";
       $i     = 0;
-      if ($result = $DB->query($query)) {
+      if ($result = $DB->doQuery($query)) {
          $number = $DB->numrows($result);
          if ($number != 0) {
             echo "<form method='post' name='massiveaction_form' id='massiveaction_form' action='" .
@@ -347,9 +330,9 @@ class PluginPositionsImageItem extends CommonDBTM {
             } else {
                echo "<td colspan='4' class='center'>";
             }
-            echo "<a onclick= \"if (markCheckboxes ('massiveaction_form')) return false;\" 
+            echo "<a onclick= \"if (markCheckboxes ('massiveaction_form')) return false;\"
                   href='#'>" . __('Check all') . "</a>";
-            echo " - <a onclick= \"if ( unMarkCheckboxes ('massiveaction_form') ) return false;\" 
+            echo " - <a onclick= \"if ( unMarkCheckboxes ('massiveaction_form') ) return false;\"
                   href='#'>" . __('Uncheck all') . "</a> ";
             echo Html::submit(_sx('button', 'Delete permanently'), ['name' => 'delete', 'class' => 'btn btn-primary']);
             echo "</td></tr>";

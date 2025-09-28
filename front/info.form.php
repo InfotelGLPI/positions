@@ -27,13 +27,15 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+use GlpiPlugin\Positions\Info;
+use GlpiPlugin\Positions\Position;
+use GlpiPlugin\Positions\Menu;
 
 if (!isset($_GET["id"])) {
    $_GET["id"] = "";
 }
 
-$info = new PluginPositionsInfo();
+$info = new Info();
 
 if (isset($_POST["add"])) {
    $info->check(-1, CREATE, $_POST);
@@ -66,7 +68,7 @@ if (isset($_POST["add"])) {
    $info->redirectToList();
 
 } else {
-   Html::header(PluginPositionsPosition::getTypeName(), '', "tools", "pluginpositionsmenu", "info");
+   Html::header(Position::getTypeName(), '', "tools", Menu::class, "info");
    $info->display($_GET);
    Html::footer();
 }

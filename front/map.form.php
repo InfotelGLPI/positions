@@ -27,21 +27,22 @@
  --------------------------------------------------------------------------
  */
 
-include('../../../inc/includes.php');
+use GlpiPlugin\Positions\Position;
+use GlpiPlugin\Positions\Menu;
 
 if (Session::getCurrentInterface() == 'central') {
    //from central
-   Html::header(PluginPositionsPosition::getTypeName(), '', "tools", "pluginpositionsmenu", "positions");
+   Html::header(Position::getTypeName(), '', "tools", Menu::class, "positions");
 } else {
    //from helpdesk
-   Html::helpHeader(PluginPositionsPosition::getTypeName());
+   Html::helpHeader(Position::getTypeName());
 }
 
 if (!isset($_POST["locations_id"])) {
    $_POST["locations_id"] = 0;
 }
 
-PluginPositionsPosition::showLocationForm($_POST["locations_id"]);
+Position::showLocationForm($_POST["locations_id"]);
 
 if (Session::getCurrentInterface() == 'central') {
    Html::footer();

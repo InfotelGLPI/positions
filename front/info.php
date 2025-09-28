@@ -27,13 +27,15 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+use GlpiPlugin\Positions\Info;
+use GlpiPlugin\Positions\Position;
+use GlpiPlugin\Positions\Menu;
 
-Html::header(PluginPositionsPosition::getTypeName(), '', "tools", "pluginpositionsmenu", "info");
+Html::header(Position::getTypeName(), '', "tools", Menu::class, "info");
 
-$config = new PluginPositionsInfo();
+$config = new Info();
 if ($config->canView() || Session::haveRight("config", UPDATE)) {
-   Search::show("PluginPositionsInfo");
+   Search::show(Info::class);
 
 } else {
    Html::displayRightError();

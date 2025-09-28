@@ -27,7 +27,9 @@
  --------------------------------------------------------------------------
  */
 
-include('../../../inc/includes.php');
+use Glpi\Exception\Http\BadRequestHttpException;
+use GlpiPlugin\Positions\Position;
+use GlpiPlugin\Positions\Menu;
 
 if (!isset($_GET["locations_id"])) {
    $_GET["locations_id"] = 0;
@@ -40,32 +42,32 @@ if (isset($_POST["affich"]) && !isset($_POST["itemtype"])) {
    $_POST["itemtype"] = "0";
 }
 
-$types = PluginPositionsPosition::getTypes();
+$types = Position::getTypes();
 if (!isset($_POST["itemtype"])) {
    $_POST["itemtype"] = $types;
 }
 
 if (Session::getCurrentInterface() == 'central') {
    //from central
-   Html::header(PluginPositionsPosition::getTypeName(), '', "tools", "pluginpositionsmenu", "positions");
+   Html::header(Position::getTypeName(), '', "tools", Menu::class, "positions");
 } else {
    //from helpdesk
-   Html::helpHeader(PluginPositionsPosition::getTypeName());
+   Html::helpHeader(Position::getTypeName());
 }
 
-$pos = new PluginPositionsPosition();
+$pos = new Position();
 
 if ($pos->canView() || Session::haveRight("config", UPDATE)) {
    if (!$_POST["locations_id"]) {
-      PluginPositionsPosition::showLocationForm($_POST["locations_id"]);
-      Html::displayErrorAndDie(__('No location selected', 'positions'), false, ERROR);
+       Position::showLocationForm($_POST["locations_id"]);
+       throw new BadRequestHttpException(__('No location selected', 'positions'));
 
    } else {
       $options = ['id'           => 0,
                   'locations_id' => $_POST["locations_id"],
                   'itemtype'     => $_POST['itemtype'],
                   'target'       => $_SERVER['PHP_SELF'] . "?locations_id=" . $_POST["locations_id"]];
-      PluginPositionsPosition::showMap($options);
+       Position::showMap($options);
    }
 }
 
