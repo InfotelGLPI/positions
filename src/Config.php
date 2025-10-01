@@ -107,7 +107,7 @@ class Config extends CommonDBTM
 
         echo "<tr><th colspan='2'>";
         echo Html::hidden('id', ['value' => 1]);
-        echo "<div align='center'>";
+        echo "<div class='center'>";
         echo Html::submit(_sx('button', 'Post'), ['name' => 'update_config', 'class' => 'btn btn-primary']);
         echo "</div></th></tr>";
         echo "</table></div>";

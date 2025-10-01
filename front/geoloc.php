@@ -29,6 +29,7 @@
 
 use GlpiPlugin\Positions\Position;
 use GlpiPlugin\Positions\Menu;
+use GlpiPlugin\Resources\Resource;
 
 if (!isset($_GET["id"])) {
    $_GET["id"] = "";
@@ -45,7 +46,7 @@ if (isset($_GET["users_id"])) {
       $infos = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items', $condition);
       if (!empty($infos)) {
          foreach ($infos as $info) {
-            $ressource     = new PluginResourcesResource();
+            $ressource     = new Resource();
             $ressource->getFromDB($info['plugin_resources_resources_id']);
 
             $restrict = ["items_id"    => $ressource->fields['id'],

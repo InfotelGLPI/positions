@@ -34,6 +34,7 @@ use CommonDBTM;
 use CommonTreeDropdown;
 use DbUtils;
 use Dropdown;
+use GlpiPlugin\Resources\Resource;
 use Html;
 use Plugin;
 use Session;
@@ -468,7 +469,7 @@ class Info extends CommonDBTM {
                          'phonepowersupplies_id',
                          'is_global'];
             break;
-         case "PluginResourcesResource" :
+         case Resource::class :
             return ['alert',
                          'comment',
                          'date_mod',
@@ -645,7 +646,7 @@ class Info extends CommonDBTM {
               "?id=" . $itemclass->fields["id"] . "' target='_blank'>";
          $title  = $itemclass->fields["name"];
          if (Plugin::isPluginActive("resources")
-             && $itemclass->getType() == 'PluginResourcesResource') {
+             && $itemclass->getType() == Resource::class) {
             $title = $itemclass->fields["firstname"] . " " . $itemclass->fields["name"];
          }
          echo $title;
@@ -678,7 +679,7 @@ class Info extends CommonDBTM {
 
       $display = "";
       switch ($itemclass->getType()) {
-         case 'PluginResourcesResource' :
+         case Resource::class :
             $resID      = $itemclass->fields['id'];
             $entitiesID = $itemclass->fields['entities_id'];
             $restrict   = ["plugin_resources_resources_id" => $resID,

@@ -35,6 +35,7 @@ use DbUtils;
 use Document;
 use Document_Item;
 use Dropdown;
+use GlpiPlugin\Resources\Resource;
 use Html;
 use Location;
 use Plugin;
@@ -1128,7 +1129,7 @@ class Position extends CommonDBTM
             return false;
         }
 
-        echo "<div align='center'>";
+        echo "<div class='center'>";
         echo "<form method='post' action=\"" . PLUGIN_POSITIONS_WEBDIR .
             "/front/position.form.php\" name='addfromplugin' id='addfromplugin'>";
 
@@ -1266,11 +1267,11 @@ class Position extends CommonDBTM
                                 "labelSize" => $val['labelSize'],
                                 "shape" => $val['shape']];
 
-                            if (Plugin::isPluginActive("resources") && ($val['itemtype'] == 'PluginResourcesResource')) {
+                            if (Plugin::isPluginActive("resources") && ($val['itemtype'] == Resource::class)) {
                                 $val['picture'] = $itemclass->fields['picture'];
-                                $options['img'] = $CFG_GLPI['url_base'] . PLUGIN_RESOURCES_NOTFULL_DIR . '/pics/nobody.png';
+                                $options['img'] = $CFG_GLPI['url_base'] . PLUGIN_RESOURCES_WEBDIR . '/pics/nobody.png';
                                 if (!($val['picture'] == null)) {
-                                    $options['img'] = $CFG_GLPI['url_base'] . PLUGIN_RESOURCES_NOTFULL_DIR . '/front/picture.send.php?file=' . $val['picture'];
+                                    $options['img'] = $CFG_GLPI['url_base'] . PLUGIN_RESOURCES_WEBDIR . '/front/picture.send.php?file=' . $val['picture'];
                                 }
                                 $objects[$val['id']] = $options;
                             } elseif (($val['itemtype'] == 'Location')) {
@@ -1480,8 +1481,8 @@ class Position extends CommonDBTM
         if (isset($itemclass->fields["name"])
             && !empty($itemclass->fields["name"])) {
             if (Plugin::isPluginActive("resources")
-                && $itemclass->getType() == 'PluginResourcesResource') {
-                $text .= PluginResourcesResource::getResourceName($itemclass->getID());
+                && $itemclass->getType() == Resource::class) {
+                $text .= Resource::getResourceName($itemclass->getID());
             } else {
                 $text .= $itemclass->fields["name"];
             }
@@ -1517,7 +1518,7 @@ class Position extends CommonDBTM
             $height = $defaultheight + $height;
             if ($itemclass->getType() == 'Phone') {
                 $height = $height + 80;
-            } elseif ($itemclass->getType() == 'PluginResourcesResource') {
+            } elseif ($itemclass->getType() == Resource::class) {
                 $resID = $itemclass->fields['id'];
                 $restrict = ["plugin_resources_resources_id" => $resID,
                     "itemtype" => 'User'];
@@ -1553,7 +1554,7 @@ class Position extends CommonDBTM
         }
         $width = 450;
 
-        if ($itemclass->getType() != 'PluginResourcesResource'
+        if ($itemclass->getType() != Resource::class
             && $itemclass->getType() != 'Location'
             && $itemclass->getType() != 'Glpi\Socket') {
             $img = "<img src='" . PLUGIN_POSITIONS_WEBDIR . "/pics/nothing.png' width='30' height='30'>";
@@ -1571,9 +1572,9 @@ class Position extends CommonDBTM
             }
         } else {
             if (Plugin::isPluginActive("resources")
-                && $itemclass->getType() == 'PluginResourcesResource') {
+                && $itemclass->getType() == Resource::class) {
                 $img = "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/nobody.png' width='90' height='90'>";
-                $res = new PluginResourcesResource();
+                $res = new Resource();
                 if ($res->getFromDB($itemclass->fields["id"])) {
                     if (isset($res->fields["picture"])) {
                         $path = GLPI_PLUGIN_DOC_DIR . "/resources/" . $res->fields["picture"];
@@ -1716,7 +1717,7 @@ class Position extends CommonDBTM
         if ($number) {
             echo "<form method='post' action=\"" . PLUGIN_POSITIONS_WEBDIR .
                 "/front/position.form.php\" name='pointform' id='pointform'>";
-            echo "<div align='center'><table class='tab_cadre_fixe'>";
+            echo "<div class='center'><table class='tab_cadre_fixe'>";
             echo "<tr><th colspan='" . (4 + $colsup) . "'>" . __('Associated coordinate', 'positions') . ":</th></tr>";
             echo "<tr><th>" . __('Name') . "</th>";
             if (Session::isMultiEntitiesMode()) {
@@ -1795,7 +1796,7 @@ class Position extends CommonDBTM
         $dbu = new DbUtils();
 
         if ($itemtype != 'User'
-            && $itemtype != 'PluginResourcesResource') {
+            && $itemtype != Resource::class) {
             $item = new $itemtype();
             $item->getFromDB($id);
 
@@ -1814,20 +1815,20 @@ class Position extends CommonDBTM
             if (Plugin::isPluginActive("resources")) {
                 //recherche de la ressource lie a ce user
 
-                if ($itemtype != 'PluginResourcesResource') {
+                if ($itemtype != Resource::class) {
                     $condition = ["items_id" => $id,
                         "itemtype" => 'User'];
 
                     $infos = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items', $condition);
                     if (!empty($infos)) {
                         foreach ($infos as $info) {
-                            $ressource = new PluginResourcesResource();
+                            $ressource = new Resource();
                             $ressource->getFromDB($info['plugin_resources_resources_id']);
 
                             $restrict = ["items_id" => $ressource->getID(),
                                 "is_deleted" => 0,
                                 "entities_id" => $ressource->fields['entities_id'],
-                                "itemtype" => 'PluginResourcesResource'];
+                                "itemtype" => Resource::class];
                             $datas = $dbu->getAllDataFromTable('glpi_plugin_positions_positions', $restrict);
                             if (!empty($datas)) {
                                 foreach ($datas as $data) {
@@ -1844,7 +1845,7 @@ class Position extends CommonDBTM
                         }
                     }
                 } else {
-                    $ressource = new PluginResourcesResource();
+                    $ressource = new Resource();
                     if ($ressource->getFromDB($id)) {
                         $restrict = ["items_id" => $ressource->fields['id'],
                             "is_deleted" => 0,
@@ -1886,7 +1887,7 @@ class Position extends CommonDBTM
 
         $dbu = new DbUtils();
         if ($itemtype != 'User'
-            && $itemtype != 'PluginResourcesResource') {
+            && $itemtype != Resource::class) {
             $position = new Position();
             $position->getFromDBByCrit(['itemtype' => $itemtype,
                 'items_id' => $id]);
@@ -1897,20 +1898,20 @@ class Position extends CommonDBTM
             if (Plugin::isPluginActive("resources")) {
                 //recherche de la ressource lie a ce user
 
-                if ($itemtype != 'PluginResourcesResource') {
+                if ($itemtype != Resource::class) {
                     $condition = ["items_id" => $id,
                         "itemtype" => 'User'];
 
                     $infos = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items', $condition);
                     if (!empty($infos)) {
                         foreach ($infos as $info) {
-                            $ressource = new PluginResourcesResource();
+                            $ressource = new Resource();
                             $ressource->getFromDB($info['plugin_resources_resources_id']);
 
                             $restrict = ["items_id" => $ressource->getID(),
                                 "is_deleted" => 0,
                                 "entities_id" => $ressource->fields['entities_id'],
-                                "itemtype" => 'PluginResourcesResource'];
+                                "itemtype" => Resource::class];
                             $datas = $dbu->getAllDataFromTable('glpi_plugin_positions_positions', $restrict);
                             if (!empty($datas)) {
                                 foreach ($datas as $data) {
@@ -1927,7 +1928,7 @@ class Position extends CommonDBTM
                         }
                     }
                 } else {
-                    $ressource = new PluginResourcesResource();
+                    $ressource = new Resource();
                     if ($ressource->getFromDB($id)) {
                         $restrict = ["items_id" => $ressource->fields['id'],
                             "is_deleted" => 0,
@@ -1994,7 +1995,7 @@ class Position extends CommonDBTM
         $itemclass = new $itemtype();
         $itemclass->getFromDB($items_id);
 
-        echo "<div align='center'>";
+        echo "<div class='center'>";
         echo "<form method='post' action=\"" . PLUGIN_POSITIONS_WEBDIR .
             "/front/position.form.php\" name='pointform' id='pointform'>";
 
