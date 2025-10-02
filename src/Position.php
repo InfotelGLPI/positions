@@ -133,17 +133,17 @@ class Position extends CommonDBTM
         // Only allowed types
         $types = self::$types;
 
-        $plugin = new Plugin();
-        if ($plugin->isActivated('genericobject') &&
-            method_exists('PluginGenericobjectType', 'getTypes')) {
-            foreach (array_keys(PluginGenericobjectType::getTypes()) as $go_itemtype) {
-                if (!class_exists($go_itemtype)) {
-                    continue;
-                }
-
-                $types[] = $go_itemtype;
-            }
-        }
+//        $plugin = new Plugin();
+//        if ($plugin->isActivated('genericobject') &&
+//            method_exists('PluginGenericobjectType', 'getTypes')) {
+//            foreach (array_keys(PluginGenericobjectType::getTypes()) as $go_itemtype) {
+//                if (!class_exists($go_itemtype)) {
+//                    continue;
+//                }
+//
+//                $types[] = $go_itemtype;
+//            }
+//        }
 
         if ($all) {
             return $types;
