@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Positions plugin 4.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-01 09:49+0000\n"
+"POT-Creation-Date: 2025-10-02 10:51+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -69,40 +69,40 @@ msgstr ""
 msgid "Configuring the display materials"
 msgstr ""
 
-#: src/Imageitem.php:101
+#: src/ImageItem.php:101
 msgid "Types of materials should be created so that the association can exist"
 msgstr ""
 
-#: src/Imageitem.php:208
+#: src/ImageItem.php:208
 msgid "Add pictures to use with plugin"
 msgstr ""
 
-#: src/Imageitem.php:212
+#: src/ImageItem.php:212
 msgid "Upload yours pics into files/_plugins/positions/pics/ folder"
 msgstr ""
 
-#: src/Imageitem.php:235
+#: src/ImageItem.php:235
 msgid "Associate images with types of equipment"
 msgstr ""
 
-#: src/Imageitem.php:271
+#: src/ImageItem.php:271
 msgid "List of associations"
 msgstr ""
 
-#: src/Imageitem.php:274 src/Imageitem.php:278 src/Info.php:106
+#: src/ImageItem.php:274 src/ImageItem.php:278 src/Info.php:106
 #: src/Info.php:214
 msgid "Equipment"
 msgstr ""
 
-#: src/Imageitem.php:275 src/Imageitem.php:279
+#: src/ImageItem.php:275 src/ImageItem.php:279
 msgid "Equipment type"
 msgstr ""
 
-#: src/Imageitem.php:276 src/Imageitem.php:280
+#: src/ImageItem.php:276 src/ImageItem.php:280
 msgid "Picture"
 msgstr ""
 
-#: src/Imageitem.php:314
+#: src/ImageItem.php:314
 msgid "No associated picture"
 msgstr ""
 
