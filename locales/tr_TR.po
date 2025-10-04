@@ -323,7 +323,7 @@ msgstr "Kurallı ifade yazılabilir"
 
 #: src/Position.php:2115
 msgid "One line by object"
-msgstr "Her nesne için bir satır"
+msgstr "Her satıra bir nesne"
 
 #: src/Position.php:2116
 msgid "Stop highlighting"
