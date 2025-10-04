@@ -178,7 +178,7 @@ msgstr "Koordinatları kaydet"
 
 #: src/Position.php:1018
 msgid "Add a sub-area"
-msgstr "Alt bölge ekleyin"
+msgstr "Alt bölge ekle"
 
 #: src/Position.php:1049 src/Position.php:1116
 msgid "No location has a configured map"
@@ -190,7 +190,7 @@ msgstr "Nesne konumu haritaya uymuyor"
 
 #: src/Position.php:1149 src/Position.php:2003
 msgid "Create coordinates"
-msgstr "Koordinatlar oluşturun"
+msgstr "Koordinatlar oluştur"
 
 #: src/Position.php:1178
 msgid "Limited view"
