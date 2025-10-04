@@ -162,7 +162,7 @@ msgstr "Yeni bir konum ekleyin"
 
 #: src/Position.php:548
 msgid "Add and continue"
-msgstr "Ekleyin ve devam edin"
+msgstr "Ekleyip ilerle"
 
 #: src/Position.php:732 src/Position.php:785
 msgid "This item is already bound to a location"
