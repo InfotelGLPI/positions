@@ -170,7 +170,7 @@ msgstr "Bu öge zaten bir konuma yerleştirilmiş"
 
 #: src/Position.php:865
 msgid "Change the coordinates"
-msgstr "Koordinatları değiştirin"
+msgstr "Koordinatları değiştir"
 
 #: src/Position.php:1014
 msgid "Save the coordinates"
