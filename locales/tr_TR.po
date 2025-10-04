@@ -146,7 +146,7 @@ msgstr "Bir bölge seçerek Tamam üzerine tıklayın"
 
 #: src/Position.php:479
 msgid "Creation of sub-areas on the map"
-msgstr "Harita alt alanlarının oluşturulması"
+msgstr "Harita alt bölgelerinin oluşturulması"
 
 #: src/Position.php:486
 msgid "Choose an existing location"
