@@ -5,16 +5,16 @@
 # 
 # Translators:
 # Xavier CAILLAUD <thetsmr@gmail.com>, 2020
-# Kaya Zeren <kayazeren@gmail.com>, 2024
+# Kaya Zeren <kayazeren@gmail.com>, 2025
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Positions plugin 4.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-25 17:03+0000\n"
+"POT-Creation-Date: 2025-10-02 10:51+0000\n"
 "PO-Revision-Date: 2020-11-02 16:14+0000\n"
-"Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2024\n"
+"Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2025\n"
 "Language-Team: Turkish (Turkey) (https://app.transifex.com/infotelGLPI/teams/12367/tr_TR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,477 +22,475 @@ msgstr ""
 "Language: tr_TR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: hook.php:241 setup.php:100 inc/menu.class.php:44 inc/position.class.php:62
-#: inc/profile.class.php:169 inc/profile.class.php:177
+#: hook.php:255 setup.php:108 src/Menu.php:50 src/Position.php:77
+#: src/Profile.php:180 src/Profile.php:188
 msgid "Cartography"
 msgid_plural "Cartographies"
 msgstr[0] "Kartografi"
 msgstr[1] "Kartografiler"
 
-#: ajax/dropdownValue.php:160
+#: ajax/dropdownValue.php:170
 msgid "All types"
 msgstr "Tüm türler"
 
-#: front/config.form.php:51
+#: front/config.form.php:53
 msgid "Please activate the plugin"
 msgstr "Lütfen eklentiyi etkinleştirin"
 
-#: front/geoloc.php:116
+#: front/geoloc.php:118
 msgid "The selected object is not located on a map"
-msgstr "Seçili nesne harita üzerine yerleştirilmemiş"
+msgstr "Seçilmiş nesne harita üzerine yerleştirilmemiş"
 
-#: front/imageitem.form.php:44
+#: front/imageitem.form.php:46
 msgid "No picture uploaded"
 msgstr "Henüz yüklenmiş bir görsel yok"
 
-#: front/map.php:61 inc/position.class.php:1044 inc/position.class.php:2017
+#: front/map.php:63 src/Position.php:1060 src/Position.php:2025
 msgid "No location selected"
 msgstr "Konum seçilmemiş"
 
-#: inc/config.class.php:53
+#: src/Config.php:63
 msgid "Plugin Setup"
 msgstr "Eklenti ayarları"
 
-#: inc/config.class.php:69
+#: src/Config.php:84
 msgid "Add sub-places on the map objects"
 msgstr "Harita nesnelerine alt konumlar ekle"
 
-#: inc/config.class.php:76
+#: src/Config.php:91
 msgid "Default width of images"
 msgstr "Varsayılan görsel genişliği"
 
-#: inc/config.class.php:85
+#: src/Config.php:100
 msgid "Default height of images"
 msgstr "Varsayılan görsel yüksekliği"
 
-#: inc/config.class.php:110
+#: src/Config.php:125
 msgid "Association : picture / types of equipment"
 msgstr "Atama: görsel / aygıt türü"
 
-#: inc/config.class.php:116 inc/position.class.php:1543
+#: src/Config.php:131 src/Position.php:1551
 msgid "Configuring the display materials"
 msgstr "Görünüm malzemeleri ayarlanıyor"
 
-#: inc/imageitem.class.php:82
+#: src/ImageItem.php:101
 msgid "Types of materials should be created so that the association can exist"
 msgstr "Atama için malzeme türleri oluşturulmuş olmalıdır"
 
-#: inc/imageitem.class.php:215
+#: src/ImageItem.php:208
 msgid "Add pictures to use with plugin"
 msgstr "Eklenti ile kullanılacak görselleri yükleyin"
 
-#: inc/imageitem.class.php:219
+#: src/ImageItem.php:212
 msgid "Upload yours pics into files/_plugins/positions/pics/ folder"
 msgstr "Görsellerinizi files/_plugins/positions/pics/ klasörüne yükleyin"
 
-#: inc/imageitem.class.php:242
+#: src/ImageItem.php:235
 msgid "Associate images with types of equipment"
 msgstr "Aygıt türlerine görsel atayın"
 
-#: inc/imageitem.class.php:278
+#: src/ImageItem.php:271
 msgid "List of associations"
 msgstr "Atama listesi"
 
-#: inc/imageitem.class.php:281 inc/imageitem.class.php:285
-#: inc/info.class.php:93 inc/info.class.php:201
+#: src/ImageItem.php:274 src/ImageItem.php:278 src/Info.php:106
+#: src/Info.php:214
 msgid "Equipment"
 msgstr "Aygıt"
 
-#: inc/imageitem.class.php:282 inc/imageitem.class.php:286
+#: src/ImageItem.php:275 src/ImageItem.php:279
 msgid "Equipment type"
 msgstr "Aygıt türü"
 
-#: inc/imageitem.class.php:283 inc/imageitem.class.php:287
+#: src/ImageItem.php:276 src/ImageItem.php:280
 msgid "Picture"
 msgstr "Fotoğraf"
 
-#: inc/imageitem.class.php:321
+#: src/ImageItem.php:314
 msgid "No associated picture"
 msgstr "Atanmış bir görsel yok"
 
-#: inc/info.class.php:49
+#: src/Info.php:62
 msgid "Display of equipment"
 msgid_plural "Display of equipments"
 msgstr[0] "Aygıt görünümü"
 msgstr[1] "Aygıt görünümleri"
 
-#: inc/info.class.php:81 inc/info.class.php:193
+#: src/Info.php:94 src/Info.php:206
 msgid "Displayed fields"
 msgstr "Görüntülenecek alanlar"
 
-#: inc/info.class.php:630 inc/info.class.php:645
+#: src/Info.php:643 src/Info.php:658
 msgid "Direct link"
 msgstr "Doğrudan bağlantı"
 
-#: inc/position.class.php:150
+#: src/Position.php:176
 msgid "No equipment associated"
 msgstr "Atanmış bir aygıt yok"
 
-#: inc/position.class.php:236 inc/position.class.php:790
-#: inc/position.class.php:1711
+#: src/Position.php:261 src/Position.php:804 src/Position.php:1726
 msgid "Coordinate x"
 msgstr "x koordinatı"
 
-#: inc/position.class.php:243 inc/position.class.php:828
-#: inc/position.class.php:1712
+#: src/Position.php:268 src/Position.php:842 src/Position.php:1727
 msgid "Coordinate y"
 msgstr "y koordinatı"
 
-#: inc/position.class.php:309 inc/position.class.php:1094
+#: src/Position.php:337 src/Position.php:1110
 msgid "See the map"
 msgstr "Haritaya bakın"
 
-#: inc/position.class.php:388
+#: src/Position.php:413
 msgid "Select an area and click on OK"
 msgstr "Bir bölge seçerek Tamam üzerine tıklayın"
 
-#: inc/position.class.php:456
+#: src/Position.php:479
 msgid "Creation of sub-areas on the map"
 msgstr "Harita alt alanlarının oluşturulması"
 
-#: inc/position.class.php:463
+#: src/Position.php:486
 msgid "Choose an existing location"
 msgstr "Var olan bir konum seçin"
 
-#: inc/position.class.php:490
+#: src/Position.php:511
 msgid "No sub-area found"
 msgstr "Herhangi bir altalan bulunamadı"
 
-#: inc/position.class.php:500
+#: src/Position.php:521
 msgid "Create a new location"
 msgstr "Yeni bir konum ekleyin"
 
-#: inc/position.class.php:527
+#: src/Position.php:548
 msgid "Add and continue"
 msgstr "Ekleyin ve devam edin"
 
-#: inc/position.class.php:717 inc/position.class.php:771
+#: src/Position.php:732 src/Position.php:785
 msgid "This item is already bound to a location"
 msgstr "Bu öge zaten bir konuma yerleştirilmiş"
 
-#: inc/position.class.php:851
+#: src/Position.php:865
 msgid "Change the coordinates"
 msgstr "Koordinatları değiştirin"
 
-#: inc/position.class.php:998
+#: src/Position.php:1014
 msgid "Save the coordinates"
 msgstr "Koordinatları kaydet"
 
-#: inc/position.class.php:1002
+#: src/Position.php:1018
 msgid "Add a sub-area"
 msgstr "Alt bölge ekleyin"
 
-#: inc/position.class.php:1033 inc/position.class.php:1100
+#: src/Position.php:1049 src/Position.php:1116
 msgid "No location has a configured map"
 msgstr "Henüz bir konum için harita ayarlanmamış"
 
-#: inc/position.class.php:1038
+#: src/Position.php:1054
 msgid "The object location does not match a map"
 msgstr "Nesne konumu haritaya uymuyor"
 
-#: inc/position.class.php:1133 inc/position.class.php:1995
+#: src/Position.php:1149 src/Position.php:2003
 msgid "Create coordinates"
 msgstr "Koordinatlar oluşturun"
 
-#: inc/position.class.php:1162
+#: src/Position.php:1178
 msgid "Limited view"
 msgstr "Sınırlı görünüm"
 
-#: inc/position.class.php:1706
+#: src/Position.php:1721
 msgid "Associated coordinate"
 msgstr "Atanmış koordinat"
 
-#: inc/position.class.php:2071
+#: src/Position.php:2077
 msgid "Please download a newer version of canvasXpress at"
 msgstr "Lütfen şuradan yeni canvasXpress sürümünü indirin"
 
-#: inc/position.class.php:2072
+#: src/Position.php:2078
 msgid ""
 "You are using an older version that do not support all the functionality of "
 "this panel"
 msgstr ""
 "Bu panonun tüm işlevlerini desteklemeyen eski bir sürüm kullanıyorsunuz"
 
-#: inc/position.class.php:2073
+#: src/Position.php:2079
 msgid "Delete selected objects"
 msgstr "Seçilmiş nesneleri sil"
 
-#: inc/position.class.php:2074
+#: src/Position.php:2080
 msgid "Informations about"
 msgstr "Şunun hakkında bilgiler:"
 
-#: inc/position.class.php:2078
+#: src/Position.php:2084
 msgid "Hide"
 msgstr "Gizle"
 
-#: inc/position.class.php:2079
+#: src/Position.php:2085
 msgid "informations about selected items"
 msgstr "Seçilmiş ögeler hakkındaki bilgiler"
 
-#: inc/position.class.php:2080
+#: src/Position.php:2086
 msgid "All hidden objects"
 msgstr "Tüm gizli nesneler"
 
-#: inc/position.class.php:2081
+#: src/Position.php:2087
 msgid "See all hidden objects"
 msgstr "Tüm gizli nesnelere bakın"
 
-#: inc/position.class.php:2082
+#: src/Position.php:2088
 msgid "cancel last change"
 msgstr "son değişikliği geri al"
 
-#: inc/position.class.php:2083
+#: src/Position.php:2089
 msgid "Replay the last change"
 msgstr "Son değişikliği yinele"
 
-#: inc/position.class.php:2084
+#: src/Position.php:2090
 msgid "Save as a new network"
 msgstr "Yeni bir ağ olarak kaydet"
 
-#: inc/position.class.php:2086
+#: src/Position.php:2092
 msgid "Save the network now"
 msgstr "Ağı şimdi kaydet"
 
-#: inc/position.class.php:2087
+#: src/Position.php:2093
 msgid "Simple search"
 msgstr "Basit arama"
 
-#: inc/position.class.php:2088
+#: src/Position.php:2094
 msgid "Import JSON data"
 msgstr "JSON verisini içe aktar"
 
-#: inc/position.class.php:2089
+#: src/Position.php:2095
 msgid "Export JSON data"
 msgstr "JSON verisini dışa aktar"
 
-#: inc/position.class.php:2090
+#: src/Position.php:2096
 msgid "Import JSON movie"
 msgstr "JSON görüntüsünü içe aktar"
 
-#: inc/position.class.php:2091
+#: src/Position.php:2097
 msgid "Export JSON movie"
 msgstr "JSON görüntüsünü dışa aktar"
 
-#: inc/position.class.php:2092
+#: src/Position.php:2098
 msgid "Force save the entire network"
 msgstr "Tüm ağ kaydedilsin"
 
-#: inc/position.class.php:2093
+#: src/Position.php:2099
 msgid "Advanced test"
 msgstr "Gelişmiş sınama"
 
-#: inc/position.class.php:2094
+#: src/Position.php:2100
 msgid "Refresh the graph"
 msgstr "Çizelgeyi yenile"
 
-#: inc/position.class.php:2095
+#: src/Position.php:2101
 msgid "See as a picture"
 msgstr "Fotoğraf olarak görüntüle"
 
-#: inc/position.class.php:2099 inc/position.class.php:2100
+#: src/Position.php:2105 src/Position.php:2106
 msgid "Color"
 msgid_plural "Colors"
 msgstr[0] "Renk"
 msgstr[1] "Renkler"
 
-#: inc/position.class.php:2101
+#: src/Position.php:2107
 msgid "Scale Factor"
 msgstr "Ölçek çarpanı"
 
-#: inc/position.class.php:2102
+#: src/Position.php:2108
 msgid "Boxed"
 msgstr "Kutu içinde"
 
-#: inc/position.class.php:2103
+#: src/Position.php:2109
 msgid "Transpose"
 msgstr "Çevir"
 
-#: inc/position.class.php:2104
+#: src/Position.php:2110
 msgid "Search on objects"
 msgstr "Nesnelerde ara"
 
-#: inc/position.class.php:2106
+#: src/Position.php:2112
 msgid "Advanced Options"
 msgstr "Gelişmiş ayarlar"
 
-#: inc/position.class.php:2107
+#: src/Position.php:2113
 msgid "Search key"
 msgstr "Aranacak bilgi"
 
-#: inc/position.class.php:2108
+#: src/Position.php:2114
 msgid "Regex accepted"
 msgstr "Kurallı ifade yazılabilir"
 
-#: inc/position.class.php:2109
+#: src/Position.php:2115
 msgid "One line by object"
 msgstr "Her nesne için bir satır"
 
-#: inc/position.class.php:2110
+#: src/Position.php:2116
 msgid "Stop highlighting"
 msgstr "Vurgulanmasın"
 
-#: inc/position.class.php:2111
+#: src/Position.php:2117
 msgid "Highlight object"
 msgstr "Nesne vurgulansın"
 
-#: inc/position.class.php:2112
+#: src/Position.php:2118
 msgid "Edit selected object"
 msgstr "Seçilmiş nesneyi düzenle"
 
-#: inc/position.class.php:2113
+#: src/Position.php:2119
 msgid "Selected object"
 msgstr "Seçilmiş nesne"
 
-#: inc/position.class.php:2114
+#: src/Position.php:2120
 msgid "This object"
 msgstr "Bu nesne"
 
-#: inc/position.class.php:2115
+#: src/Position.php:2121
 msgid "Selected objects and all the"
 msgstr "Seçilmiş nesne ve tüm diğer"
 
-#: inc/position.class.php:2116
+#: src/Position.php:2122
 msgid "This object and all its"
 msgstr "Bu nesne ve tüm diğer"
 
-#: inc/position.class.php:2117
+#: src/Position.php:2123
 msgid "Do you want to delete"
 msgstr "Silmek istediğinize emin misiniz"
 
-#: inc/position.class.php:2118
+#: src/Position.php:2124
 msgid "Links will be deleted"
 msgstr "Bağlantılar silinecek"
 
-#: inc/position.class.php:2119
+#: src/Position.php:2125
 msgid "Tooltip"
 msgstr "İpucu"
 
-#: inc/position.class.php:2120
+#: src/Position.php:2126
 msgid "Object type"
 msgstr "Nesne türü"
 
-#: inc/position.class.php:2121
+#: src/Position.php:2127
 msgid "Required selection"
 msgstr "Gereken seçim"
 
-#: inc/position.class.php:2122
+#: src/Position.php:2128
 msgid "Image path"
 msgstr "Görsel yolu"
 
-#: inc/position.class.php:2123
+#: src/Position.php:2129
 msgid "The object is fixed"
 msgstr "Nesne sabitlendi"
 
-#: inc/position.class.php:2126
+#: src/Position.php:2132
 msgid "Object editor"
 msgstr "Nesne düzenleyici"
 
-#: inc/position.class.php:2127
+#: src/Position.php:2133
 msgid "Object id"
 msgstr "Nesne kimliği"
 
-#: inc/position.class.php:2129
+#: src/Position.php:2135
 msgid "Pattern"
 msgstr "Örüntü"
 
-#: inc/position.class.php:2130
+#: src/Position.php:2136
 msgid "Edge"
 msgstr "Kenar"
 
-#: inc/position.class.php:2131 inc/position.class.php:2132
+#: src/Position.php:2137 src/Position.php:2138
 msgid "Object"
 msgid_plural "Objects"
 msgstr[0] "Nesne"
 msgstr[1] "Nesneler"
 
-#: inc/position.class.php:2134
+#: src/Position.php:2140
 msgid "Axes"
 msgstr "Eksenler"
 
-#: inc/position.class.php:2136
+#: src/Position.php:2142
 msgid "Legend"
 msgstr "İşaretler"
 
-#: inc/position.class.php:2137
+#: src/Position.php:2143
 msgid "Indicators"
 msgstr "Göstergeler"
 
-#: inc/position.class.php:2138
+#: src/Position.php:2144
 msgid "Decorations"
 msgstr "Dekorasyonlar"
 
-#: inc/position.class.php:2139
+#: src/Position.php:2145
 msgid "Data"
 msgstr "Veri"
 
-#: inc/position.class.php:2140
+#: src/Position.php:2146
 msgid "Font weight"
 msgstr "Yazı kalınlığı"
 
-#: inc/position.class.php:2141
+#: src/Position.php:2147
 msgid "Properties"
 msgstr "Özellikler"
 
-#: inc/position.class.php:2142
+#: src/Position.php:2148
 msgid "Transform"
 msgstr "Dönüştürme"
 
-#: inc/position.class.php:2143
+#: src/Position.php:2149
 msgid "Ticks"
 msgstr "İmler"
 
-#: inc/position.class.php:2144
+#: src/Position.php:2150
 msgid "Font"
 msgstr "Yazı türü"
 
-#: inc/position.class.php:2145
+#: src/Position.php:2151
 msgid "Layout"
 msgstr "Düzen"
 
-#: inc/position.class.php:2146
+#: src/Position.php:2152
 msgid "Orientation"
 msgstr "Duruş"
 
-#: inc/position.class.php:2147
+#: src/Position.php:2153
 msgid "Overlays"
 msgstr "Katmanlar"
 
-#: inc/position.class.php:2148
+#: src/Position.php:2154
 msgid "Background"
 msgstr "Arka plan"
 
-#: inc/position.class.php:2149
+#: src/Position.php:2155
 msgid "Gradient"
 msgstr "Dereceli değişen"
 
-#: inc/position.class.php:2150
+#: src/Position.php:2156
 msgid "Solid"
 msgstr "Katı"
 
-#: inc/position.class.php:2152
+#: src/Position.php:2158
 msgid "Width"
 msgstr "Genişlik"
 
-#: inc/position.class.php:2153
+#: src/Position.php:2159
 msgid "Height"
 msgstr "Yükseklik"
 
-#: inc/position.class.php:2154
+#: src/Position.php:2160
 msgid "Text"
 msgstr "Metin"
 
-#: inc/position.class.php:2156
+#: src/Position.php:2162
 msgid "Field searched"
 msgstr "Aranan alan"
 
-#: inc/position.class.php:2157
+#: src/Position.php:2163
 msgid "Value found"
 msgstr "Bulunan değer"
 
-#: inc/position.class.php:2158
+#: src/Position.php:2164
 msgid "Menu"
 msgstr "Menü"
 
-#: inc/position.class.php:2160
+#: src/Position.php:2166
 msgid "Subtitle"
 msgstr "Alt yazı"
