@@ -158,7 +158,7 @@ msgstr "Herhangi bir alt bölge bulunamadı"
 
 #: src/Position.php:521
 msgid "Create a new location"
-msgstr "Yeni bir konum ekleyin"
+msgstr "Yeni bir konum ekle"
 
 #: src/Position.php:548
 msgid "Add and continue"
