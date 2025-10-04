@@ -261,7 +261,7 @@ msgstr "JSON verilerini içe aktar"
 
 #: src/Position.php:2095
 msgid "Export JSON data"
-msgstr "JSON verisini dışa aktar"
+msgstr "JSON verilerini dışa aktar"
 
 #: src/Position.php:2096
 msgid "Import JSON movie"
