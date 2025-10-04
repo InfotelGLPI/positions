@@ -477,7 +477,7 @@ msgstr "Yükseklik"
 
 #: src/Position.php:2160
 msgid "Text"
-msgstr "Metin"
+msgstr "Yazı"
 
 #: src/Position.php:2162
 msgid "Field searched"
