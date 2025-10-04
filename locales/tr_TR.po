@@ -257,7 +257,7 @@ msgstr "Basit arama"
 
 #: src/Position.php:2094
 msgid "Import JSON data"
-msgstr "JSON verisini içe aktar"
+msgstr "JSON verilerini içe aktar"
 
 #: src/Position.php:2095
 msgid "Export JSON data"
