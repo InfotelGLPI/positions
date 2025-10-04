@@ -154,7 +154,7 @@ msgstr "Var olan bir konum seçin"
 
 #: src/Position.php:511
 msgid "No sub-area found"
-msgstr "Herhangi bir alt alan bulunamadı"
+msgstr "Herhangi bir alt bölge bulunamadı"
 
 #: src/Position.php:521
 msgid "Create a new location"
