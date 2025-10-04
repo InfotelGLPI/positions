@@ -421,7 +421,7 @@ msgstr "Dekorasyonlar"
 
 #: src/Position.php:2145
 msgid "Data"
-msgstr "Veri"
+msgstr "Veriler"
 
 #: src/Position.php:2146
 msgid "Font weight"
