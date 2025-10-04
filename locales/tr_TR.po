@@ -237,7 +237,7 @@ msgstr "Tüm gizli nesnelere bakın"
 
 #: src/Position.php:2088
 msgid "cancel last change"
-msgstr "son değişikliği geri al"
+msgstr "Son değişikliği geri al"
 
 #: src/Position.php:2089
 msgid "Replay the last change"
