@@ -269,12 +269,19 @@ function plugin_positions_addLeftJoin($type, $ref_table, $new_table, $linkfield,
 
     switch ($new_table) {
         case "glpi_plugin_positions_positions": // From items
-            $out = " LEFT JOIN `glpi_plugin_positions_positions`
-                        ON (`$ref_table`.`id` =
-                              `glpi_plugin_positions_positions`.`items_id`
-                              AND `glpi_plugin_positions_positions`.`itemtype` = '$type') ";
+            $out['LEFT JOIN'] = [
+                'glpi_plugin_positions_positions' => [
+                    'ON' => [
+                        $ref_table  => 'id',
+                        'glpi_plugin_positions_positions'  => 'items_id', [
+                            'AND' => [
+                                'glpi_plugin_positions_positions.itemtype' => $type,
+                            ],
+                        ],
+                    ],
+                ],
+            ];
             return $out;
-            break;
     }
 
     return "";
