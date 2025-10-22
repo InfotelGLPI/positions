@@ -31,6 +31,7 @@
 use GlpiPlugin\Positions\Menu;
 use GlpiPlugin\Positions\Position;
 use GlpiPlugin\Positions\Profile;
+use function Safe\mkdir;
 
 function plugin_positions_install()
 {
