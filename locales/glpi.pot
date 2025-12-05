@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Positions plugin 4.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-22 12:22+0000\n"
+"POT-Creation-Date: 2025-12-05 11:52+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: hook.php:256 setup.php:108 src/Menu.php:50 src/Position.php:88
+#: hook.php:328 setup.php:108 src/Menu.php:50 src/Position.php:88
 #: src/Profile.php:180 src/Profile.php:188
 msgid "Cartography"
 msgid_plural "Cartographies"
