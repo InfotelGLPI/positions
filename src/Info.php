@@ -41,26 +41,28 @@ use Session;
 use Toolbox;
 
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access directly to this file");
+    die("Sorry. You can't access directly to this file");
 }
 
 /**
  * Class Info
  */
-class Info extends CommonDBTM {
+class Info extends CommonDBTM
+{
 
-   public    $dohistory  = true;
-   static    $rightname  = "plugin_positions";
-   protected $usenotepad = true;
+    public $dohistory  = true;
+    static $rightname  = "plugin_positions";
+    protected $usenotepad = true;
 
    /**
     * Return the localized name of the current Type
     *
     * @return string
     **/
-   public static function getTypeName($nb = 0) {
-      return _n('Display of equipment', 'Display of equipments', $nb, 'positions');
-   }
+    public static function getTypeName($nb = 0)
+    {
+        return _n('Display of equipment', 'Display of equipments', $nb, 'positions');
+    }
 
    /**
     * Provides search options configuration. Do not rely directly
@@ -74,20 +76,21 @@ class Info extends CommonDBTM {
     *
     * @see https://glpi-developer-documentation.rtfd.io/en/master/devapi/search.html
     **/
-   public function rawSearchOptions() {
+    public function rawSearchOptions()
+    {
 
-      $tab = parent::rawSearchOptions();
+        $tab = parent::rawSearchOptions();
 
-      $tab[] = [
+        $tab[] = [
          'id'                 => '2',
          'table'              => $this->getTable(),
          'field'              => 'id',
          'name'               => __('ID'),
          'datatype'           => 'number',
          'massiveaction'      => false
-      ];
+        ];
 
-      $tab[] = [
+        $tab[] = [
          'id'                 => '3',
          'table'              => $this->getTable(),
          'field'              => 'fields',
@@ -97,9 +100,9 @@ class Info extends CommonDBTM {
          'additionalfields'   => [
             '0'                  => 'itemtype'
          ]
-      ];
+        ];
 
-      $tab[] = [
+        $tab[] = [
          'id'                 => '4',
          'table'              => $this->getTable(),
          'field'              => 'itemtype',
@@ -107,44 +110,44 @@ class Info extends CommonDBTM {
          'massiveaction'      => false,
          'datatype'           => 'itemtypename',
          'forcegroupby'       => true
-      ];
+        ];
 
-      $tab[] = [
+        $tab[] = [
          'id'                 => '14',
          'table'              => $this->getTable(),
          'field'              => 'date_mod',
          'name'               => __('Last update'),
          'massiveaction'      => false,
          'datatype'           => 'datetime'
-      ];
+        ];
 
-      $tab[] = [
+        $tab[] = [
          'id'                 => '16',
          'table'              => $this->getTable(),
          'field'              => 'comment',
          'name'               => __('Comments'),
          'datatype'           => 'text'
-      ];
+        ];
 
-      $tab[] = [
+        $tab[] = [
          'id'                 => '30',
          'table'              => $this->getTable(),
          'field'              => 'is_active',
          'name'               => __('Active'),
          'datatype'           => 'bool',
          'massiveaction'      => false
-      ];
+        ];
 
-      $tab[] = [
+        $tab[] = [
          'id'                 => '80',
          'table'              => 'glpi_entities',
          'field'              => 'completename',
          'name'               => __('Entity'),
          'datatype'           => 'dropdown'
-      ];
+        ];
 
-      return $tab;
-   }
+        return $tab;
+    }
 
    /**
     * Define tabs to display
@@ -156,15 +159,16 @@ class Info extends CommonDBTM {
     *
     * @return array array containing the tabs
     **/
-   function defineTabs($options = []) {
+    function defineTabs($options = [])
+    {
 
-      $ong = [];
-      $this->addDefaultFormTab($ong);
-      $this->addStandardTab('Notepad', $ong, $options);
-      $this->addStandardTab('Log', $ong, $options);
+        $ong = [];
+        $this->addDefaultFormTab($ong);
+        $this->addStandardTab('Notepad', $ong, $options);
+        $this->addStandardTab('Log', $ong, $options);
 
-      return $ong;
-   }
+        return $ong;
+    }
 
    /**
     * @param       $ID
@@ -172,65 +176,66 @@ class Info extends CommonDBTM {
     *
     * @return bool
     */
-   function showForm($ID, $options = []) {
+    function showForm($ID, $options = [])
+    {
 
-      if (!$this->canView()) {
-         return false;
-      }
+        if (!$this->canView()) {
+            return false;
+        }
 
-      $this->initForm($ID, $options);
-      $this->showFormHeader($options);
+        $this->initForm($ID, $options);
+        $this->showFormHeader($options);
 
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Name') . "&nbsp;:</td>";
-      echo "<td>";
-      echo Html::input('name', ['value' => $this->fields['name'], 'size' => 40]);
-      echo "</td>";
-      echo "<td rowspan='5'>" . __('Comments') . "&nbsp;:</td>";
-      echo "<td rowspan='5'>";
-      echo Html::textarea([
+        echo "<tr class='tab_bg_1'>";
+        echo "<td>" . __('Name') . "&nbsp;:</td>";
+        echo "<td>";
+        echo Html::input('name', ['value' => $this->fields['name'], 'size' => 40]);
+        echo "</td>";
+        echo "<td rowspan='5'>" . __('Comments') . "&nbsp;:</td>";
+        echo "<td rowspan='5'>";
+        echo Html::textarea([
                              'name'    => 'comment',
                              'value' => $this->fields["comment"],
                              'cols'    => '45',
                              'rows'    => '8',
                              'display' => false,
                           ]);
-      echo "</td>";
-      echo "</tr>";
+        echo "</td>";
+        echo "</tr>";
 
-      echo "<tr class='tab_bg_1'><td>" . __('Active') . "&nbsp;:</td>";
-      echo "<td>";
-      Dropdown::showYesNo('is_active', $this->fields['is_active']);
-      echo "</td></tr>";
+        echo "<tr class='tab_bg_1'><td>" . __('Active') . "&nbsp;:</td>";
+        echo "<td>";
+        Dropdown::showYesNo('is_active', $this->fields['is_active']);
+        echo "</td></tr>";
 
-      echo "<tr class='tab_bg_1'><td>" . __('Displayed fields', 'positions') . "&nbsp;:</td>";
-      echo "<td>";
+        echo "<tr class='tab_bg_1'><td>" . __('Displayed fields', 'positions') . "&nbsp;:</td>";
+        echo "<td>";
 
-      $this->showItemtype($ID, $this->fields['itemtype']);
+        $this->showItemtype($ID, $this->fields['itemtype']);
 
-      echo "</td>";
-      echo "</tr>";
+        echo "</td>";
+        echo "</tr>";
 
-      echo "<tr class='tab_bg_1'><td>" . __('Equipment', 'positions') . "&nbsp;:</td>";
-      echo "<td>";
+        echo "<tr class='tab_bg_1'><td>" . __('Equipment', 'positions') . "&nbsp;:</td>";
+        echo "<td>";
 
-      self::selectCriterias($this);
+        self::selectCriterias($this);
 
-      echo "</td>";
-      echo "</tr>";
+        echo "</td>";
+        echo "</tr>";
 
-      echo "<tr class='tab_bg_1'>";
-      echo "<td colspan='2'>";
-      $datestring = __('Last update') . ": ";
-      $date       = Html::convDateTime($this->fields["date_mod"]);
-      echo $datestring . $date;
-      echo "</td>";
-      echo "</tr>";
+        echo "<tr class='tab_bg_1'>";
+        echo "<td colspan='2'>";
+        $datestring = __('Last update') . ": ";
+        $date       = Html::convDateTime($this->fields["date_mod"]);
+        echo $datestring . $date;
+        echo "</td>";
+        echo "</tr>";
 
-      $this->showFormButtons($options);
+        $this->showFormButtons($options);
 
-      return true;
-   }
+        return true;
+    }
 
    /**
     * Display a dropdown which contains all the available itemtypes
@@ -240,56 +245,60 @@ class Info extends CommonDBTM {
     *
     * @return nothing
     **/
-   function showItemtype($ID, $value = 0) {
-      global $CFG_GLPI;
+    function showItemtype($ID, $value = 0)
+    {
+        global $CFG_GLPI;
 
-      //Criteria already added : only display the selected itemtype
-      if ($ID > 0) {
-         $item = new $this->fields['itemtype']();
-         echo $item->getTypeName();
-         echo Html::hidden('itemtype', ['value' => $this->fields['itemtype']]);
+       //Criteria already added : only display the selected itemtype
+        if ($ID > 0) {
+            $item = new $this->fields['itemtype']();
+            echo $item->getTypeName();
+            echo Html::hidden('itemtype', ['value' => $this->fields['itemtype']]);
+        } else {
+            $possible_types = Position::getTypes();
+            $dbu            = new DbUtils();
+            $restrict       = ["is_active"  => 1,
+                            "is_deleted" => 0]+$dbu->getEntitiesRestrictCriteria(
+                                "glpi_plugin_positions_infos",
+                                '',
+                                '',
+                                $this->maybeRecursive()
+                            );
+            $dbu   = new DbUtils();
+            $types = $dbu->getAllDataFromTable('glpi_plugin_positions_infos', $restrict);
 
-      } else {
-
-         $possible_types = Position::getTypes();
-         $dbu            = new DbUtils();
-         $restrict       = ["is_active"  => 1,
-                            "is_deleted" => 0]+$dbu->getEntitiesRestrictCriteria("glpi_plugin_positions_infos",
-                                                                                 '', '',
-                                                                                 $this->maybeRecursive());
-         $dbu   = new DbUtils();
-         $types = $dbu->getAllDataFromTable('glpi_plugin_positions_infos', $restrict);
-
-         if (!empty($types)) {
-            foreach ($types as $type) {
-               foreach ($possible_types as $key => $val) {
-                  if ($type["itemtype"] == $val) {
-                     unset($possible_types[$key]);
-                  }
-               }
+            if (!empty($types)) {
+                foreach ($types as $type) {
+                    foreach ($possible_types as $key => $val) {
+                        if ($type["itemtype"] == $val) {
+                             unset($possible_types[$key]);
+                        }
+                    }
+                }
             }
-         }
-         //Add criteria : display dropdown
-         $options[0] = Dropdown::EMPTY_VALUE;
-         foreach ($possible_types as $itemtype) {
-            if (class_exists($itemtype)) {
-               $item = new $itemtype();
-               if ($item->can(-1, READ)) {
-                  $options[$itemtype] = $item->getTypeName($itemtype);
-               }
+           //Add criteria : display dropdown
+            $options[0] = Dropdown::EMPTY_VALUE;
+            foreach ($possible_types as $itemtype) {
+                if (class_exists($itemtype)) {
+                    $item = new $itemtype();
+                    if ($item->can(-1, READ)) {
+                        $options[$itemtype] = $item->getTypeName($itemtype);
+                    }
+                }
             }
-         }
-         asort($options);
-         $rand = Dropdown::showFromArray('itemtype', $options);
+            asort($options);
+            $rand = Dropdown::showFromArray('itemtype', $options);
 
-         $params = ['itemtype' => '__VALUE__',
+            $params = ['itemtype' => '__VALUE__',
                          'id'       => $ID];
-         Ajax::updateItemOnSelectEvent("dropdown_itemtype$rand", "span_fields",
-                                       PLUGIN_POSITIONS_WEBDIR . "/ajax/dropdownInfoFields.php",
-                                       $params);
-      }
-
-   }
+            Ajax::updateItemOnSelectEvent(
+                "dropdown_itemtype$rand",
+                "span_fields",
+                PLUGIN_POSITIONS_WEBDIR . "/ajax/dropdownInfoFields.php",
+                $params
+            );
+        }
+    }
 
    /**
     * Display a list of available fields for widget fields
@@ -298,58 +307,60 @@ class Info extends CommonDBTM {
     *
     * @return
     **/
-   static function selectCriterias(CommonDBTM $config) {
-      global $DB;
+    static function selectCriterias(CommonDBTM $config)
+    {
+        global $DB;
 
-      echo "<span id='span_fields' name='span_fields'>";
+        echo "<span id='span_fields' name='span_fields'>";
 
-      if (!isset($config->fields['itemtype']) || !$config->fields['itemtype']) {
-         echo "</span>";
-         return;
-      }
+        if (!isset($config->fields['itemtype']) || !$config->fields['itemtype']) {
+            echo "</span>";
+            return;
+        }
 
-      if (!isset($config->fields['entities_id'])) {
-         $config->fields['entities_id'] = $_SESSION['glpiactive_entity'];
-      }
+        if (!isset($config->fields['entities_id'])) {
+            $config->fields['entities_id'] = $_SESSION['glpiactive_entity'];
+        }
 
-      $config_fields = explode(',', $config->fields['fields']);
-      //Search option for this type
-      $item = new $config->fields['itemtype']();
+        $config_fields = explode(',', $config->fields['fields']);
+       //Search option for this type
+        $item = new $config->fields['itemtype']();
 
-      //Construct list
-      echo "<span id='span_fields' name='span_fields'>";
-      echo "<select name='_fields[]' multiple size='15' style='width:400px'>";
+       //Construct list
+        echo "<span id='span_fields' name='span_fields'>";
+        echo "<select name='_fields[]' multiple size='15' style='width:400px'>";
 
-      $dbu = new DbUtils();
-      foreach ($DB->listFields($dbu->getTableForItemType($config->fields['itemtype'])) as $field) {
+        $dbu = new DbUtils();
+        foreach ($DB->listFields($dbu->getTableForItemType($config->fields['itemtype'])) as $field) {
+            $searchOption = $item->getSearchOptionByField(
+                'field',
+                $field['Field'],
+                $dbu->getTableForItemType($item->getType())
+            );
 
-         $searchOption = $item->getSearchOptionByField('field', $field['Field'],
-                                                       $dbu->getTableForItemType($item->getType()));
-
-         if (empty($searchOption)) {
-            if ($table = $dbu->getTableNameForForeignKeyField($field['Field'])) {
-               $crit = $dbu->getItemForItemtype($dbu->getItemTypeForTable($table));
-               if ($crit instanceof CommonTreeDropdown) {
-                  $searchOption = $item->getSearchOptionByField('field', 'completename', $table);
-               } else {
-                  $searchOption = $item->getSearchOptionByField('field', 'name', $table);
-               }
+            if (empty($searchOption)) {
+                if ($table = $dbu->getTableNameForForeignKeyField($field['Field'])) {
+                    $crit = $dbu->getItemForItemtype($dbu->getItemTypeForTable($table));
+                    if ($crit instanceof CommonTreeDropdown) {
+                        $searchOption = $item->getSearchOptionByField('field', 'completename', $table);
+                    } else {
+                        $searchOption = $item->getSearchOptionByField('field', 'name', $table);
+                    }
+                }
             }
-         }
 
-         if (!empty($searchOption)
+            if (!empty($searchOption)
              && !in_array($field['Field'], self::getUnallowedFields($config->fields['itemtype']))) {
-
-            echo "<option value='" . $field['Field'] . "'";
-            if (isset($config_fields) && in_array($field['Field'], $config_fields)) {
-               echo " selected ";
+                echo "<option value='" . $field['Field'] . "'";
+                if (isset($config_fields) && in_array($field['Field'], $config_fields)) {
+                    echo " selected ";
+                }
+                echo ">" . $searchOption['name'] . "</option>";
             }
-            echo ">" . $searchOption['name'] . "</option>";
-         }
-      }
+        }
 
-      echo "</select></span>";
-   }
+        echo "</select></span>";
+    }
 
    /**
     * Perform checks to be sure that an itemtype and at least a field are selected
@@ -358,19 +369,22 @@ class Info extends CommonDBTM {
     *
     * @return input the values to insert, but modified
     **/
-   static function checkBeforeInsert($input) {
+    static function checkBeforeInsert($input)
+    {
 
-      if (!$input['itemtype'] || empty($input['_fields'])) {
-         Session::addMessageAfterRedirect(__("It's mandatory to select a type and at least one field"),
-                                          true, ERROR);
-         $input = [];
-
-      } else {
-         $input['fields'] = implode(',', $input['_fields']);
-         unset($input['_fields']);
-      }
-      return $input;
-   }
+        if (!$input['itemtype'] || empty($input['_fields'])) {
+            Session::addMessageAfterRedirect(
+                __("It's mandatory to select a type and at least one field"),
+                true,
+                ERROR
+            );
+            $input = [];
+        } else {
+            $input['fields'] = implode(',', $input['_fields']);
+            unset($input['_fields']);
+        }
+        return $input;
+    }
 
 
    /**
@@ -380,9 +394,10 @@ class Info extends CommonDBTM {
     *
     * @return array the modified $input array
     **/
-   function prepareInputForAdd($input) {
-      return self::checkBeforeInsert($input);
-   }
+    function prepareInputForAdd($input)
+    {
+        return self::checkBeforeInsert($input);
+    }
 
 
    /**
@@ -392,24 +407,26 @@ class Info extends CommonDBTM {
     *
     * @return array the modified $input array
     **/
-   function prepareInputForUpdate($input) {
+    function prepareInputForUpdate($input)
+    {
 
-      $input['fields'] = implode(',', $input['_fields']);
-      unset($input['_fields']);
+        $input['fields'] = implode(',', $input['_fields']);
+        unset($input['_fields']);
 
-      return $input;
-   }
+        return $input;
+    }
 
    /**
     * @param $itemclass
     *
     * @return array
     */
-   static function getUnallowedFields($itemclass) {
+    static function getUnallowedFields($itemclass)
+    {
 
-      switch ($itemclass) {
-         case "Computer" :
-            return ['date_mod',
+        switch ($itemclass) {
+            case "Computer":
+                return ['date_mod',
                          'notepad',
                          'os_license_number',
                          'os_licenseid',
@@ -417,8 +434,8 @@ class Info extends CommonDBTM {
                          'manufacturers_id',
                          'is_ocs_import'];
             break;
-         case "Printer" :
-            return ['is_recursive',
+            case "Printer":
+                return ['is_recursive',
                          'date_mod',
                          'notepad',
                          'have_serial',
@@ -429,16 +446,16 @@ class Info extends CommonDBTM {
                          'manufacturers_id',
                          'is_global'];
             break;
-         case "NetworkEquipment" :
-            return ['is_recursive',
+            case "NetworkEquipment":
+                return ['is_recursive',
                          'date_mod',
                          'notepad',
                          'ram',
                          'networkequipmentfirmwares_id',
                          'manufacturers_id'];
             break;
-         case "Monitor" :
-            return ['date_mod',
+            case "Monitor":
+                return ['date_mod',
                          'notepad',
                          'size',
                          'have_micro',
@@ -452,15 +469,15 @@ class Info extends CommonDBTM {
                          'manufacturers_id',
                          'is_global'];
             break;
-         case "Peripheral" :
-            return ['date_mod',
+            case "Peripheral":
+                return ['date_mod',
                          'notepad',
                          'brand',
                          'manufacturers_id',
                          'is_global'];
             break;
-         case "Phone" :
-            return ['date_mod',
+            case "Phone":
+                return ['date_mod',
                          'notepad',
                          'brand',
                          'have_headset',
@@ -469,8 +486,8 @@ class Info extends CommonDBTM {
                          'phonepowersupplies_id',
                          'is_global'];
             break;
-         case Resource::class :
-            return ['alert',
+            case Resource::class:
+                return ['alert',
                          'comment',
                          'date_mod',
                          'picture',
@@ -485,8 +502,8 @@ class Info extends CommonDBTM {
                          'date_begin',
                          'date_end'];
             break;
-         default:
-            return ['alert',
+            default:
+                return ['alert',
                          'date_mod',
                          'picture',
                          'is_recursive',
@@ -499,61 +516,63 @@ class Info extends CommonDBTM {
                          'users_id_recipient_leaving',
                          'date_begin',
                          'date_end'];
-      }
-   }
+        }
+    }
 
    /**
     * @param $item
     * @param $itemclass
     */
-   static function showFields($item, $itemclass) {
-      global $DB;
+    static function showFields($item, $itemclass)
+    {
+        global $DB;
 
-      if (isset($item["fields"])
+        if (isset($item["fields"])
           && !empty($item["fields"])) {
+            $input  = explode(',', $item['fields']);
+            $target = new $item['itemtype']();
+            $dbu    = new DbUtils();
+            foreach ($DB->listFields($dbu->getTableForItemType($item['itemtype'])) as $field) {
+                if (in_array($field['Field'], $input)) {
+                    $searchOption = $target->getSearchOptionByField(
+                        'field',
+                        $field['Field'],
+                        $dbu->getTableForItemType($target->getType())
+                    );
 
-         $input  = explode(',', $item['fields']);
-         $target = new $item['itemtype']();
-         $dbu    = new DbUtils();
-         foreach ($DB->listFields($dbu->getTableForItemType($item['itemtype'])) as $field) {
-
-            if (in_array($field['Field'], $input)) {
-               $searchOption = $target->getSearchOptionByField('field', $field['Field'],
-                                                               $dbu->getTableForItemType($target->getType()));
-
-               if (empty($searchOption)) {
-                  if ($table = $dbu->getTableNameForForeignKeyField($field['Field'])) {
-                     $crit = $dbu->getItemForItemtype($dbu->getItemTypeForTable($table));
-                     if ($crit instanceof CommonTreeDropdown) {
-                        $searchOption = $target->getSearchOptionByField('field', 'completename', $table);
-                     } else {
-                        if(Plugin::isPluginActive('resources')) {
-                           $searchOption = $target->getSearchOptionByField('field', 'name', $table);
+                    if (empty($searchOption)) {
+                        if ($table = $dbu->getTableNameForForeignKeyField($field['Field'])) {
+                            $crit = $dbu->getItemForItemtype($dbu->getItemTypeForTable($table));
+                            if ($crit instanceof CommonTreeDropdown) {
+                                 $searchOption = $target->getSearchOptionByField('field', 'completename', $table);
+                            } else {
+                                if (Plugin::isPluginActive('resources')) {
+                                    $searchOption = $target->getSearchOptionByField('field', 'name', $table);
+                                }
+                            }
                         }
-                     }
-                  }
-               }
+                    }
 
-               if (!empty($searchOption)
-                   && isset($itemclass->fields[$field['Field']])
-                   && !empty($itemclass->fields[$field['Field']])
-                   && !in_array($field['Field'], self::getUnallowedFields($item['itemtype']))) {
-
-                  self::getFieldsValue($searchOption, $field, $itemclass);
-               }
+                    if (!empty($searchOption)
+                     && isset($itemclass->fields[$field['Field']])
+                     && !empty($itemclass->fields[$field['Field']])
+                     && !in_array($field['Field'], self::getUnallowedFields($item['itemtype']))) {
+                        self::getFieldsValue($searchOption, $field, $itemclass);
+                    }
+                }
             }
-         }
-      }
-   }
+        }
+    }
 
    /**
     * @param $searchOption
     *
     * @return bool|string
     */
-   static function getTypeFields($searchOption) {
+    static function getTypeFields($searchOption)
+    {
 
-      $dropdown_tables = ['glpi_entities',
+        $dropdown_tables = ['glpi_entities',
                                'glpi_locations',
                                'glpi_states',
                                'glpi_plugin_resources_contracttypes',
@@ -581,94 +600,86 @@ class Info extends CommonDBTM {
                                'glpi_passivedcequipmentmodels',
                                'glpi_passivedcequipmenttypes'];
 
-      if (in_array($searchOption['table'], $dropdown_tables)) {
-         return "dropdown";
-      }
-      return false;
-   }
+        if (in_array($searchOption['table'], $dropdown_tables)) {
+            return "dropdown";
+        }
+        return false;
+    }
 
    /**
     * @param $searchOption
     * @param $field
     * @param $itemclass
     */
-   static function getFieldsValue($searchOption, $field, $itemclass) {
-      global $CFG_GLPI;
+    static function getFieldsValue($searchOption, $field, $itemclass)
+    {
+        global $CFG_GLPI;
 
-      $display = $itemclass->fields[$field['Field']];
-      echo "<h3><span class='title'>" . $searchOption['name'] . " : </span>";
+        $display = $itemclass->fields[$field['Field']];
+        echo "<h3><span class='title'>" . $searchOption['name'] . " : </span>";
 
-      $type = self::getTypeFields($searchOption);
-      if ($type == 'dropdown') {
-         echo Dropdown::getDropdownName($searchOption['table'], $display);
-
-      } else if (isset($searchOption['datatype'])
+        $type = self::getTypeFields($searchOption);
+        if ($type == 'dropdown') {
+            echo Dropdown::getDropdownName($searchOption['table'], $display);
+        } elseif (isset($searchOption['datatype'])
                  && $searchOption['datatype'] == 'decimal') {
-         echo Html::formatNumber($display, 2);
-
-      } else if ($searchOption['table'] == 'glpi_users') {
-         $dbu = new DbUtils();
-         echo $dbu->getUserName($display);
-
-      } else if ($searchOption['field'] == 'contact_num') {
-
-         echo "<img src='" . PLUGIN_POSITIONS_WEBDIR . "/pics/miniphones.png' title='" .
+            echo Html::formatNumber($display, 2);
+        } elseif ($searchOption['table'] == 'glpi_users') {
+            $dbu = new DbUtils();
+            echo $dbu->getUserName($display);
+        } elseif ($searchOption['field'] == 'contact_num') {
+            echo "<img src='" . PLUGIN_POSITIONS_WEBDIR . "/pics/miniphones.png' title='" .
               $display . "'>&nbsp;
          <a href=\"tel:" . $display . "\">" .
               $display . "</a>";
-
-      } else if ($searchOption['field'] == 'number_line') {
-
-         echo "<img src='" . PLUGIN_POSITIONS_WEBDIR . "/pics/miniphones.png' title='" .
+        } elseif ($searchOption['field'] == 'number_line') {
+            echo "<img src='" . PLUGIN_POSITIONS_WEBDIR . "/pics/miniphones.png' title='" .
               $display . "'>&nbsp;
          <a href=\"tel:" . $display . "\">" .
               $display . "</a>";
+        } else {
+            echo $display;
+        }
 
-      } else {
-         echo $display;
-      }
-
-      echo "</h3></br>";
-
-   }
+        echo "</h3></br>";
+    }
 
    /**
     * @param $itemclass
     */
-   static function getDirectLink($itemclass) {
-      global $CFG_GLPI;
+    static function getDirectLink($itemclass)
+    {
+        global $CFG_GLPI;
 
-      if (isset($itemclass->fields["name"])
+        if (isset($itemclass->fields["name"])
           && !empty($itemclass->fields["name"])
           && $itemclass->getType() != 'Location') {
+            echo "<h3>" . __('Direct link', 'positions') . " : ";
 
-         echo "<h3>" . __('Direct link', 'positions') . " : ";
-
-         echo "<a href='" . Toolbox::getItemTypeFormURL($itemclass->getType()) .
+            echo "<a href='" . Toolbox::getItemTypeFormURL($itemclass->getType()) .
               "?id=" . $itemclass->fields["id"] . "' target='_blank'>";
-         $title  = $itemclass->fields["name"];
-         if (Plugin::isPluginActive("resources")
+            $title  = $itemclass->fields["name"];
+            if (Plugin::isPluginActive("resources")
              && $itemclass->getType() == Resource::class) {
-            $title = $itemclass->fields["firstname"] . " " . $itemclass->fields["name"];
-         }
-         echo $title;
-         echo "</a>";
+                $title = $itemclass->fields["firstname"] . " " . $itemclass->fields["name"];
+            }
+            echo $title;
+            echo "</a>";
 
-         echo "</h3></br>";
+            echo "</h3></br>";
+        } else {
+            echo "<h3>" . __('Direct link', 'positions') . " : ";
 
-      } else {
-         echo "<h3>" . __('Direct link', 'positions') . " : ";
-
-         echo "<a href='" . PLUGIN_POSITIONS_WEBDIR .
+            echo "<a href='" . PLUGIN_POSITIONS_WEBDIR .
               "/front/map.php?locations_id=" . $itemclass->fields["id"] . "'
          target='_blank'>";
-         $title = $itemclass->fields["name"];
-         echo $title;
-         echo "</a>";
+            $title = $itemclass->fields["name"];
+            echo $title;
+            echo "</a>";
 
-         echo "</h3></br>";
-      }
-   }
+            echo "</h3></br>";
+        }
+    }
 
    /**
     * @param      $itemclass
@@ -676,79 +687,82 @@ class Info extends CommonDBTM {
     *
     * @return string
     */
-   static function getCallValue($itemclass, $export = false) {
-      global $CFG_GLPI;
+    static function getCallValue($itemclass, $export = false)
+    {
+        global $CFG_GLPI;
 
-      $display = "";
-      switch ($itemclass->getType()) {
-         case Resource::class :
-            $resID      = $itemclass->fields['id'];
-            $entitiesID = $itemclass->fields['entities_id'];
-            $restrict   = ["plugin_resources_resources_id" => $resID,
+        $display = "";
+        switch ($itemclass->getType()) {
+            case Resource::class:
+                $resID      = $itemclass->fields['id'];
+                $entitiesID = $itemclass->fields['entities_id'];
+                $restrict   = ["plugin_resources_resources_id" => $resID,
                            "itemtype" => 'User'];
-            $dbu        = new DbUtils();
-            $infos      = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items', $restrict);
-            if (!empty($infos)) {
-               foreach ($infos as $info) {
-                  if (isset($info['items_id']) && ($info['items_id'] > 0)) {
-                     $userid    = $info['items_id'];
-                     $condition = ["users_id"    => $userid,
+                $dbu        = new DbUtils();
+                $infos      = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items', $restrict);
+                if (!empty($infos)) {
+                    foreach ($infos as $info) {
+                        if (isset($info['items_id']) && ($info['items_id'] > 0)) {
+                              $userid    = $info['items_id'];
+                              $condition = ["users_id"    => $userid,
                                    "is_deleted"  => 0,
                                    "is_template" => 0,
                                    "entities_id" => $entitiesID,
                                    "NOT"         => ["contact_num" => 0]];
 
-                     $phones = $dbu->getAllDataFromTable('glpi_phones', $condition);
-                     if (!empty($phones)) {
-                        foreach ($phones as $phone) {
-                           $contact_num = $phone['contact_num'];
-                           $number_line = $phone['number_line'];
+                              $phones = $dbu->getAllDataFromTable('glpi_phones', $condition);
+                              if (!empty($phones)) {
+                                  foreach ($phones as $phone) {
+                                      $contact_num = $phone['contact_num'];
+                                      $number_line = $phone['number_line'];
 
-                           $location = Dropdown::getDropdownName("glpi_locations",
-                                                                 $phone["locations_id"]);
+                                      $location = Dropdown::getDropdownName(
+                                          "glpi_locations",
+                                          $phone["locations_id"]
+                                      );
 
-                           if (!$export) {
-                              echo "<h3>";
-                           }
-                           if (isset($contact_num) && $contact_num != null) {
-                              if (!$export) {
-                                 $dbu = new DbUtils();
-                                 if ($dbu->countElementsInTable("glpi_phones", $condition) > 1) {
-                                    echo $location . " : <br>";
-                                 }
-                                 echo "<span class='title'>" . __('Alternate username number') . " : </span>";
-                                 echo "<img src='" . PLUGIN_POSITIONS_WEBDIR . "/pics/miniphones.png' title='" .
-                                      $contact_num . "'>&nbsp;
+                                      if (!$export) {
+                                              echo "<h3>";
+                                      }
+                                      if (isset($contact_num) && $contact_num != null) {
+                                          if (!$export) {
+                                              $dbu = new DbUtils();
+                                              if ($dbu->countElementsInTable("glpi_phones", $condition) > 1) {
+                                                  echo $location . " : <br>";
+                                              }
+                                              echo "<span class='title'>" . __('Alternate username number') . " : </span>";
+                                              echo "<img src='" . PLUGIN_POSITIONS_WEBDIR . "/pics/miniphones.png' title='" .
+                                              $contact_num . "'>&nbsp;
                                  <a href=\"tel:" . $contact_num . "\">" .
-                                      $contact_num . "</a>&nbsp;&nbsp;&nbsp;&nbsp;";
-                              } else {
-                                 $display .= "\n" . __('Alternate username number') . " : " . $contact_num;
-                              }
-                           }
-                           if (isset($number_line) && $number_line != null) {
-                              if (!$export) {
-                                 echo "<span class='title'>" . _x('quantity', 'Number of lines') . " : </span>";
-                                 echo "<img src='" . PLUGIN_POSITIONS_WEBDIR . "/pics/miniphones.png' title='" .
-                                      $number_line . "'>&nbsp;
+                                              $contact_num . "</a>&nbsp;&nbsp;&nbsp;&nbsp;";
+                                          } else {
+                                              $display .= "\n" . __('Alternate username number') . " : " . $contact_num;
+                                          }
+                                      }
+                                      if (isset($number_line) && $number_line != null) {
+                                          if (!$export) {
+                                              echo "<span class='title'>" . _x('quantity', 'Number of lines') . " : </span>";
+                                              echo "<img src='" . PLUGIN_POSITIONS_WEBDIR . "/pics/miniphones.png' title='" .
+                                              $number_line . "'>&nbsp;
                                  <a href=\"tel:" . $number_line . "\">" .
-                                      $number_line . "</a>";
-                              } else {
-                                 $display .= "\n" . _x('quantity', 'Number of lines') . " :\n" . $number_line;
-                              }
-                           }
-                           if (!$export) {
-                              echo "</h3>";
-                           }
+                                              $number_line . "</a>";
+                                          } else {
+                                              $display .= "\n" . _x('quantity', 'Number of lines') . " :\n" . $number_line;
+                                          }
+                                      }
+                                      if (!$export) {
+                                            echo "</h3>";
+                                      }
 
-                           if ($export) {
-                              return $display;
-                           }
+                                      if ($export) {
+                                          return $display;
+                                      }
+                                  }
+                              }
                         }
-                     }
-                  }
-               }
-            }
-            break;
-      }
-   }
+                    }
+                }
+                break;
+        }
+    }
 }
