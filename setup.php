@@ -34,7 +34,7 @@ use GlpiPlugin\Positions\Profile;
 // Init the hooks of the plugins -Needed
 global $CFG_GLPI;
 
-define('PLUGIN_POSITIONS_VERSION', '7.0.2');
+define('PLUGIN_POSITIONS_VERSION', '7.0.3');
 
 if (!defined("PLUGIN_POSITIONS_DIR")) {
     define("PLUGIN_POSITIONS_DIR", Plugin::getPhpDir("positions"));
