@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Positions plugin 4.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-21 16:02+0000\n"
+"POT-Creation-Date: 2026-10-21 16:08+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -98,8 +98,8 @@ msgstr ""
 msgid "List of associations"
 msgstr ""
 
-#: src/ImageItem.php:308 src/ImageItem.php:312 src/Info.php:124
-#: src/Info.php:234
+#: src/ImageItem.php:308 src/ImageItem.php:312 src/Info.php:125
+#: src/Info.php:235
 msgid "Equipment"
 msgstr ""
 
@@ -115,21 +115,21 @@ msgstr ""
 msgid "No associated picture"
 msgstr ""
 
-#: src/Info.php:79
+#: src/Info.php:80
 msgid "Display of equipment"
 msgid_plural "Display of equipments"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Info.php:112 src/Info.php:226
+#: src/Info.php:113 src/Info.php:227
 msgid "Displayed fields"
 msgstr ""
 
-#: src/Info.php:398
+#: src/Info.php:399
 msgid "It's mandatory to select a type and at least one field"
 msgstr ""
 
-#: src/Info.php:701 src/Info.php:715
+#: src/Info.php:702 src/Info.php:716
 msgid "Direct link"
 msgstr ""
 
