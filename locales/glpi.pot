@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Positions plugin 4.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-21 16:08+0000\n"
+"POT-Creation-Date: 2026-10-21 16:22+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,8 +41,8 @@ msgstr ""
 msgid "No picture uploaded"
 msgstr ""
 
-#: front/map.php:63 src/Position.php:212 src/Position.php:1166
-#: src/Position.php:2126
+#: front/map.php:63 src/Position.php:212 src/Position.php:1171
+#: src/Position.php:2131
 msgid "No location selected"
 msgstr ""
 
@@ -66,7 +66,7 @@ msgstr ""
 msgid "Association : picture / types of equipment"
 msgstr ""
 
-#: src/Config.php:131 src/Position.php:1659
+#: src/Config.php:131 src/Position.php:1664
 msgid "Configuring the display materials"
 msgstr ""
 
@@ -137,372 +137,372 @@ msgstr ""
 msgid "No equipment associated"
 msgstr ""
 
-#: src/Position.php:319 src/Position.php:891 src/Position.php:1827
+#: src/Position.php:319 src/Position.php:896 src/Position.php:1832
 msgid "Coordinate x"
 msgstr ""
 
-#: src/Position.php:326 src/Position.php:929 src/Position.php:1828
+#: src/Position.php:326 src/Position.php:934 src/Position.php:1833
 msgid "Coordinate y"
 msgstr ""
 
-#: src/Position.php:333 src/Position.php:902
+#: src/Position.php:333 src/Position.php:907
 msgid "Associated element"
 msgstr ""
 
-#: src/Position.php:396 src/Position.php:1213
+#: src/Position.php:396 src/Position.php:1218
 msgid "See the map"
 msgstr ""
 
-#: src/Position.php:477
+#: src/Position.php:482
 msgid "Select an area and click on OK"
 msgstr ""
 
-#: src/Position.php:543
+#: src/Position.php:548
 msgid "Creation of sub-areas on the map"
 msgstr ""
 
-#: src/Position.php:550
+#: src/Position.php:555
 msgid "Choose an existing location"
 msgstr ""
 
-#: src/Position.php:575
+#: src/Position.php:580
 msgid "No sub-area found"
 msgstr ""
 
-#: src/Position.php:585
+#: src/Position.php:590
 msgid "Create a new location"
 msgstr ""
 
-#: src/Position.php:612
+#: src/Position.php:617
 msgid "Add and continue"
 msgstr ""
 
-#: src/Position.php:819 src/Position.php:872
+#: src/Position.php:824 src/Position.php:877
 msgid "This item is already bound to a location"
 msgstr ""
 
-#: src/Position.php:952
+#: src/Position.php:957
 msgid "Change the coordinates"
 msgstr ""
 
-#: src/Position.php:1120
+#: src/Position.php:1125
 msgid "Save the coordinates"
 msgstr ""
 
-#: src/Position.php:1124
+#: src/Position.php:1129
 msgid "Add a sub-area"
 msgstr ""
 
-#: src/Position.php:1155 src/Position.php:1219
+#: src/Position.php:1160 src/Position.php:1224
 msgid "No location has a configured map"
 msgstr ""
 
-#: src/Position.php:1160
+#: src/Position.php:1165
 msgid "The object location does not match a map"
 msgstr ""
 
-#: src/Position.php:1252 src/Position.php:2104
+#: src/Position.php:1257 src/Position.php:2109
 msgid "Create coordinates"
 msgstr ""
 
-#: src/Position.php:1281
+#: src/Position.php:1286
 msgid "Limited view"
 msgstr ""
 
-#: src/Position.php:1822
+#: src/Position.php:1827
 msgid "Associated coordinate"
 msgstr ""
 
-#: src/Position.php:2178
+#: src/Position.php:2183
 msgid "Please download a newer version of canvasXpress at"
 msgstr ""
 
-#: src/Position.php:2179
+#: src/Position.php:2184
 msgid ""
 "You are using an older version that do not support all the functionality of "
 "this panel"
 msgstr ""
 
-#: src/Position.php:2180
+#: src/Position.php:2185
 msgid "Delete selected objects"
 msgstr ""
 
-#: src/Position.php:2181
+#: src/Position.php:2186
 msgid "Informations about"
 msgstr ""
 
-#: src/Position.php:2185
+#: src/Position.php:2190
 msgid "Hide"
 msgstr ""
 
-#: src/Position.php:2186
+#: src/Position.php:2191
 msgid "informations about selected items"
 msgstr ""
 
-#: src/Position.php:2187
+#: src/Position.php:2192
 msgid "All hidden objects"
 msgstr ""
 
-#: src/Position.php:2188
+#: src/Position.php:2193
 msgid "See all hidden objects"
 msgstr ""
 
-#: src/Position.php:2189
+#: src/Position.php:2194
 msgid "cancel last change"
 msgstr ""
 
-#: src/Position.php:2190
+#: src/Position.php:2195
 msgid "Replay the last change"
 msgstr ""
 
-#: src/Position.php:2191
+#: src/Position.php:2196
 msgid "Save as a new network"
 msgstr ""
 
-#: src/Position.php:2193
+#: src/Position.php:2198
 msgid "Save the network now"
 msgstr ""
 
-#: src/Position.php:2194
+#: src/Position.php:2199
 msgid "Simple search"
 msgstr ""
 
-#: src/Position.php:2195
+#: src/Position.php:2200
 msgid "Import JSON data"
 msgstr ""
 
-#: src/Position.php:2196
+#: src/Position.php:2201
 msgid "Export JSON data"
 msgstr ""
 
-#: src/Position.php:2197
+#: src/Position.php:2202
 msgid "Import JSON movie"
 msgstr ""
 
-#: src/Position.php:2198
+#: src/Position.php:2203
 msgid "Export JSON movie"
 msgstr ""
 
-#: src/Position.php:2199
+#: src/Position.php:2204
 msgid "Force save the entire network"
 msgstr ""
 
-#: src/Position.php:2200
+#: src/Position.php:2205
 msgid "Advanced test"
 msgstr ""
 
-#: src/Position.php:2201
+#: src/Position.php:2206
 msgid "Refresh the graph"
 msgstr ""
 
-#: src/Position.php:2202
+#: src/Position.php:2207
 msgid "See as a picture"
 msgstr ""
 
-#: src/Position.php:2206 src/Position.php:2207
+#: src/Position.php:2211 src/Position.php:2212
 msgid "Color"
 msgid_plural "Colors"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Position.php:2208
+#: src/Position.php:2213
 msgid "Scale Factor"
 msgstr ""
 
-#: src/Position.php:2209
+#: src/Position.php:2214
 msgid "Boxed"
 msgstr ""
 
-#: src/Position.php:2210
+#: src/Position.php:2215
 msgid "Transpose"
 msgstr ""
 
-#: src/Position.php:2211
+#: src/Position.php:2216
 msgid "Search on objects"
 msgstr ""
 
-#: src/Position.php:2213
+#: src/Position.php:2218
 msgid "Advanced Options"
 msgstr ""
 
-#: src/Position.php:2214
+#: src/Position.php:2219
 msgid "Search key"
 msgstr ""
 
-#: src/Position.php:2215
+#: src/Position.php:2220
 msgid "Regex accepted"
 msgstr ""
 
-#: src/Position.php:2216
+#: src/Position.php:2221
 msgid "One line by object"
 msgstr ""
 
-#: src/Position.php:2217
+#: src/Position.php:2222
 msgid "Stop highlighting"
 msgstr ""
 
-#: src/Position.php:2218
+#: src/Position.php:2223
 msgid "Highlight object"
 msgstr ""
 
-#: src/Position.php:2219
+#: src/Position.php:2224
 msgid "Edit selected object"
 msgstr ""
 
-#: src/Position.php:2220
+#: src/Position.php:2225
 msgid "Selected object"
 msgstr ""
 
-#: src/Position.php:2221
+#: src/Position.php:2226
 msgid "This object"
 msgstr ""
 
-#: src/Position.php:2222
+#: src/Position.php:2227
 msgid "Selected objects and all the"
 msgstr ""
 
-#: src/Position.php:2223
+#: src/Position.php:2228
 msgid "This object and all its"
 msgstr ""
 
-#: src/Position.php:2224
+#: src/Position.php:2229
 msgid "Do you want to delete"
 msgstr ""
 
-#: src/Position.php:2225
+#: src/Position.php:2230
 msgid "Links will be deleted"
 msgstr ""
 
-#: src/Position.php:2226
+#: src/Position.php:2231
 msgid "Tooltip"
 msgstr ""
 
-#: src/Position.php:2227
+#: src/Position.php:2232
 msgid "Object type"
 msgstr ""
 
-#: src/Position.php:2228
+#: src/Position.php:2233
 msgid "Required selection"
 msgstr ""
 
-#: src/Position.php:2229
+#: src/Position.php:2234
 msgid "Image path"
 msgstr ""
 
-#: src/Position.php:2230
+#: src/Position.php:2235
 msgid "The object is fixed"
 msgstr ""
 
-#: src/Position.php:2233
+#: src/Position.php:2238
 msgid "Object editor"
 msgstr ""
 
-#: src/Position.php:2234
+#: src/Position.php:2239
 msgid "Object id"
 msgstr ""
 
-#: src/Position.php:2236
+#: src/Position.php:2241
 msgid "Pattern"
 msgstr ""
 
-#: src/Position.php:2237
+#: src/Position.php:2242
 msgid "Edge"
 msgstr ""
 
-#: src/Position.php:2238 src/Position.php:2239
+#: src/Position.php:2243 src/Position.php:2244
 msgid "Object"
 msgid_plural "Objects"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Position.php:2241
+#: src/Position.php:2246
 msgid "Axes"
 msgstr ""
 
-#: src/Position.php:2243
+#: src/Position.php:2248
 msgid "Legend"
 msgstr ""
 
-#: src/Position.php:2244
+#: src/Position.php:2249
 msgid "Indicators"
 msgstr ""
 
-#: src/Position.php:2245
+#: src/Position.php:2250
 msgid "Decorations"
 msgstr ""
 
-#: src/Position.php:2246
+#: src/Position.php:2251
 msgid "Data"
 msgstr ""
 
-#: src/Position.php:2247
+#: src/Position.php:2252
 msgid "Font weight"
 msgstr ""
 
-#: src/Position.php:2248
+#: src/Position.php:2253
 msgid "Properties"
 msgstr ""
 
-#: src/Position.php:2249
+#: src/Position.php:2254
 msgid "Transform"
 msgstr ""
 
-#: src/Position.php:2250
+#: src/Position.php:2255
 msgid "Ticks"
 msgstr ""
 
-#: src/Position.php:2251
+#: src/Position.php:2256
 msgid "Font"
 msgstr ""
 
-#: src/Position.php:2252
+#: src/Position.php:2257
 msgid "Layout"
 msgstr ""
 
-#: src/Position.php:2253
+#: src/Position.php:2258
 msgid "Orientation"
 msgstr ""
 
-#: src/Position.php:2254
+#: src/Position.php:2259
 msgid "Overlays"
 msgstr ""
 
-#: src/Position.php:2255
+#: src/Position.php:2260
 msgid "Background"
 msgstr ""
 
-#: src/Position.php:2256
+#: src/Position.php:2261
 msgid "Gradient"
 msgstr ""
 
-#: src/Position.php:2257
+#: src/Position.php:2262
 msgid "Solid"
 msgstr ""
 
-#: src/Position.php:2259
+#: src/Position.php:2264
 msgid "Width"
 msgstr ""
 
-#: src/Position.php:2260
+#: src/Position.php:2265
 msgid "Height"
 msgstr ""
 
-#: src/Position.php:2261
+#: src/Position.php:2266
 msgid "Text"
 msgstr ""
 
-#: src/Position.php:2263
+#: src/Position.php:2268
 msgid "Field searched"
 msgstr ""
 
-#: src/Position.php:2264
+#: src/Position.php:2269
 msgid "Value found"
 msgstr ""
 
-#: src/Position.php:2265
+#: src/Position.php:2270
 msgid "Menu"
 msgstr ""
 
-#: src/Position.php:2267
+#: src/Position.php:2272
 msgid "Subtitle"
 msgstr ""
