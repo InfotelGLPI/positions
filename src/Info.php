@@ -54,6 +54,19 @@ class Info extends CommonDBTM
     static $rightname  = "plugin_positions";
     protected $usenotepad = true;
 
+    /**
+     * The rights matrix of the plugin offers no Purge: deleting covers it
+     */
+    public static function canPurge(): bool
+    {
+        return Session::haveRight(static::$rightname, DELETE);
+    }
+
+    public function canPurgeItem(): bool
+    {
+        return $this->canDeleteItem();
+    }
+
    /**
     * Return the localized name of the current Type
     *
@@ -251,8 +264,12 @@ class Info extends CommonDBTM
 
        //Criteria already added : only display the selected itemtype
         if ($ID > 0) {
-            $item = new $this->fields['itemtype']();
-            echo $item->getTypeName();
+            // Stored by an older version without check: the types of the plugin only
+            if (!in_array($this->fields['itemtype'], Position::getTypes(), true)
+                || !($item = getItemForItemtype($this->fields['itemtype']))) {
+                return;
+            }
+            echo htmlescape($item->getTypeName());
             echo Html::hidden('itemtype', ['value' => $this->fields['itemtype']]);
         } else {
             $possible_types = Position::getTypes();
@@ -313,7 +330,9 @@ class Info extends CommonDBTM
 
         echo "<span id='span_fields' name='span_fields'>";
 
-        if (!isset($config->fields['itemtype']) || !$config->fields['itemtype']) {
+        // The item type may be posted: only the types of the plugin are instantiated
+        if (!isset($config->fields['itemtype']) || !$config->fields['itemtype']
+            || !in_array($config->fields['itemtype'], Position::getTypes(), true)) {
             echo "</span>";
             return;
         }
@@ -372,18 +391,40 @@ class Info extends CommonDBTM
     static function checkBeforeInsert($input)
     {
 
-        if (!$input['itemtype'] || empty($input['_fields'])) {
+        if (empty($input['itemtype']) || empty($input['_fields']) || !is_array($input['_fields'])) {
             Session::addMessageAfterRedirect(
                 __("It's mandatory to select a type and at least one field"),
                 true,
                 ERROR
             );
-            $input = [];
-        } else {
-            $input['fields'] = implode(',', $input['_fields']);
-            unset($input['_fields']);
+            return false;
         }
+        // The item type is posted and later instantiated: the types of the plugin only
+        if (!in_array($input['itemtype'], Position::getTypes(), true)) {
+            return false;
+        }
+        $input['fields'] = implode(',', self::filterFields($input['itemtype'], $input['_fields']));
+        unset($input['_fields']);
+
         return $input;
+    }
+
+    /**
+     * Posted fields kept among the columns of the table of the item type, the unallowed ones
+     * excepted
+     *
+     * @param array $fields
+     *
+     * @return list<string>
+     */
+    static function filterFields(string $itemtype, array $fields): array
+    {
+        global $DB;
+
+        $columns = array_column($DB->listFields(getTableForItemType($itemtype)), 'Field');
+        $allowed = array_diff($columns, (array) self::getUnallowedFields($itemtype));
+
+        return array_values(array_intersect(array_map('strval', $fields), $allowed));
     }
 
 
@@ -409,8 +450,12 @@ class Info extends CommonDBTM
     **/
     function prepareInputForUpdate($input)
     {
+        // The item type of a configuration is fixed once created
+        unset($input['itemtype']);
 
-        $input['fields'] = implode(',', $input['_fields']);
+        if (isset($input['_fields']) && is_array($input['_fields'])) {
+            $input['fields'] = implode(',', self::filterFields((string) $this->fields['itemtype'], $input['_fields']));
+        }
         unset($input['_fields']);
 
         return $input;
@@ -528,9 +573,10 @@ class Info extends CommonDBTM
         global $DB;
 
         if (isset($item["fields"])
-          && !empty($item["fields"])) {
+          && !empty($item["fields"])
+          && in_array($item['itemtype'], Position::getTypes(), true)
+          && ($target = getItemForItemtype($item['itemtype']))) {
             $input  = explode(',', $item['fields']);
-            $target = new $item['itemtype']();
             $dbu    = new DbUtils();
             foreach ($DB->listFields($dbu->getTableForItemType($item['itemtype'])) as $field) {
                 if (in_array($field['Field'], $input)) {
@@ -615,30 +661,26 @@ class Info extends CommonDBTM
     {
         global $CFG_GLPI;
 
-        $display = $itemclass->fields[$field['Field']];
-        echo "<h3><span class='title'>" . $searchOption['name'] . " : </span>";
+        $display = (string) $itemclass->fields[$field['Field']];
+        echo "<h3><span class='title'>" . htmlescape((string) $searchOption['name']) . " : </span>";
 
+        // Values of the item, stored raw: escaped in every context
         $type = self::getTypeFields($searchOption);
         if ($type == 'dropdown') {
-            echo Dropdown::getDropdownName($searchOption['table'], $display);
+            echo htmlescape((string) Dropdown::getDropdownName($searchOption['table'], $display));
         } elseif (isset($searchOption['datatype'])
                  && $searchOption['datatype'] == 'decimal') {
-            echo Html::formatNumber($display, 2);
+            echo htmlescape(Html::formatNumber($display, 2));
         } elseif ($searchOption['table'] == 'glpi_users') {
             $dbu = new DbUtils();
-            echo $dbu->getUserName($display);
-        } elseif ($searchOption['field'] == 'contact_num') {
+            echo htmlescape((string) $dbu->getUserName($display));
+        } elseif ($searchOption['field'] == 'contact_num' || $searchOption['field'] == 'number_line') {
             echo "<img src='" . PLUGIN_POSITIONS_WEBDIR . "/pics/miniphones.png' title='" .
-              $display . "'>&nbsp;
-         <a href=\"tel:" . $display . "\">" .
-              $display . "</a>";
-        } elseif ($searchOption['field'] == 'number_line') {
-            echo "<img src='" . PLUGIN_POSITIONS_WEBDIR . "/pics/miniphones.png' title='" .
-              $display . "'>&nbsp;
-         <a href=\"tel:" . $display . "\">" .
-              $display . "</a>";
+              htmlescape($display) . "'>&nbsp;
+         <a href=\"tel:" . htmlescape(rawurlencode($display)) . "\">" .
+              htmlescape($display) . "</a>";
         } else {
-            echo $display;
+            echo htmlescape($display);
         }
 
         echo "</h3></br>";
@@ -657,13 +699,13 @@ class Info extends CommonDBTM
             echo "<h3>" . __('Direct link', 'positions') . " : ";
 
             echo "<a href='" . Toolbox::getItemTypeFormURL($itemclass->getType()) .
-              "?id=" . $itemclass->fields["id"] . "' target='_blank'>";
+              "?id=" . (int) $itemclass->fields["id"] . "' target='_blank'>";
             $title  = $itemclass->fields["name"];
             if (Plugin::isPluginActive("resources")
              && $itemclass->getType() == Resource::class) {
                 $title = $itemclass->fields["firstname"] . " " . $itemclass->fields["name"];
             }
-            echo $title;
+            echo htmlescape((string) $title);
             echo "</a>";
 
             echo "</h3></br>";
@@ -671,10 +713,10 @@ class Info extends CommonDBTM
             echo "<h3>" . __('Direct link', 'positions') . " : ";
 
             echo "<a href='" . PLUGIN_POSITIONS_WEBDIR .
-              "/front/map.php?locations_id=" . $itemclass->fields["id"] . "'
+              "/front/map.php?locations_id=" . (int) $itemclass->fields["id"] . "'
          target='_blank'>";
             $title = $itemclass->fields["name"];
-            echo $title;
+            echo htmlescape((string) $title);
             echo "</a>";
 
             echo "</h3></br>";
@@ -728,24 +770,24 @@ class Info extends CommonDBTM
                                           if (!$export) {
                                               $dbu = new DbUtils();
                                               if ($dbu->countElementsInTable("glpi_phones", $condition) > 1) {
-                                                  echo $location . " : <br>";
+                                                  echo htmlescape((string) $location) . " : <br>";
                                               }
-                                              echo "<span class='title'>" . __('Alternate username number') . " : </span>";
+                                              echo "<span class='title'>" . __s('Alternate username number') . " : </span>";
                                               echo "<img src='" . PLUGIN_POSITIONS_WEBDIR . "/pics/miniphones.png' title='" .
-                                              $contact_num . "'>&nbsp;
-                                 <a href=\"tel:" . $contact_num . "\">" .
-                                              $contact_num . "</a>&nbsp;&nbsp;&nbsp;&nbsp;";
+                                              htmlescape((string) $contact_num) . "'>&nbsp;
+                                 <a href=\"tel:" . htmlescape(rawurlencode((string) $contact_num)) . "\">" .
+                                              htmlescape((string) $contact_num) . "</a>&nbsp;&nbsp;&nbsp;&nbsp;";
                                           } else {
                                               $display .= "\n" . __('Alternate username number') . " : " . $contact_num;
                                           }
                                       }
                                       if (isset($number_line) && $number_line != null) {
                                           if (!$export) {
-                                              echo "<span class='title'>" . _x('quantity', 'Number of lines') . " : </span>";
+                                              echo "<span class='title'>" . _sx('quantity', 'Number of lines') . " : </span>";
                                               echo "<img src='" . PLUGIN_POSITIONS_WEBDIR . "/pics/miniphones.png' title='" .
-                                              $number_line . "'>&nbsp;
-                                 <a href=\"tel:" . $number_line . "\">" .
-                                              $number_line . "</a>";
+                                              htmlescape((string) $number_line) . "'>&nbsp;
+                                 <a href=\"tel:" . htmlescape(rawurlencode((string) $number_line)) . "\">" .
+                                              htmlescape((string) $number_line) . "</a>";
                                           } else {
                                               $display .= "\n" . _x('quantity', 'Number of lines') . " :\n" . $number_line;
                                           }

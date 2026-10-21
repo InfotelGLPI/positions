@@ -542,8 +542,9 @@ Ext.canvasXpress = Ext.extend(Ext.Panel, {
        for(var i = 0; i < n.length; i++){
            var win = 0;
            //emgi =>>>>> fonction qui permet de d'afficher les infos dans une fenêtre modale
-           win = new Ext.Window({id:n[i].id,title:this.languages.information +' - '+n[i].name,width:'600px',height:'200px',
-               modal:false,layout:'fit',resizable:false, autoLoad: {url: 'showinfos.php?items_id='+n[i].items_id+'&id='+n[i].id+'&name='+n[i].name+'&img='+n[i].imagePath+'&itemtype='+n[i].itemtype}
+           // The title of an Ext.Window is HTML: the name of the item is encoded
+           win = new Ext.Window({id:n[i].id,title:this.languages.information +' - '+Ext.util.Format.htmlEncode(n[i].name),width:'600px',height:'200px',
+               modal:false,layout:'fit',resizable:false, autoLoad: {url: 'showinfos.php?items_id='+encodeURIComponent(n[i].items_id)+'&id='+encodeURIComponent(n[i].id)+'&img='+encodeURIComponent(n[i].imagePath)+'&itemtype='+encodeURIComponent(n[i].itemtype)}
            });
            win.show();
            if( n[i].itemtype =='Location'){
@@ -4616,9 +4617,13 @@ Ext.canvasXpress.nodeDialog = Ext.extend(Ext.Window, {
     
     // UPDATE LUDU
     var ajaxSend = function(config) {
+       // GLPI checks the CSRF token of an AJAX POST in the X-Glpi-Csrf-Token header; the token
+       // of the page is in its glpi:csrf_token meta
+       var csrf_meta = document.querySelector('meta[property="glpi:csrf_token"]');
        Ext.Ajax.request({
           url: '../ajax/position.php',
-          params: { 
+          headers: { 'X-Glpi-Csrf-Token': csrf_meta ? csrf_meta.getAttribute('content') : '' },
+          params: {
              'action' : 'setConfig',
              'config'  : Ext.util.JSON.encode(config)
           },

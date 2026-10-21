@@ -58,12 +58,12 @@ if (isset($_POST["add"])) {
    $info->redirectToList();
 
 } else if (isset($_POST["restore"])) {
-   $info->check($_POST['id'], PURGE);
+   $info->check((int) $_POST['id'], DELETE);
    $info->restore($_POST);
    $info->redirectToList();
 
 } else if (isset($_POST["purge"])) {
-   $info->check($_POST['id'], PURGE);
+   $info->check((int) $_POST['id'], DELETE);
    $info->delete($_POST, 1);
    $info->redirectToList();
 

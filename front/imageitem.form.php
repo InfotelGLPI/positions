@@ -35,12 +35,15 @@ $img = new ImageItem();
 
 if (isset($_POST["add"]) && isset($_POST['type'])) {
    $test = explode(";", $_POST['type']);
-   if (isset($test[0]) && isset($test[1]) && !empty($test[1])) {
-      $_POST['type']     = $test[1];
+   // The item type names the table of its types (addItemImage()): the types of the plugin only
+   if (isset($test[0]) && isset($test[1]) && !empty($test[1])
+       && in_array($test[0], Position::getTypes(), true)) {
+      $_POST['type']     = (int) $test[1];
       $_POST['itemtype'] = $test[0];
 
       if ($img->canCreate()) {
-         if ($_POST["img"] != -1) {
+         // A picture of the pics directory only, or -1 when none was chosen
+         if ($_POST["img"] != -1 && Position::getPicturePath((string) $_POST["img"]) !== null) {
             $img->addItemImage($_POST);
          } else {
             Session::addMessageAfterRedirect(__('No picture uploaded', 'positions'), false, ERROR);
@@ -50,10 +53,10 @@ if (isset($_POST["add"]) && isset($_POST['type'])) {
    Html::back();
 
 } else if (isset($_POST["delete"])) {
-   $img->getFromDB($_POST["id"], -1);
-   foreach ($_POST["item"] as $key => $val) {
+   foreach ((array) ($_POST["item"] ?? []) as $key => $val) {
       if ($val == 1) {
-         $img->delete(['id' => $key]);
+         $img->check((int) $key, DELETE);
+         $img->delete(['id' => (int) $key]);
       }
    }
    Html::back();

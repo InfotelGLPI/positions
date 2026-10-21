@@ -31,10 +31,13 @@ global $CFG_GLPI;
 
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
-Session::checkLoginUser();
+Session::checkRight('plugin_positions', UPDATE);
 
 // Make a select box
 if (isset($_POST["type"]) && $_POST['action']) {
+   if (!in_array($_POST['type'], \GlpiPlugin\Positions\Position::getTypes(), true)) {
+      throw new \Glpi\Exception\Http\BadRequestHttpException();
+   }
    $dbu = new DbUtils();
    if ($_POST['action'] == 'showType') {
       $item = $dbu->getItemForItemtype($_POST['type']."Type");

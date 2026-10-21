@@ -28,6 +28,8 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Positions\ImageItem;
+use GlpiPlugin\Positions\Info;
 use GlpiPlugin\Positions\Menu;
 use GlpiPlugin\Positions\Position;
 use GlpiPlugin\Positions\Profile;
@@ -282,10 +284,13 @@ function plugin_positions_uninstall()
         'DropdownTranslation',
         'NotificationTemplate',
         'Notification'];
+    // Every class of the plugin that leaves rows behind, history included
+    $plugin_itemtypes = [Position::class, Info::class, ImageItem::class];
     foreach ($itemtypes as $itemtype) {
         $item = new $itemtype();
-        $item->deleteByCriteria(['itemtype' => Position::class]);
+        $item->deleteByCriteria(['itemtype' => $plugin_itemtypes]);
     }
+    $DB->delete('glpi_logs', ['itemtype' => $plugin_itemtypes]);
 
     //Delete rights associated with the plugin
     $profileRight = new ProfileRight();

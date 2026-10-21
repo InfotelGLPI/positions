@@ -33,14 +33,15 @@ if (strpos($_SERVER['PHP_SELF'], "dropdownInfoFields.php")) {
     header("Content-Type: text/html; charset=UTF-8");
     Html::header_nocache();
 }
-Session::checkLoginUser();
+// Only caller: the form of the display configuration of the information pop-up
+Session::checkRight('plugin_positions', UPDATE);
 
 $config = new Info();
-if ($_POST['id'] > 0) {
-    $config->getFromDB($_POST['id']);
+if ((int) ($_POST['id'] ?? 0) > 0) {
+    $config->check((int) $_POST['id'], READ);
 } else {
     $config->getEmpty();
-    $config->fields['itemtype'] = $_POST['itemtype'];
+    $config->fields['itemtype'] = (string) ($_POST['itemtype'] ?? '');
 }
 
 Info::selectCriterias($config);

@@ -30,6 +30,12 @@
 use GlpiPlugin\Positions\Position;
 use GlpiPlugin\Positions\Menu;
 
+// Creates a location, a document and its link, and a position: the rights of each, the source
+// map, the locations and the entity being checked by cropPicture()
+Session::checkRight('plugin_positions', UPDATE);
+Session::checkRight('location', CREATE);
+Session::checkRight('document', CREATE);
+
 if (isset($_POST['valid'])
       && (isset($_POST['locations_id'])
          || isset($_POST['locations_idParent']) )) {

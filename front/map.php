@@ -66,7 +66,7 @@ if ($pos->canView() || Session::haveRight("config", UPDATE)) {
       $options = ['id'           => 0,
                   'locations_id' => $_POST["locations_id"],
                   'itemtype'     => $_POST['itemtype'],
-                  'target'       => $_SERVER['PHP_SELF'] . "?locations_id=" . $_POST["locations_id"]];
+                  'target'       => $_SERVER['PHP_SELF'] . "?locations_id=" . (int) $_POST["locations_id"]];
        Position::showMap($options);
    }
 }

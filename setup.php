@@ -69,11 +69,8 @@ function plugin_init_positions()
 
        // Add specific files to add to the header : javascript or css
         $PLUGIN_HOOKS['add_javascript']['positions'] = [
-         //file upload
-//         "lib/plupload/plupload.full.js",
          "lib/extjs/adapter/ext/ext-base.js",
          "lib/extjs/ext-all.js",
-//         "upload.js",
          "positions.js",
          "geoloc.js",
          "lib/canvas/canvasXpress.min.js",

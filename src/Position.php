@@ -98,6 +98,19 @@ class Position extends CommonDBTM
      **@since 0.85
      *
      */
+    /**
+     * The rights matrix of the plugin offers no Purge: deleting covers it
+     */
+    public static function canPurge(): bool
+    {
+        return Session::haveRight(static::$rightname, DELETE);
+    }
+
+    public function canPurgeItem(): bool
+    {
+        return $this->canDeleteItem();
+    }
+
     public function getRights($interface = 'central')
     {
 
@@ -189,6 +202,16 @@ class Position extends CommonDBTM
         }
 
         $input['itemtype'] = str_replace('\\\\', '\\', $input['itemtype']);
+        // The item type is posted: only the types a position may be linked to are instantiated
+        if (!in_array($input['itemtype'], self::getTypes(), true)) {
+            return false;
+        }
+        // The linked item must be within the reach of the user
+        $linked = getItemForItemtype($input['itemtype']);
+        if (!$linked || !$linked->can((int) $input['items_id'], READ)) {
+            Session::addMessageAfterRedirect(__('No equipment associated', 'positions'), false, ERROR);
+            return false;
+        }
 
         //      if (isset ($input["items_id"])
         //            && isset($input["itemtype"])) {
@@ -412,17 +435,22 @@ class Position extends CommonDBTM
     {
         global $DB, $CFG_GLPI;
 
-        $document_id = $options["document_id"];
-        $locations_idParent = $options["locations_id"];
+        // Both end in the inline script below: integers, the message through json_encode()
+        $document_id = (int) $options["document_id"];
+        $locations_idParent = (int) $options["locations_id"];
         $test = '';
 
         if (!Session::haveRight('plugin_positions', READ)) {
             return false;
         }
+        $parent = new Location();
+        if (!$parent->can($locations_idParent, READ)) {
+            throw new \Glpi\Exception\Http\AccessDeniedHttpException();
+        }
 
         Html::requireJs('positions');
 
-        $alert = __('Select an area and click on OK', 'positions');
+        $alert = json_encode(__('Select an area and click on OK', 'positions'));
 
         echo Html::scriptBlock('$(document).ready(function() {
          jQuery(function($){
@@ -451,7 +479,7 @@ class Position extends CommonDBTM
       {
          if (parseInt(jQuery('#w').val())>0) return true;
          if ('#name'=='') return true;
-         alert('$alert');
+         alert($alert);
          return false;
       }
 
@@ -499,18 +527,18 @@ class Position extends CommonDBTM
                 echo "</td>";
 
                 echo "<td id=\"existLocation\" class='left' style=\"visibility:hidden\">";
-                $query = "SELECT `id`,`name`
-                            FROM `glpi_locations`
-                            WHERE `locations_id` = '" . $locations_idParent . "'
-                            AND `name` NOT IN
-                                ( SELECT `name` FROM `glpi_documents`
-                                 )
-                                ";
-                $result = $DB->doQuery($query);
-                $DB->numrows($result);
-
                 $locations = [];
-                while ($data = $DB->fetchAssoc($result)) {
+                foreach ($DB->request([
+                    'SELECT' => ['id'],
+                    'FROM'   => 'glpi_locations',
+                    'WHERE'  => [
+                        'locations_id' => (int) $locations_idParent,
+                        'NOT'          => ['name' => new \Glpi\DBAL\QuerySubQuery([
+                            'SELECT' => 'name',
+                            'FROM'   => 'glpi_documents',
+                        ])],
+                    ],
+                ]) as $data) {
                     $locations[] = $data['id'];
                 }
                 if (!empty($locations)) {
@@ -566,7 +594,7 @@ class Position extends CommonDBTM
 
                 echo "<table class='tab_cadre'>";
                 echo "<tr class='tab_bg_1'><th>";
-                echo $Doc->fields["name"];
+                echo htmlescape((string) $Doc->fields["name"]);
                 echo "<div id=\"imageCrop\"> ";
                 echo "<img src='" . $img . "' id=\"target\" alt=\"$document_id\" width=\"$dim[0]\" height=\"$dim[1]\" />";
                 echo "</div> ";
@@ -587,38 +615,61 @@ class Position extends CommonDBTM
 
     public static function cropPicture($input)
     {
-
-        $x1 = $input['x1'];
-        $y1 = $input['y1'];
-        $width = $input['w'];
-        $height = $input['h'];
-
-        if ($input['test'] == "newLocation") {
-            $name = $input['name'];
-        } elseif ($input['test'] == "existLocation") {
-            $loc = new Location();
-            $loc->getFromDB($input['locations_id']);
-            $name = $loc->fields['name'];
+        $x1 = (int) $input['x1'];
+        $y1 = (int) $input['y1'];
+        $width = (int) $input['w'];
+        $height = (int) $input['h'];
+        if ($width <= 0 || $height <= 0) {
+            throw new \Glpi\Exception\Http\BadRequestHttpException();
         }
 
-        $document_id = $input['document_id'];
-        $extension = $input['extension'];
+        $test = (string) ($input['test'] ?? '');
+        $locations_idParent = (int) ($input['locations_idParent'] ?? 0);
+        $entities_id = (int) ($input['entities_id'] ?? -1);
+        $document_id = (int) ($input['document_id'] ?? 0);
 
-        if (isset($input['locations_id'])) {
-            $locations_id = $input['locations_id'];
-        } else {
-            $locations_id = $input['locations_idParent'];
-        }
-
-        $locations_idParent = $input['locations_idParent'];
-        $entities_id = $input['entities_id'];
-        $test = $input['test'];
-
+        // Every id comes from the request: the entity, the source map and the locations must
+        // all be within the reach of the user
         $Doc = new Document();
-        $Doc->getFromDB($document_id);
+        $parent = new Location();
+        if (!Session::haveAccessToEntity($entities_id)
+            || !$Doc->can($document_id, READ)
+            || !$parent->can($locations_idParent, READ)) {
+            throw new \Glpi\Exception\Http\AccessDeniedHttpException();
+        }
+
+        if ($test == "newLocation") {
+            $name = (string) $input['name'];
+            $locations_id = $locations_idParent;
+        } elseif ($test == "existLocation") {
+            $loc = new Location();
+            $locations_id = (int) $input['locations_id'];
+            if (!$loc->can($locations_id, UPDATE)) {
+                throw new \Glpi\Exception\Http\AccessDeniedHttpException();
+            }
+            $name = $loc->fields['name'];
+        } else {
+            throw new \Glpi\Exception\Http\BadRequestHttpException();
+        }
+
+        $extension = strtoupper((string) $input['extension']);
+        if (!in_array($extension, ['PNG', 'JPG', 'JPEG', 'GIF'], true)) {
+            throw new \Glpi\Exception\Http\BadRequestHttpException();
+        }
+
         $path = GLPI_DOC_DIR . "/" . $Doc->fields["filepath"];
 
-        $tmpfile = GLPI_UPLOAD_DIR . "/" . $document_id . $name;
+        // The area must lie within the source map: an unbounded size had GD allocate gigabytes
+        $sizes = @getimagesize($path);
+        if ($sizes === false
+            || $x1 < 0 || $y1 < 0
+            || $x1 + $width > $sizes[0] || $y1 + $height > $sizes[1]) {
+            throw new \Glpi\Exception\Http\BadRequestHttpException();
+        }
+
+        // The name becomes part of a file name in the upload directory: keep a bare component
+        $file_name = preg_replace('/[^\p{L}\p{N}_ -]/u', '_', basename(str_replace('\\', '/', $name)));
+        $tmpfile = GLPI_UPLOAD_DIR . "/" . $document_id . $file_name;
         if ($extension == 'PNG') {
             $srcImg = imagecreatefrompng($path);
             $newImg = imagecreatetruecolor($width, $height);
@@ -652,6 +703,7 @@ class Position extends CommonDBTM
         //Si non : on envoie l'utilisateur vers la carte pour ajouter du matériel
         $options = ["document_id" => $document_id,
             "name" => $name,
+            "file_name" => $file_name,
             "locations_idParent" => $locations_idParent,
             "locations_id" => $locations_id,
             "entities_id" => $entities_id,
@@ -669,19 +721,14 @@ class Position extends CommonDBTM
     {
         global $CFG_GLPI, $DB;
 
-        $filename = $opt["document_id"] . $opt["name"] . "." . $opt["extension"];
+        $filename = $opt["document_id"] . $opt["file_name"] . "." . $opt["extension"];
         $filepath = "/_uploads/" . $filename;
 
         $id = 0;
         if ($opt["test"] == "existLocation") {
-            $query = "SELECT `id`,`name`
-                  FROM `glpi_locations`
-                  WHERE `id` = '" . $opt["locations_id"] . "'";
-
-            $result = $DB->doQuery($query);
-
-            while ($data = $DB->fetchAssoc($result)) {
-                $id = $data['id'];
+            $location = new Location();
+            if ($location->getFromDB((int) $opt["locations_id"])) {
+                $id = $location->getID();
             }
         } elseif ($opt["test"] == "newLocation") {
             $locations_id = $opt["locations_idParent"];
@@ -843,9 +890,9 @@ class Position extends CommonDBTM
                 if (class_exists($this->fields['itemtype'])) {
                     $item = new $this->fields['itemtype']();
                     $item->getFromDB($this->fields['items_id']);
-                    echo $item->getTypeName() . " - ";
+                    echo htmlescape($item->getTypeName()) . " - ";
                     echo $item->getLink() . " - ";
-                    echo Dropdown::getDropdownName("glpi_locations", $item->fields['locations_id']);
+                    echo htmlescape((string) Dropdown::getDropdownName("glpi_locations", $item->fields['locations_id']));
                 }
             }
         }
@@ -886,13 +933,14 @@ class Position extends CommonDBTM
         global $DB;
 
         $documents_id = 0;
-        $query = "SELECT `documents_id`
-             FROM `glpi_documents_items`
-             WHERE `items_id` = '" . $locations_id . "'
-                   AND `itemtype` = 'Location' ";
-
-        $result = $DB->doQuery($query);
-        while ($data = $DB->fetchAssoc($result)) {
+        foreach ($DB->request([
+            'SELECT' => ['documents_id'],
+            'FROM'   => 'glpi_documents_items',
+            'WHERE'  => [
+                'items_id' => (int) $locations_id,
+                'itemtype' => Location::class,
+            ],
+        ]) as $data) {
             $documents_id = $data['documents_id'];
         }
         return $documents_id;
@@ -955,6 +1003,13 @@ class Position extends CommonDBTM
             if (isset($self->fields["itemtype"])) {
                 $options['locations_id'] = $self->fields['locations_id'];
             }
+        }
+
+        $options['locations_id'] = (int) $options['locations_id'];
+        // The location comes from the request: its map is only shown to who may read it
+        $location = new Location();
+        if ($options['locations_id'] && !$location->can($options['locations_id'], READ)) {
+            throw new \Glpi\Exception\Http\AccessDeniedHttpException();
         }
 
         if ($options['locations_id']) {
@@ -1043,7 +1098,7 @@ class Position extends CommonDBTM
                     echo "<div class='center'><table class='tab_cadre_fixe'>";
 
                     echo "<tr class='tab_bg_1'><th>";
-                    echo $Doc->fields["name"];
+                    echo htmlescape((string) $Doc->fields["name"]);
                     echo "</th></tr>";
 
                     echo "<tr class='tab_bg_1'><td>";
@@ -1095,14 +1150,11 @@ class Position extends CommonDBTM
             echo "<tr class='tab_bg_2'><td class='center'>";
         }
 
-        $query = "SELECT `items_id`
-               FROM `glpi_documents_items`
-               WHERE `itemtype` = 'Location' ";
-
-        $result = $DB->doQuery($query);
-        $DB->numrows($result);
-
-        while ($data = $DB->fetchAssoc($result)) {
+        foreach ($DB->request([
+            'SELECT' => ['items_id'],
+            'FROM'   => 'glpi_documents_items',
+            'WHERE'  => ['itemtype' => Location::class],
+        ]) as $data) {
             $locations[] = $data['items_id'];
         }
         if (!empty($locations)) {
@@ -1183,7 +1235,7 @@ class Position extends CommonDBTM
         if (!empty($items)) {
             $colspan = count($items);
             $colspan = ($colspan * 2) + 1;
-            echo "<form method='post' name='massiveaction_form' id='massiveaction_form' action='" . $params["target"] . "'>";
+            echo "<form method='post' name='massiveaction_form' id='massiveaction_form' action='" . htmlescape((string) $params["target"]) . "'>";
             echo "<table class='tab_cadre' cellpadding='5'>";
             echo "<tr class='tab_bg_1'>";
             echo "<th colspan='" . $colspan . "'>";
@@ -1252,14 +1304,19 @@ class Position extends CommonDBTM
                             $itemclass = new $val['itemtype']();
                         }
 
-                        if ($itemclass->getFromDB($val['items_id'])) {
+                        // Only the items the user may read on their own (e.g. the Computer
+                        // right), not on the sole right of the cartography
+                        if ($itemclass->getFromDB($val['items_id'])
+                            && $itemclass->can($val['items_id'], READ)) {
                             $val['picture'] = null;
                             $val['img'] = null;
 
                             $canvas_id = count($objects);
 
+                            // canvasXpress renders the label and the tooltip as HTML: escaped,
+                            // values saved by older versions included
                             $options = ['canvas_id' => $canvas_id,
-                                'name' => self::displayItemTitle($itemclass),
+                                'name' => htmlescape((string) self::displayItemTitle($itemclass)),
                                 'id' => $val['id'],
                                 'items_id' => $val['items_id'],
                                 'itemtype' => $val['itemtype'],
@@ -1269,7 +1326,7 @@ class Position extends CommonDBTM
                                 'y_coordinates' => $val['y_coordinates'],
                                 "hideLabel" => $val['hideLabel'],
                                 "hideTooltip" => $val['hideTooltip'],
-                                "tooltip" => $val['tooltip'],
+                                "tooltip" => htmlescape((string) $val['tooltip']),
                                 "color" => $val['color'],
                                 "rotate" => $val['rotate'],
                                 "outline" => $val['outline'],
@@ -1438,15 +1495,15 @@ class Position extends CommonDBTM
                                  var n = obj.nodes[0];
                                  var win = new Ext.Window({
                                     id:n.id,
-                                    title:'Informations - '+n.name,
+                                    title:'Informations - '+Ext.util.Format.htmlEncode(n.name),
                                     width:'600px',
                                     height:'800px',
                                     modal:false,
                                     layout:'fit',
                                     resizable:false,
                                     autoLoad: function(n){
-                                                url: 'showinfos.php?items_id='+n.items_id+'&id='+n.id+'&name='+n.name+
-                                            '&img='+n.imagePath+'&itemtype='+n.itemtype}
+                                                url: 'showinfos.php?items_id='+encodeURIComponent(n.items_id)+'&id='+encodeURIComponent(n.id)+
+                                            '&img='+encodeURIComponent(n.imagePath)+'&itemtype='+encodeURIComponent(n.itemtype)}
 
                                  });
                                  win.show();
@@ -1463,15 +1520,15 @@ class Position extends CommonDBTM
                      var n = obj.nodes[0];
                          var win = new Ext.Window({
                             id:n.id,
-                            title:'Informations - '+n.name,
+                            title:'Informations - '+Ext.util.Format.htmlEncode(n.name),
                             width:'600px',
                             height:'800px',
                             modal:false,
                             layout:'fit',
                             resizable:false,
                             autoLoad: {
-                            url: 'showinfos.php?items_id='+n.items_id+'&id='+n.id+'&name='+n.name+
-                            '&img='+n.imagePath+'&itemtype='+n.itemtype}
+                            url: 'showinfos.php?items_id='+encodeURIComponent(n.items_id)+'&id='+encodeURIComponent(n.id)+
+                            '&img='+encodeURIComponent(n.imagePath)+'&itemtype='+encodeURIComponent(n.itemtype)}
                          });
                          win.show();
                          if( n.itemtype =='Location'){
@@ -1571,15 +1628,22 @@ class Position extends CommonDBTM
             && $itemclass->getType() != 'Glpi\Socket') {
             $img = "<img src='" . PLUGIN_POSITIONS_WEBDIR . "/pics/nothing.png' width='30' height='30'>";
 
-            if (!preg_match("/nothing.png/", $srcimg)) {
-                $path = GLPI_PLUGIN_DOC_DIR . "/positions/pics/" . $srcimg;
-                $sizes = getimagesize($path);
-                $largeur = $sizes[0];
-                $hauteur = $sizes[1];
-                $ext = pathinfo($srcimg, PATHINFO_EXTENSION);
-                $img = "<object width='" . $largeur . "' height='" . $hauteur . "' data='" . PLUGIN_POSITIONS_WEBDIR . "/front/map.send.php?file=" . $srcimg . "&type=pics' type='image/$ext'>
-             <param name='src' value='" . PLUGIN_POSITIONS_WEBDIR
-                    . "/front/map.send.php?file=" . $srcimg . "&type=pics'>
+            // The picture comes from the request, as a file name or the URL of the canvas
+            // (map.send.php?type=pics&file=<name>): only a picture of the pics directory is shown
+            $picture = (string) $srcimg;
+            $query   = (string) parse_url($picture, PHP_URL_QUERY);
+            if ($query !== '') {
+                parse_str($query, $params);
+                $picture = (string) ($params['file'] ?? '');
+            }
+            $path = self::getPicturePath($picture);
+            if ($path !== null && ($sizes = getimagesize($path)) !== false) {
+                $largeur = (int) $sizes[0];
+                $hauteur = (int) $sizes[1];
+                $ext = htmlescape(pathinfo($path, PATHINFO_EXTENSION));
+                $src = htmlescape(PLUGIN_POSITIONS_WEBDIR . "/front/map.send.php?file=" . rawurlencode($picture));
+                $img = "<object width='" . $largeur . "' height='" . $hauteur . "' data='" . $src . "' type='image/$ext'>
+             <param name='src' value='" . $src . "'>
             </object> ";
             }
         } else {
@@ -1632,65 +1696,57 @@ class Position extends CommonDBTM
         echo "</td></tr></table>";
     }
 
-    /**
-     * Send a file (not a document) to the navigator
-     * See Document->send();
-     *
-     * @param $file string: storage filename
-     * @param $filename string: file title
-     *
-     * @return nothing
-     **/
-    public static function sendFile($file, $filename, $type)
+    /** Directory of the pictures of the equipment types (front/map.send.php?file=) */
+    public static function getPicturesDir(): string
     {
+        return GLPI_PLUGIN_DOC_DIR . '/positions/pics';
+    }
 
-        // Test securite : document in DOC_DIR
-        $tmpfile = str_replace(GLPI_PLUGIN_DOC_DIR . "/positions/" . $type . "/", "", $file);
-
-        if (strstr($tmpfile, "../")
-            || strstr($tmpfile, "..\\")) {
-            Event::log(
-                $file,
-                "sendFile",
-                1,
-                "security",
-                $_SESSION["glpiname"] . " try to get a non standard file."
-            );
-            die("Security attack !!!");
+    /**
+     * Path of a picture of the pics directory, null unless the name is a bare image file name
+     * that resolves inside that directory
+     */
+    public static function getPicturePath(string $name): ?string
+    {
+        if ($name === '' || basename($name) !== $name || !preg_match('/\.(png|jpe?g|gif)$/i', $name)) {
+            return null;
+        }
+        $dir  = realpath(self::getPicturesDir());
+        $path = realpath(self::getPicturesDir() . '/' . $name);
+        if ($dir === false || $path === false || !str_starts_with($path, $dir . DIRECTORY_SEPARATOR) || !is_file($path)) {
+            return null;
         }
 
-        if (!file_exists($file)) {
-            die("Error file $file does not exist");
+        return $path;
+    }
+
+    /**
+     * A picture of the pics directory, the only files of the plugin served by map.send.php:
+     * the name is reduced to a bare file name, the final path kept inside the directory
+     */
+    public static function getPictureResponse(string $name): \Symfony\Component\HttpFoundation\Response
+    {
+        $path = self::getPicturePath($name);
+        if ($path === null) {
+            throw new \Glpi\Exception\Http\NotFoundHttpException();
         }
 
-        $mime = "application/octet-stream";
+        return Toolbox::getFileAsResponse($path, basename($path));
+    }
 
-        if (preg_match('/\.(....?)$/', $file, $regs)) {
-            switch ($regs[1]) {
-                case "png":
-                    $mime = "image/png";
-                    break;
-                case "jpeg":
-                    $mime = "image/jpeg";
-                    break;
-
-                case "jpg":
-                    $mime = "image/jpg";
-                    break;
-                case "gif":
-                    $mime = "image/gif";
-                    break;
+    /**
+     * Whether the document is the map of a location the user may read
+     */
+    public static function isLocationMap(int $documents_id): bool
+    {
+        $location = new Location();
+        foreach ((new Document_Item())->find(['documents_id' => $documents_id, 'itemtype' => Location::class]) as $link) {
+            if ($location->can((int) $link['items_id'], READ)) {
+                return true;
             }
         }
 
-        // Now send the file with header() magic
-        header("Expires: Mon, 26 Nov 1962 00:00:00 GMT");
-        header('Pragma: private'); /// IE BUG + SSL
-        header('Cache-control: private, must-revalidate'); /// IE BUG + SSL
-        header("Content-disposition: filename=\"$filename\"");
-        header("Content-type: " . $mime);
-
-        readfile($file) or die("Error opening file $file");
+        return false;
     }
 
     //from items
@@ -1702,25 +1758,17 @@ class Position extends CommonDBTM
         $canread = $item->can($ID, READ);
 
         $self = new self();
-        $dbu = new DbUtils();
 
-        $query = "SELECT `glpi_plugin_positions_positions`.* "
-            . "FROM `glpi_plugin_positions_positions` "
-            . " LEFT JOIN `glpi_entities` ON (`glpi_entities`.`id` =
-                        `glpi_plugin_positions_positions`.`entities_id`) "
-            . " WHERE `glpi_plugin_positions_positions`.`items_id` = '" . $ID . "'
-                  AND `glpi_plugin_positions_positions`.`itemtype` = '" . $itemtype . "' "
-            . $dbu->getEntitiesRestrictRequest(
-                " AND ",
-                "glpi_plugin_positions_positions",
-                '',
-                '',
-                $self->maybeRecursive()
-            );
-        $query .= " ORDER BY `glpi_plugin_positions_positions`.`name` ";
-
-        $result = $DB->doQuery($query);
-        $number = $DB->numrows($result);
+        $iterator = $DB->request([
+            'SELECT' => ['glpi_plugin_positions_positions.*'],
+            'FROM'   => 'glpi_plugin_positions_positions',
+            'WHERE'  => [
+                'glpi_plugin_positions_positions.items_id' => (int) $ID,
+                'glpi_plugin_positions_positions.itemtype' => $itemtype,
+            ] + getEntitiesRestrictCriteria('glpi_plugin_positions_positions', '', '', $self->maybeRecursive()),
+            'ORDER'  => 'glpi_plugin_positions_positions.name',
+        ]);
+        $number = count($iterator);
 
         $colsup = 0;
         if (Session::isMultiEntitiesMode()) {
@@ -1737,13 +1785,13 @@ class Position extends CommonDBTM
             }
             echo "<th>" . __('Coordinate x', 'positions') . "</th>";
             echo "<th>" . __('Coordinate y', 'positions') . "</th>";
-            if (Session::haveRight('plugin_positions', UPDATE)) {
+            if (Session::haveRight('plugin_positions', DELETE)) {
                 echo "<th>&nbsp;</th>";
             }
             echo "</tr>";
             $used = [];
 
-            while ($data = $DB->fetchArray($result)) {
+            foreach ($iterator as $data) {
                 $positionsID = $data["id"];
 
                 $used[] = $positionsID;
@@ -1753,7 +1801,7 @@ class Position extends CommonDBTM
                     && (in_array($data['entities_id'], $_SESSION['glpiactiveentities'])
                         || $data["is_recursive"])) {
                     echo "<td class='center'><a href='" . PLUGIN_POSITIONS_WEBDIR
-                        . "/front/position.form.php?id=" . $data["id"] . "'>" . $data["name"];
+                        . "/front/position.form.php?id=" . (int) $data["id"] . "'>" . htmlescape((string) $data["name"]);
 
                     if (($_SESSION["glpiis_ids_visible"]) || (empty($data["name"]))) {
                         echo " (" . $data["id"] . ")";
@@ -1762,7 +1810,7 @@ class Position extends CommonDBTM
                     echo self::showGeolocLink($itemtype, $ID, $data["id"]);
                     echo "</td>";
                 } else {
-                    echo "<td class='center'>" . $data["name"];
+                    echo "<td class='center'>" . htmlescape((string) $data["name"]);
                     if ($_SESSION["glpiis_ids_visible"]) {
                         echo " (" . $data["id"] . ")";
                     }
@@ -1774,10 +1822,10 @@ class Position extends CommonDBTM
                         $data['entities_id']
                     ) . "</td>";
                 }
-                echo "<td class='center'>" . $data["x_coordinates"] . "</td>";
-                echo "<td class='center'>" . $data["y_coordinates"] . "</td>";
+                echo "<td class='center'>" . htmlescape((string) $data["x_coordinates"]) . "</td>";
+                echo "<td class='center'>" . htmlescape((string) $data["y_coordinates"]) . "</td>";
 
-                if (Session::haveRight('plugin_positions', UPDATE)
+                if (Session::haveRight('plugin_positions', DELETE)
                     && $withtemplate < 2) {
                     if ($data["is_deleted"] != 1) {
                         echo "<td class='center tab_bg_2'>";
@@ -1981,16 +2029,16 @@ class Position extends CommonDBTM
     {
         global $CFG_GLPI;
 
-        $documents_id = self::getDocument($id);
-        $locations_id = $id;
+        $locations_id = (int) $id;
+        $documents_id = self::getDocument($locations_id);
 
         $Doc = new Document();
         if (isset($documents_id)
             && $Doc->getFromDB($documents_id)) {
             $target = PLUGIN_POSITIONS_WEBDIR . "/front/geoloc.php?positions_id="
-                . $positions_id . "&amp;download=1&amp;locations_id=" . $locations_id;
+                . (int) $positions_id . "&download=1&locations_id=" . $locations_id;
             echo "<script type='text/javascript'>
-         Position.openWindow('$target');
+         Position.openWindow(" . json_encode($target) . ");
          </script>";
         }
     }
@@ -2032,7 +2080,7 @@ class Position extends CommonDBTM
         if (isset($location)
             && !empty($location)) {
             echo Html::hidden('locations_id', ['value' => $location]);
-            echo Dropdown::getDropdownName("glpi_locations", $location);
+            echo htmlescape((string) Dropdown::getDropdownName("glpi_locations", $location));
         } else {
             echo "<div class='red'>" . __('No location selected', 'positions') . "</div>";
         }

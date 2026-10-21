@@ -30,6 +30,8 @@
 use GlpiPlugin\Positions\Position;
 use GlpiPlugin\Positions\Menu;
 
+Session::checkRight('plugin_positions', READ);
+
 if (Session::getCurrentInterface() == 'central') {
    //from central
    Html::header(Position::getTypeName(), '', "tools", Menu::class, "positions");
@@ -42,7 +44,7 @@ if (!isset($_POST["locations_id"])) {
    $_POST["locations_id"] = 0;
 }
 
-Position::showLocationForm($_POST["locations_id"]);
+Position::showLocationForm((int) $_POST["locations_id"]);
 
 if (Session::getCurrentInterface() == 'central') {
    Html::footer();

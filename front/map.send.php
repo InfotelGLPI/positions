@@ -27,39 +27,33 @@
  --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\AccessDeniedHttpException;
 use Glpi\Exception\Http\BadRequestHttpException;
+use Glpi\Exception\Http\NotFoundHttpException;
 use GlpiPlugin\Positions\Position;
 
-Session::checkLoginUser();
+Session::checkRight('plugin_positions', READ);
 
-$doc = new Document();
-
-if (isset($_GET['docid'])) { // docid for document
-   if (!$doc->getFromDB($_GET['docid'])) {
-       throw new BadRequestHttpException(__('Unknown file'));
-   }
-
-   if (!file_exists(GLPI_DOC_DIR . "/" . $doc->fields['filepath'])) {
-       throw new BadRequestHttpException(__('File not found')); // Not found
-   }
-   if ($doc->fields['sha1sum'] && $doc->fields['sha1sum'] != sha1_file(GLPI_DOC_DIR . "/" . $doc->fields['filepath'])) {
-       throw new BadRequestHttpException(__('File is altered (bad checksum)')); // Doc alterated
-   } else {
-      return $doc->getAsResponse();
-   }
-
-} else if (isset($_GET["file"]) && isset($_GET["type"])) {
-   Position::sendFile(GLPI_PLUGIN_DOC_DIR . "/positions/" . $_GET["type"] . "/" . $_GET["file"], $_GET["file"], $_GET["type"]);
-
-} else if (isset($_GET["file"])) { // for other file
-   $splitter = explode("/", $_GET["file"]);
-   if (count($splitter) == 2) {
-      if (file_exists(GLPI_DOC_DIR . "/" . $_GET["file"])) {
-          return Toolbox::getFileAsResponse(GLPI_DOC_DIR . "/" . $_GET["file"], $splitter[1]);
-      } else {
-          throw new BadRequestHttpException(__('Unauthorized access to this file'));
-      }
-   } else {
-       throw new BadRequestHttpException(__('Invalid filename'));
-   }
+if (isset($_GET['docid'])) {
+    // Map of a location: the document must be readable, and attached to a location the user
+    // may read. getAsResponse() checks nothing by itself.
+    $doc = new Document();
+    if (!$doc->getFromDB((int) $_GET['docid'])) {
+        throw new NotFoundHttpException();
+    }
+    if (!$doc->canViewFile() || !Position::isLocationMap($doc->getID())) {
+        throw new AccessDeniedHttpException();
+    }
+    if (!file_exists(GLPI_DOC_DIR . "/" . $doc->fields['filepath'])) {
+        throw new NotFoundHttpException();
+    }
+    if ($doc->fields['sha1sum'] && $doc->fields['sha1sum'] != sha1_file(GLPI_DOC_DIR . "/" . $doc->fields['filepath'])) {
+        throw new BadRequestHttpException(__('File is altered (bad checksum)'));
+    }
+    return $doc->getAsResponse();
+} elseif (isset($_GET["file"])) {
+    // Pictures of the equipment types, the only directory of the plugin served here
+    return Position::getPictureResponse((string) $_GET["file"]);
 }
+
+throw new BadRequestHttpException();

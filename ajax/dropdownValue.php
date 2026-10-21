@@ -28,192 +28,167 @@
  */
 
 use GlpiPlugin\Positions\Config;
+use GlpiPlugin\Positions\Position;
 
 global $CFG_GLPI, $DB;
 
-// Direct access to file
-if (strpos($_SERVER['PHP_SELF'], "dropdownValue.php")) {
-    header("Content-Type: text/html; charset=UTF-8");
-    Html::header_nocache();
-}
+header("Content-Type: text/html; charset=UTF-8");
+Html::header_nocache();
 
-Session::checkLoginUser();
+// Only caller: the add-coordinates and equipment type pictures forms
+Session::checkRight('plugin_positions', UPDATE);
 
 if (empty($_GET) && !empty($_POST)) {
     $_GET = $_POST;
 }
-// Security
-if (!$DB->tableExists($_GET['table'])) {
-    exit();
+
+// Item types of the plugin only, or their "Type" dropdown for the pictures form; the table is
+// derived from the item type, never taken from the request
+$name     = (string) ($_GET['name'] ?? '');
+$is_type  = ($name === 'type');
+$itemtype = (string) ($_GET['itemtype'] ?? '');
+if (!in_array($itemtype, Position::getTypes(), true)) {
+    throw new \Glpi\Exception\Http\BadRequestHttpException();
 }
-
-$item = new $_GET['itemtype']();
-
-if (isset($_GET["entity_restrict"])
-    && !is_numeric($_GET["entity_restrict"])
-    && !is_array($_GET["entity_restrict"])) {
-    $_GET["entity_restrict"] = Toolbox::decodeArrayFromInput($_GET["entity_restrict"]);
+$item = getItemForItemtype($is_type ? $itemtype . 'Type' : $itemtype);
+if (!($item instanceof CommonDBTM)) {
+    throw new \Glpi\Exception\Http\BadRequestHttpException();
 }
-
-$NBMAX = $CFG_GLPI["dropdown_max"];
-$LIMIT = "LIMIT 0,$NBMAX";
-if ($_GET['searchText']==$CFG_GLPI["ajax_wildcard"]) {
-    $LIMIT = "";
+// The names listed are the ones of the item type: its own read right is required too
+if (!$item::canView()) {
+    throw new \Glpi\Exception\Http\AccessDeniedHttpException();
 }
+$table = $item->getTable();
 
-$where =" WHERE `".$_GET['table']."`.`id` NOT IN ('".$_GET['value2']."'";
+$value2       = (int) ($_GET['value2'] ?? 0);
+$locations_id = (int) ($_GET['locations_id'] ?? -1);
+$search_text  = (string) ($_GET['searchText'] ?? '');
 
-$used = [];
-$dbu = new DbUtils();
-if ($_GET["name"] != "type") {
-    $datas = $dbu->getAllDataFromTable(
-        "glpi_plugin_positions_positions",
-        ["itemtype" => $_GET['itemtype']]
-    );
-} else {
-    $datas = $dbu->getAllDataFromTable(
-        "glpi_plugin_positions_imageitems",
-        ["itemtype" => $_GET['itemtype']]
-    );
+$entity_restrict = $_GET['entity_restrict'] ?? -1;
+if (!is_numeric($entity_restrict) && !is_array($entity_restrict)) {
+    $entity_restrict = Toolbox::decodeArrayFromInput($entity_restrict);
 }
-if (!empty($datas)) {
-    foreach ($datas as $data) {
-        if ($_GET["name"] != "type") {
-            $used[]=$data["items_id"];
-        } else {
-            $used[]=$data["type"];
-        }
+// Posted by the client: narrowed to the active entities of the user, never widened
+if (!(is_numeric($entity_restrict) && $entity_restrict < 0)) {
+    $entity_restrict = Session::getMatchingActiveEntities($entity_restrict);
+    if ($entity_restrict === [] || $entity_restrict === '') {
+        // None of them is active: matches nothing (-1 would mean "all the active ones")
+        $entity_restrict = [-2];
     }
 }
 
-if (count($used)) {
-    $where .= ",'".implode("','", $used)."'";
+// Items already placed on a map, or types already having a picture
+$used = [$value2];
+if (!$is_type) {
+    foreach ((new Position())->find(['itemtype' => $itemtype]) as $data) {
+        $used[] = (int) $data['items_id'];
+    }
+} else {
+    foreach (getAllDataFromTable('glpi_plugin_positions_imageitems', ['itemtype' => $itemtype]) as $data) {
+        $used[] = (int) $data['type'];
+    }
 }
 
-$where .= ")";
-
+$where = ['NOT' => ["$table.id" => $used]];
 $multi = false;
 
- $config = new Config();
- $config->getFromDB(1);
+$config = new Config();
+$config->getFromDB(1);
+$view_all = !$is_type && $config->fields['use_view_all_object'];
 
-if (isset($_GET["name"]) && $_GET["name"] != "type") {
-    $dbu = new DbUtils();
+if (!$is_type) {
     if (!$config->fields['use_view_all_object']) {
-        if ($_GET['locations_id'] != -1) {
-            $where .= " AND `locations_id` = '" . $_GET['locations_id'] . "'";
+        if ($locations_id != -1) {
+            $where["$table.locations_id"] = $locations_id;
         }
     } else {
-        $locations = $dbu->getSonsOf('glpi_locations', $_GET['locations_id']);
-        $where .= " AND `locations_id` IN (" . implode(',', $locations). ")";
+        $where["$table.locations_id"] = array_values(getSonsOf('glpi_locations', $locations_id));
     }
     if ($item->maybeDeleted()) {
-        $where .= " AND `is_deleted` = '0' ";
+        $where["$table.is_deleted"] = 0;
     }
     if ($item->maybeTemplate()) {
-        $where .= " AND `is_template` = '0' ";
+        $where["$table.is_template"] = 0;
     }
 
     if ($item->isEntityAssign()) {
         $multi = $item->maybeRecursive();
-
-        if (isset($_GET["entity_restrict"]) && !($_GET["entity_restrict"]<0)) {
-            $where .= $dbu->getEntitiesRestrictRequest(
-                "AND",
-                $_GET['table'],
-                "entities_id",
-                $_GET["entity_restrict"],
-                $multi
-            );
-
-            if (is_array($_GET["entity_restrict"]) && count($_GET["entity_restrict"])>1) {
-                 $multi = true;
+        if (!(is_numeric($entity_restrict) && $entity_restrict < 0)) {
+            $where += getEntitiesRestrictCriteria($table, 'entities_id', $entity_restrict, $multi);
+            if (is_array($entity_restrict) && count($entity_restrict) > 1) {
+                $multi = true;
             }
         } else {
-            $where .= $dbu->getEntitiesRestrictRequest("AND", $_GET['table'], '', '', $multi);
-
-            if (count($_SESSION['glpiactiveentities'])>1) {
+            $where += getEntitiesRestrictCriteria($table, '', '', $multi);
+            if (count($_SESSION['glpiactiveentities']) > 1) {
                 $multi = true;
             }
         }
     }
 }
 
-$field = "name";
-
-if ($_GET['searchText'] != '__VALUE__' && $_GET['searchText']!=$CFG_GLPI["ajax_wildcard"]) {
-    $where .= " AND $field ".Search::makeTextSearch($_GET['searchText']);
+$field = 'name';
+if ($search_text !== '__VALUE__' && $search_text !== $CFG_GLPI["ajax_wildcard"] && $search_text !== '') {
+    $where["$table.$field"] = ['LIKE', Search::makeTextSearchValue($search_text)];
 }
 
-$query = "SELECT *
-          FROM `".$_GET['table']."`
-          $where ";
-if ($config->fields['use_view_all_object'] && $_GET["name"] != "type") {
-    $query .= "ORDER BY `locations_id`";
+$criteria = [
+    'FROM'  => $table,
+    'WHERE' => $where,
+];
+if ($view_all) {
+    $criteria['ORDER'] = "$table.locations_id";
 } else {
-    if ($multi) {
-        $query .= " ORDER BY `entities_id`, $field
-                 $LIMIT";
-    } else {
-        $query .= " ORDER BY $field
-                 $LIMIT";
+    $criteria['ORDER'] = $multi ? ["$table.entities_id", "$table.$field"] : ["$table.$field"];
+    if ($search_text !== $CFG_GLPI["ajax_wildcard"]) {
+        $criteria['LIMIT'] = (int) $CFG_GLPI["dropdown_max"];
     }
 }
 
-$result = $DB->doQuery($query);
+$iterator = $DB->request($criteria);
 
 $out = [];
 
-$number = $DB->numrows($result);
-if ($number != 0 && $_GET["locations_id"]== -1) {
-    array_push($out, ['id'   => $_GET['itemtype'].";-1",
-                          'text' => __('All types', 'positions')]);
+$number = count($iterator);
+if ($number != 0 && $locations_id == -1) {
+    $out[] = ['id' => $itemtype . ";-1", 'text' => __('All types', 'positions')];
 }
-$output = Dropdown::getDropdownName($_GET['table'], $_GET['value2']);
-if (!empty($output)&&$output!="&nbsp;") {
-    array_push($out, ['id'   => $_GET['value2'],
-                          'text' => $output]);
+if ($value2 > 0) {
+    $output = Dropdown::getDropdownName($table, $value2);
+    if (!empty($output) && $output != "&nbsp;") {
+        $out[] = ['id' => $value2, 'text' => $output];
+    }
 }
-
 
 if ($number) {
-    if ($config->fields['use_view_all_object'] && $_GET["name"] != "type") {
-        $current_location = '';
-        while ($data =$DB->fetchArray($result)) {
-            if (empty($current_location)) {
-                $children = [];
-                $level = 1;
-                $current_location = new Location();
-                $current_location->getFromDB($data['locations_id']);
-            } elseif ($current_location->fields['id'] != $data['locations_id']) {
-                array_push($out, ['text' => $current_location->fields['completename'], 'children' => $children]);
-
-                $children = [];
-                $level = 1;
+    if ($view_all) {
+        $current_location = null;
+        $children         = [];
+        foreach ($iterator as $data) {
+            if ($current_location === null || $current_location->fields['id'] != $data['locations_id']) {
+                if ($current_location !== null) {
+                    $out[] = ['text' => $current_location->fields['completename'], 'children' => $children];
+                }
+                $children         = [];
                 $current_location = new Location();
                 $current_location->getFromDB($data['locations_id']);
             }
             $output = $data[$field];
-            $ID = $data['id'];
-
+            $ID     = $data['id'];
             if (empty($output)) {
                 $output = "($ID)";
             }
-            array_push($children, ['id' => $_GET['itemtype'].";".$ID, 'text' => $output, 'level' => '1']);
-            $level++;
+            $children[] = ['id' => $itemtype . ";" . $ID, 'text' => $output, 'level' => '1'];
         }
-        array_push($out, ['text' => $current_location->fields['completename'], 'children' => $children]);
+        $out[] = ['text' => $current_location->fields['completename'] ?? '', 'children' => $children];
     } else {
-        while ($data =$DB->fetchArray($result)) {
+        foreach ($iterator as $data) {
             $output = $data[$field];
-            $ID = $data['id'];
-
+            $ID     = $data['id'];
             if (empty($output)) {
                 $output = "($ID)";
             }
-
-            array_push($out, ['id'   => $_GET['itemtype'].";".$ID,
-                                'text' => $output]);
+            $out[] = ['id' => $itemtype . ";" . $ID, 'text' => $output];
         }
     }
 }

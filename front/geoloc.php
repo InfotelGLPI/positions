@@ -31,23 +31,34 @@ use GlpiPlugin\Positions\Position;
 use GlpiPlugin\Positions\Menu;
 use GlpiPlugin\Resources\Resource;
 
+Session::checkRight('plugin_positions', READ);
+
 if (!isset($_GET["id"])) {
    $_GET["id"] = "";
 }
 
 if (isset($_GET["users_id"])) {
+   // Where a person sits: only for who may read that user
+   $users_id = (int) $_GET["users_id"];
+   $user     = new User();
+   if (!$user->can($users_id, READ)) {
+      throw new \Glpi\Exception\Http\AccessDeniedHttpException();
+   }
 
    //si plugin ressource active
    if (Plugin::isPluginActive("resources")) {
       //recherche de la ressource lie a ce user
-      $condition = ["items_id" => $_GET["users_id"],
-                    "itemtype" => 'User'];
+      $condition = ["items_id" => $users_id,
+                    "itemtype" => User::class];
       $dbu = new DbUtils();
       $infos = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items', $condition);
       if (!empty($infos)) {
          foreach ($infos as $info) {
             $ressource     = new Resource();
-            $ressource->getFromDB($info['plugin_resources_resources_id']);
+            // ... and its resource
+            if (!$ressource->can((int) $info['plugin_resources_resources_id'], READ)) {
+               continue;
+            }
 
             $restrict = ["items_id"    => $ressource->fields['id'],
                          "is_deleted"  => 0,
@@ -73,23 +84,16 @@ if (isset($_GET["users_id"])) {
    }
 
 } else {
-   if (!isset($_POST["locations_id"])) {
-      $_POST["locations_id"] = $_GET["locations_id"];
-   }
-   if (!isset($_POST["download"])) {
-      $_POST["download"] = $_GET["download"];
-   }
-
    $types = Position::getTypes();
    if (!isset($_POST["itemtype"])) {
       $_POST["itemtype"] = $types;
    }
 
-   $locations_id  = $_POST["locations_id"];
-   $id            = $_GET["positions_id"];
+   $locations_id  = (int) ($_POST["locations_id"] ?? $_GET["locations_id"] ?? 0);
+   $id            = (int) ($_GET["positions_id"] ?? 0);
    $itemtype      = $_POST['itemtype'];
    $menuoff       = 1;
-   $download      = $_POST['download'];
+   $download      = (int) ($_POST["download"] ?? $_GET["download"] ?? 0);
 }
 
 if (isset($_GET['from_treeview']) && Plugin::isPluginActive("treeview")) {
@@ -101,7 +105,7 @@ if (isset($_GET['from_treeview']) && Plugin::isPluginActive("treeview")) {
 }
 
 if (isset($locations_id) && !empty($locations_id)) {
-   $target        = $_SERVER['PHP_SELF']."?id=".$id;
+   $target        = $_SERVER['PHP_SELF'] . "?id=" . (int) $id;
 
    $options = ['id'           => $id,
                     'locations_id' => $locations_id,

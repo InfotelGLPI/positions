@@ -36,6 +36,7 @@ use Dropdown;
 use GlpiPlugin\Resources\Resource;
 use Html;
 use Plugin;
+use Session;
 
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
@@ -48,6 +49,19 @@ class ImageItem extends CommonDBTM
 {
 
     static $rightname = "plugin_positions";
+
+    /**
+     * The rights matrix of the plugin offers no Purge: deleting covers it
+     */
+    public static function canPurge(): bool
+    {
+        return Session::haveRight(static::$rightname, DELETE);
+    }
+
+    public function canPurgeItem(): bool
+    {
+        return $this->canDeleteItem();
+    }
 
    /**
     * @param        $myname
@@ -132,14 +146,12 @@ class ImageItem extends CommonDBTM
                         'img'      => $values["img"]]);
             }
         } else {
-            $dbu    = new DbUtils();
-            $query  = "SELECT *
-                   FROM `" . $dbu->getTableForItemType($values["itemtype"] . "Type") . "` ";
-            $result = $DB->doQuery($query);
-            $number = $DB->numrows($result);
-            $i      = 0;
-            while ($i < $number) {
-                $type_table = $DB->result($result, $i, "id");
+            $type_item = getItemForItemtype($values["itemtype"] . "Type");
+            if (!$type_item) {
+                return;
+            }
+            foreach ($DB->request(['SELECT' => ['id'], 'FROM' => $type_item->getTable()]) as $data) {
+                $type_table = $data['id'];
                 if ($this->getFromDBByCrit(['itemtype' => $values["itemtype"],
                 'type'     => $type_table])) {
                     $this->update(['id'  => $this->fields['id'],
@@ -149,7 +161,6 @@ class ImageItem extends CommonDBTM
                            'type'     => $type_table,
                            'img'      => $values["img"]]);
                 }
-                $i++;
             }
         }
     }
@@ -302,13 +313,13 @@ class ImageItem extends CommonDBTM
                     if (isset($typeclass->fields["name"])) {
                           $name = $typeclass->fields["name"];
                     }
-                    echo "<td>" . $name . "</td>";
+                    echo "<td>" . htmlescape((string) $name) . "</td>";
                     echo "<td>";
                     if (!empty($ligne["img"])) {
-                        $ext = pathinfo($ligne["img"], PATHINFO_EXTENSION);
-                        echo "<object data='" . PLUGIN_POSITIONS_WEBDIR . "/front/map.send.php?file=" . $ligne["img"] . "&type=pics' type='image/$ext'>
-                      <param name='src' value='" . PLUGIN_POSITIONS_WEBDIR .
-                          "/front/map.send.php?file=" . $ligne["img"] . "&type=pics'>
+                        $ext = htmlescape(pathinfo($ligne["img"], PATHINFO_EXTENSION));
+                        $src = htmlescape(PLUGIN_POSITIONS_WEBDIR . "/front/map.send.php?file=" . rawurlencode($ligne["img"]));
+                        echo "<object data='$src' type='image/$ext'>
+                      <param name='src' value='$src'>
                      </object> ";
                     } else {
                         echo __('No associated picture', 'positions');

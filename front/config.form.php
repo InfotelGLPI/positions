@@ -40,6 +40,8 @@ if (Plugin::isPluginActive("positions")) {
         Html::back();
 
    } else {
+      // The form is the one saved above: the same right to display it
+      Session::checkRight("config", UPDATE);
       Html::header(Position::getTypeName(), '', "tools", Menu::class, "config");
       $config->showConfigForm();
       Html::footer();

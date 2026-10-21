@@ -30,26 +30,32 @@
 use GlpiPlugin\Positions\Info;
 use GlpiPlugin\Positions\Position;
 
-if (!isset($_GET["file"])) {
-    $_GET["file"] = "";
-    $image = $_GET['img'];
-} else {
-    $image = $_GET['file'];
+Session::checkRight('plugin_positions', READ);
+
+$image = (string) ($_GET['file'] ?? $_GET['img'] ?? '');
+
+$items_id = (int) ($_GET['items_id'] ?? 0);
+$itemtype = (string) ($_GET['itemtype'] ?? '');
+$idpos = (int) ($_GET['id'] ?? 0);
+// Positions saved before the namespace keep the short class name of the sockets
+if ($itemtype === 'Socket') {
+    $itemtype = \Glpi\Socket::class;
 }
 
-$items_id = $_GET['items_id'];
-$name = $_GET['name'];
-$itemtype = $_GET['itemtype'];
-$idpos = $_GET['id'];
+// Types a position may be linked to only, and an item the user may read
+if (!in_array($itemtype, Position::getTypes(), true)) {
+    throw new \Glpi\Exception\Http\BadRequestHttpException();
+}
+$item = getItemForItemtype($itemtype);
+if (!$item || !$item->can($items_id, READ)) {
+    throw new \Glpi\Exception\Http\AccessDeniedHttpException();
+}
 
 $pos = new Position();
 
-if ($itemtype == 'Location') {
+if ($item instanceof Location) {
     Position::showGeolocLocation($items_id);
 } else {
-
-    $detail = new Info();
-    $restrict = "`is_active` = 1 ";
     $pos->getFromDB($idpos);
     $dbu = new DbUtils();
 
@@ -57,14 +63,6 @@ if ($itemtype == 'Location') {
             "is_deleted" => 0] + $dbu->getEntitiesRestrictCriteria("glpi_plugin_positions_infos",
             '', '', $pos->maybeRecursive());
     $infos = $dbu->getAllDataFromTable('glpi_plugin_positions_infos', $restrict);
-
-    if ($itemtype == "Socket") {
-        $item = new \Glpi\Socket();
-    } else {
-        $item = new $itemtype();
-    }
-
-    $item->getFromDB($items_id);
 
     Position::showOverlay($image, $item, $infos);
 }

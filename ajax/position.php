@@ -32,16 +32,61 @@ use GlpiPlugin\Positions\Position;
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
-Session::checkLoginUser();
+Session::checkRight('plugin_positions', UPDATE);
 
-switch ($_POST['action']) {
+switch ($_POST['action'] ?? '') {
    case 'setConfig':
       if (isset($_POST['config']) && !empty($_POST['config'])) {
          $positions = new Position();
-         $input = json_decode(stripslashes($_POST['config']), true);
-         $input['name']          = $input['label'];
-         $input['x_coordinates'] = $input['x'];
-         $input['y_coordinates'] = $input['y'];
+         $config = json_decode(stripslashes($_POST['config']), true);
+         if (!is_array($config) || (int) ($config['id'] ?? 0) <= 0) {
+            throw new \Glpi\Exception\Http\BadRequestHttpException();
+         }
+         // An existing position the user may update, and only what the canvas edits: its
+         // label, coordinates and display attributes, never its item, location or entity
+         $positions->check((int) $config['id'], UPDATE);
+
+         $input = ['id' => (int) $config['id']];
+         // canvasXpress builds its labels and tooltips as HTML without escaping: the texts are
+         // stored without markup, the other attributes restricted to their own syntax
+         if (isset($config['label'])) {
+            $input['name'] = strip_tags((string) $config['label']);
+         }
+         if (isset($config['tooltip'])) {
+            $input['tooltip'] = strip_tags((string) $config['tooltip']);
+         }
+         if (isset($config['x'])) {
+            $input['x_coordinates'] = (int) $config['x'];
+         }
+         if (isset($config['y'])) {
+            $input['y_coordinates'] = (int) $config['y'];
+         }
+         // Colors: #rgb, #rrggbb, rgb()/rgba() or a color name
+         foreach (['color', 'outline'] as $field) {
+            if (isset($config[$field])
+                && preg_match('/^(#[0-9a-f]{3,8}|rgba?\([0-9., ]+\)|[a-z]+)$/i', (string) $config[$field])) {
+               $input[$field] = (string) $config[$field];
+            }
+         }
+         // Shape and pattern: names of the library (circle, square, solid, ...)
+         foreach (['shape', 'pattern'] as $field) {
+            if (isset($config[$field]) && preg_match('/^[a-z0-9_-]{1,50}$/i', (string) $config[$field])) {
+               $input[$field] = (string) $config[$field];
+            }
+         }
+         foreach (['width', 'height', 'outlineWidth', 'rotate'] as $field) {
+            if (isset($config[$field])) {
+               $input[$field] = (int) $config[$field];
+            }
+         }
+         foreach (['hideLabel', 'hideTooltip'] as $field) {
+            if (isset($config[$field])) {
+               $input[$field] = $config[$field] ? 1 : 0;
+            }
+         }
+         if (isset($config['labelSize'])) {
+            $input['labelSize'] = (float) $config['labelSize'];
+         }
 
          $positions->update($input);
       }

@@ -30,6 +30,8 @@
 use GlpiPlugin\Positions\Position;
 use GlpiPlugin\Positions\Menu;
 
+Session::checkRight('plugin_positions', READ);
+
 Html::header(Position::getTypeName(), '', "tools", Menu::class, "positions");
 
 if (!isset($_GET["id"])) {
@@ -46,7 +48,7 @@ if (!isset($_POST["itemtype"])) {
 $options = ['id'           => $_GET["id"],
                  'locations_id' => 0,
                  'itemtype'     => $_POST['itemtype'],
-                 'target'       => $_SERVER['PHP_SELF']."?id=".$_GET["id"]];
+                 'target'       => $_SERVER['PHP_SELF'] . "?id=" . (int) $_GET["id"]];
 
 Position::showMap($options);
 
