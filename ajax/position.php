@@ -46,46 +46,15 @@ switch ($_POST['action'] ?? '') {
          // label, coordinates and display attributes, never its item, location or entity
          $positions->check((int) $config['id'], UPDATE);
 
+         // The fields the canvas edits, under their column names; their values are checked by
+         // Position::checkValues(), as for the forms
          $input = ['id' => (int) $config['id']];
-         // canvasXpress builds its labels and tooltips as HTML without escaping: the texts are
-         // stored without markup, the other attributes restricted to their own syntax
-         if (isset($config['label'])) {
-            $input['name'] = strip_tags((string) $config['label']);
-         }
-         if (isset($config['tooltip'])) {
-            $input['tooltip'] = strip_tags((string) $config['tooltip']);
-         }
-         if (isset($config['x'])) {
-            $input['x_coordinates'] = (int) $config['x'];
-         }
-         if (isset($config['y'])) {
-            $input['y_coordinates'] = (int) $config['y'];
-         }
-         // Colors: #rgb, #rrggbb, rgb()/rgba() or a color name
-         foreach (['color', 'outline'] as $field) {
-            if (isset($config[$field])
-                && preg_match('/^(#[0-9a-f]{3,8}|rgba?\([0-9., ]+\)|[a-z]+)$/i', (string) $config[$field])) {
-               $input[$field] = (string) $config[$field];
+         $map   = ['label' => 'name', 'x' => 'x_coordinates', 'y' => 'y_coordinates'];
+         foreach (['label', 'x', 'y', 'tooltip', 'color', 'outline', 'shape', 'pattern', 'width', 'height',
+                   'outlineWidth', 'rotate', 'hideLabel', 'hideTooltip', 'labelSize'] as $field) {
+            if (isset($config[$field]) && is_scalar($config[$field])) {
+               $input[$map[$field] ?? $field] = $config[$field];
             }
-         }
-         // Shape and pattern: names of the library (circle, square, solid, ...)
-         foreach (['shape', 'pattern'] as $field) {
-            if (isset($config[$field]) && preg_match('/^[a-z0-9_-]{1,50}$/i', (string) $config[$field])) {
-               $input[$field] = (string) $config[$field];
-            }
-         }
-         foreach (['width', 'height', 'outlineWidth', 'rotate'] as $field) {
-            if (isset($config[$field])) {
-               $input[$field] = (int) $config[$field];
-            }
-         }
-         foreach (['hideLabel', 'hideTooltip'] as $field) {
-            if (isset($config[$field])) {
-               $input[$field] = $config[$field] ? 1 : 0;
-            }
-         }
-         if (isset($config['labelSize'])) {
-            $input['labelSize'] = (float) $config['labelSize'];
          }
 
          $positions->update($input);

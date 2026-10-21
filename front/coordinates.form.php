@@ -45,7 +45,7 @@ if (!isset($_POST["itemtype"])) {
    $_POST["itemtype"] = $types;
 }
 
-$options = ['id'           => $_GET["id"],
+$options = ['id'           => (int) $_GET["id"],
                  'locations_id' => 0,
                  'itemtype'     => $_POST['itemtype'],
                  'target'       => $_SERVER['PHP_SELF'] . "?id=" . (int) $_GET["id"]];

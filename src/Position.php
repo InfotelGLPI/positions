@@ -181,12 +181,51 @@ class Position extends CommonDBTM
         return $types;
     }
 
+    /**
+     * Display attributes of a position, whichever way they are posted (forms or canvas):
+     * canvasXpress renders them as HTML without escaping, so the texts lose their markup and
+     * the other attributes are kept to their own syntax. A value out of it is dropped.
+     */
     public function checkValues($input)
     {
-        $values_to_check = ['width', 'height', 'outlineWidth', 'hideTooltip', 'hideLabel'];
-        foreach ($values_to_check as $field) {
-            if (in_array($field, $input)) {
-                $input[$field] = empty($input[$field]) ? 0 : $input[$field];
+        foreach (['name', 'tooltip'] as $field) {
+            if (isset($input[$field])) {
+                $input[$field] = strip_tags((string) $input[$field]);
+            }
+        }
+        // Colors: #rgb, #rrggbb, rgb()/rgba() or a color name
+        foreach (['color', 'outline'] as $field) {
+            if (isset($input[$field])
+                && !preg_match('/^(#[0-9a-f]{3,8}|rgba?\([0-9., ]+\)|[a-z]+)?$/i', (string) $input[$field])) {
+                unset($input[$field]);
+            }
+        }
+        // Shape and pattern: names of the library (circle, square, solid, ...)
+        foreach (['shape', 'pattern'] as $field) {
+            if (isset($input[$field]) && !preg_match('/^[a-z0-9_-]{0,50}$/i', (string) $input[$field])) {
+                unset($input[$field]);
+            }
+        }
+        foreach (['width', 'height', 'outlineWidth', 'rotate', 'x_coordinates', 'y_coordinates', 'locations_id'] as $field) {
+            if (isset($input[$field])) {
+                $input[$field] = (int) $input[$field];
+            }
+        }
+        foreach (['hideTooltip', 'hideLabel'] as $field) {
+            if (isset($input[$field])) {
+                $input[$field] = empty($input[$field]) ? 0 : 1;
+            }
+        }
+        if (isset($input['labelSize'])) {
+            $input['labelSize'] = (float) $input['labelSize'];
+        }
+
+        // The map the position is put on must be readable
+        if (!empty($input['locations_id'])) {
+            $location = new Location();
+            if (!$location->can($input['locations_id'], READ)) {
+                Session::addMessageAfterRedirect(__('No location selected', 'positions'), false, ERROR);
+                return false;
             }
         }
 
@@ -750,8 +789,9 @@ class Position extends CommonDBTM
 
         //AJOUT DU LIEU
         if ($opt["test"] == 'newLocation') {
-            if ($newID = $dropdown->add($params)) {
-            } else {
+            if (!($newID = $dropdown->add($params))) {
+                // The same location exists already (same name, parent and entity): it is
+                // reused, the cropped map attached to it, only when the user may change it
                 $locations_found = $dropdown->find(
                     ['name' => $params['name'],
                         'entities_id' => $params['entities_id'],
@@ -759,7 +799,10 @@ class Position extends CommonDBTM
                     [],
                     '1'
                 );
-                $newID = key($locations_found);
+                $newID = (int) key($locations_found);
+                if ($newID <= 0 || !$dropdown->can($newID, UPDATE)) {
+                    throw new \Glpi\Exception\Http\AccessDeniedHttpException();
+                }
             }
             $opt["locations_id"] = $newID;
         }
@@ -997,10 +1040,22 @@ class Position extends CommonDBTM
     public static function showMap($options)
     {
 
+        $options['id'] = (int) $options['id'];
+        // Types displayed: posted as a list, or "0" when none is checked; a plain string made
+        // in_array() fail further down. Only the types of the plugin are kept.
+        // None checked shows every type, as the string "0" used to
+        $options['itemtype'] = array_values(array_intersect(
+            is_array($options['itemtype'] ?? null) ? $options['itemtype'] : [],
+            self::getTypes(),
+        )) ?: self::getTypes();
         if (!$options['locations_id']) {
+            // The position comes from the request: its name and link are shown, so it must be
+            // readable itself (entity), not only through its location
             $self = new self();
-            $self->getFromDB($options["id"]);
-            if (isset($self->fields["itemtype"])) {
+            if ($options['id'] > 0) {
+                if (!$self->can($options['id'], READ)) {
+                    throw new \Glpi\Exception\Http\AccessDeniedHttpException();
+                }
                 $options['locations_id'] = $self->fields['locations_id'];
             }
         }
@@ -1261,9 +1316,9 @@ class Position extends CommonDBTM
                             echo "checked ";
                         }
                     }
-                    echo "name='itemtype[]' value='" . $classe . "'>";
+                    echo "name='itemtype[]' value='" . htmlescape($classe) . "'>";
                     echo "</td>";
-                    echo "<td>" . $item->getTypeName() . "</td>";
+                    echo "<td>" . htmlescape($item->getTypeName()) . "</td>";
                 }
             }
             echo "<td class='center'>";

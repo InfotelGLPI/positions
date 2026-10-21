@@ -39,22 +39,20 @@ if (!isset($_GET["withtemplate"])) {
 
 $pos = new Position();
 
-if (isset($_POST["add"])) {
-   $test = explode(";", $_POST['items_id']);
+if (isset($_POST["add"]) || isset($_POST["additem"])) {
+   // The fields the creation forms post; the display attributes are checked by
+   // Position::checkValues()
+   $input = array_intersect_key($_POST, array_flip([
+      'name', 'items_id', 'itemtype', 'entities_id', 'is_recursive', 'locations_id',
+      'x_coordinates', 'y_coordinates',
+   ]));
+   $test = explode(";", (string) ($input['items_id'] ?? ''));
    if (isset($test[0]) && isset($test[1]) && !empty($test[1])) {
-      $_POST['items_id'] = $test[1];
-      $_POST['itemtype'] = $test[0];
-      $pos->check(-1, CREATE, $_POST);
-      $pos->add($_POST);
-   } else {
-      $pos->check(-1, CREATE, $_POST);
-      $pos->add($_POST);
+      $input['items_id'] = (int) $test[1];
+      $input['itemtype'] = $test[0];
    }
-   Html::back();
-
-} else if (isset($_POST["additem"])) {
-   $pos->check(-1, UPDATE, $_POST);
-   $pos->add($_POST);
+   $pos->check(-1, CREATE, $input);
+   $pos->add($input);
    Html::back();
 
 } else if (isset($_POST["update"])) {
