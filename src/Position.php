@@ -421,6 +421,11 @@ class Position extends CommonDBTM
 
     public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
+        // The tab can be requested directly (ajax/common.tabs.php): the right of the
+        // cartography is checked again, not only when its title is shown
+        if (!Session::haveRight('plugin_positions', READ)) {
+            return false;
+        }
 
         $self = new self();
 
