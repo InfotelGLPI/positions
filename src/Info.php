@@ -40,6 +40,7 @@ use Plugin;
 use Session;
 use Toolbox;
 use Location;
+use Phone;
 use User;
 
 if (!defined('GLPI_ROOT')) {
@@ -754,7 +755,13 @@ class Info extends CommonDBTM
                                    "entities_id" => $entitiesID,
                                    "NOT"         => ["contact_num" => 0]];
 
-                              $phones = $dbu->getAllDataFromTable('glpi_phones', $condition);
+                              // Numbers and locations of the phones of the user: only the phones
+                              // the viewer may read, not on the sole right of the cartography
+                              $phone_item = new Phone();
+                              $phones = array_filter(
+                                  $dbu->getAllDataFromTable('glpi_phones', $condition),
+                                  static fn(array $row): bool => $phone_item->can((int) $row['id'], READ),
+                              );
                               if (!empty($phones)) {
                                   foreach ($phones as $phone) {
                                       $contact_num = $phone['contact_num'];
@@ -770,8 +777,7 @@ class Info extends CommonDBTM
                                       }
                                       if (isset($contact_num) && $contact_num != null) {
                                           if (!$export) {
-                                              $dbu = new DbUtils();
-                                              if ($dbu->countElementsInTable("glpi_phones", $condition) > 1) {
+                                              if (count($phones) > 1) {
                                                   echo htmlescape((string) $location) . " : <br>";
                                               }
                                               echo "<span class='title'>" . __s('Alternate username number') . " : </span>";
