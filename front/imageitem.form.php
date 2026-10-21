@@ -33,6 +33,12 @@ use GlpiPlugin\Positions\Menu;
 
 $img = new ImageItem();
 
+if (isset($_POST["add"]) || isset($_POST["delete"])) {
+   // The pictures of the equipment types have no entity: they apply to every map, so changing
+   // them is a setting of the plugin, under the same right as its configuration
+   Session::checkRight('config', UPDATE);
+}
+
 if (isset($_POST["add"]) && isset($_POST['type'])) {
    $test = explode(";", $_POST['type']);
    // The item type names the table of its types (addItemImage()): the types of the plugin only
@@ -41,13 +47,11 @@ if (isset($_POST["add"]) && isset($_POST['type'])) {
       $_POST['type']     = (int) $test[1];
       $_POST['itemtype'] = $test[0];
 
-      if ($img->canCreate()) {
-         // A picture of the pics directory only, or -1 when none was chosen
-         if ($_POST["img"] != -1 && Position::getPicturePath((string) $_POST["img"]) !== null) {
-            $img->addItemImage($_POST);
-         } else {
-            Session::addMessageAfterRedirect(__('No picture uploaded', 'positions'), false, ERROR);
-         }
+      // A picture of the pics directory only, or -1 when none was chosen
+      if ($_POST["img"] != -1 && Position::getPicturePath((string) $_POST["img"]) !== null) {
+         $img->addItemImage($_POST);
+      } else {
+         Session::addMessageAfterRedirect(__('No picture uploaded', 'positions'), false, ERROR);
       }
    }
    Html::back();
@@ -55,7 +59,6 @@ if (isset($_POST["add"]) && isset($_POST['type'])) {
 } else if (isset($_POST["delete"])) {
    foreach ((array) ($_POST["item"] ?? []) as $key => $val) {
       if ($val == 1) {
-         $img->check((int) $key, DELETE);
          $img->delete(['id' => (int) $key]);
       }
    }

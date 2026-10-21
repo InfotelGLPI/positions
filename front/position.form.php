@@ -120,7 +120,7 @@ if (isset($_POST["add"]) || isset($_POST["additem"])) {
    }
 
 } else if (isset($_POST["delete"])) {
-   $pos->check($_POST['id'], DELETE);
+   $pos->check((int) $_POST['id'], DELETE);
    $pos->delete($_POST);
    $pos->redirectToList();
 

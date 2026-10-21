@@ -39,6 +39,8 @@ use Html;
 use Plugin;
 use Session;
 use Toolbox;
+use Location;
+use User;
 
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
@@ -370,11 +372,11 @@ class Info extends CommonDBTM
 
             if (!empty($searchOption)
              && !in_array($field['Field'], self::getUnallowedFields($config->fields['itemtype']))) {
-                echo "<option value='" . $field['Field'] . "'";
+                echo "<option value='" . htmlescape($field['Field']) . "'";
                 if (isset($config_fields) && in_array($field['Field'], $config_fields)) {
                     echo " selected ";
                 }
-                echo ">" . $searchOption['name'] . "</option>";
+                echo ">" . htmlescape((string) $searchOption['name']) . "</option>";
             }
         }
 
@@ -393,7 +395,7 @@ class Info extends CommonDBTM
 
         if (empty($input['itemtype']) || empty($input['_fields']) || !is_array($input['_fields'])) {
             Session::addMessageAfterRedirect(
-                __("It's mandatory to select a type and at least one field"),
+                __("It's mandatory to select a type and at least one field", 'positions'),
                 true,
                 ERROR
             );
@@ -695,7 +697,7 @@ class Info extends CommonDBTM
 
         if (isset($itemclass->fields["name"])
           && !empty($itemclass->fields["name"])
-          && $itemclass->getType() != 'Location') {
+          && $itemclass->getType() != Location::class) {
             echo "<h3>" . __('Direct link', 'positions') . " : ";
 
             echo "<a href='" . Toolbox::getItemTypeFormURL($itemclass->getType()) .
@@ -739,7 +741,7 @@ class Info extends CommonDBTM
                 $resID      = $itemclass->fields['id'];
                 $entitiesID = $itemclass->fields['entities_id'];
                 $restrict   = ["plugin_resources_resources_id" => $resID,
-                           "itemtype" => 'User'];
+                           "itemtype" => User::class];
                 $dbu        = new DbUtils();
                 $infos      = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items', $restrict);
                 if (!empty($infos)) {

@@ -51,16 +51,37 @@ class ImageItem extends CommonDBTM
     static $rightname = "plugin_positions";
 
     /**
-     * The rights matrix of the plugin offers no Purge: deleting covers it
+     * The pictures of the equipment types have no entity and apply to every map: viewing them
+     * follows the right of the cartography, changing them the one of the configuration
      */
+    public static function canCreate(): bool
+    {
+        return Session::haveRight('config', UPDATE);
+    }
+
+    public static function canUpdate(): bool
+    {
+        return Session::haveRight('config', UPDATE);
+    }
+
+    public static function canDelete(): bool
+    {
+        return Session::haveRight('config', UPDATE);
+    }
+
     public static function canPurge(): bool
     {
-        return Session::haveRight(static::$rightname, DELETE);
+        return Session::haveRight('config', UPDATE);
     }
 
     public function canPurgeItem(): bool
     {
-        return $this->canDeleteItem();
+        return self::canPurge();
+    }
+
+    public function canDeleteItem(): bool
+    {
+        return self::canDelete();
     }
 
    /**
@@ -192,12 +213,13 @@ class ImageItem extends CommonDBTM
                 foreach ($uploaded_files as $key => $val) {
                     $elements[$val] = $val;
                 }
-                Dropdown::showFromArray($myname, $elements);
+                // public/positions.js previews the chosen picture in #imageitemPreview
+                Dropdown::showFromArray($myname, $elements, ['rand' => 'imageitem', 'width' => '200px']);
             } else {
-                echo __('File not found');
+                echo __s('No picture found', 'positions');
             }
         } else {
-            echo __("Upload directory doesn't exist");
+            echo __s("Upload directory doesn't exist", 'positions');
         }
     }
 
@@ -263,12 +285,13 @@ class ImageItem extends CommonDBTM
         echo "</table>";
         Html::closeForm();
 
-        $query = "SELECT *
-                FROM `" . $this->getTable() . "`
-                ORDER BY `itemtype`,`type` ASC;";
-        $i     = 0;
-        if ($result = $DB->doQuery($query)) {
-            $number = $DB->numrows($result);
+        $iterator = $DB->request([
+            'FROM'  => $this->getTable(),
+            'ORDER' => ['itemtype', 'type'],
+        ]);
+        $i = 0;
+        if ($iterator) {
+            $number = count($iterator);
             if ($number != 0) {
                 echo "<form method='post' name='massiveaction_form' id='massiveaction_form' action='" .
                  "./imageitem.form.php'>";
@@ -292,25 +315,23 @@ class ImageItem extends CommonDBTM
                 }
                 echo "</tr>";
 
-                while ($ligne = $DB->fetchAssoc($result)) {
-                    $ID = $ligne["id"];
+                foreach ($iterator as $ligne) {
+                    $ID = (int) $ligne["id"];
                     if ($i % 2 == 0 && $number > 1) {
                         echo "<tr class='tab_bg_1'>";
                     }
                     if ($number == 1) {
                         echo "<tr class='tab_bg_1'>";
                     }
-                    $dbu = new DbUtils();
-                    if (!($item = $dbu->getItemForItemtype($ligne["itemtype"]))) {
+                    // Types of the plugin only, as when they are saved
+                    if (!in_array($ligne["itemtype"], Position::getTypes(), true)
+                        || !($item = getItemForItemtype($ligne["itemtype"]))) {
                         continue;
                     }
-                 //$item = new $ligne["itemtype"]();
-                    echo "<td>" . $item->getTypeName() . "</td>";
-                    $class     = $ligne["itemtype"] . "Type";
-                    $typeclass = new $class();
-                    $typeclass->getFromDB($ligne["type"]);
+                    echo "<td>" . htmlescape($item->getTypeName()) . "</td>";
                     $name = $ligne["type"];
-                    if (isset($typeclass->fields["name"])) {
+                    $typeclass = getItemForItemtype($ligne["itemtype"] . "Type");
+                    if ($typeclass && $typeclass->getFromDB((int) $ligne["type"]) && isset($typeclass->fields["name"])) {
                           $name = $typeclass->fields["name"];
                     }
                     echo "<td>" . htmlescape((string) $name) . "</td>";

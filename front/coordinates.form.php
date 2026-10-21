@@ -48,7 +48,7 @@ if (!isset($_POST["itemtype"])) {
 $options = ['id'           => (int) $_GET["id"],
                  'locations_id' => 0,
                  'itemtype'     => $_POST['itemtype'],
-                 'target'       => $_SERVER['PHP_SELF'] . "?id=" . (int) $_GET["id"]];
+                 'target'       => PLUGIN_POSITIONS_WEBDIR . "/front/coordinates.form.php?id=" . (int) $_GET["id"]];
 
 Position::showMap($options);
 

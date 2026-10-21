@@ -45,9 +45,9 @@ if (isset($_GET["users_id"])) {
       throw new \Glpi\Exception\Http\AccessDeniedHttpException();
    }
 
-   //si plugin ressource active
+   // Resources plugin enabled
    if (Plugin::isPluginActive("resources")) {
-      //recherche de la ressource lie a ce user
+      // resource linked to the user
       $condition = ["items_id" => $users_id,
                     "itemtype" => User::class];
       $dbu = new DbUtils();
@@ -101,11 +101,11 @@ if (isset($_GET['from_treeview']) && Plugin::isPluginActive("treeview")) {
 } else {
    //TODO
    //Use modal
-   Html::popHeader(Position::getTypeName(), $_SERVER['PHP_SELF']);
+   Html::popHeader(Position::getTypeName(), PLUGIN_POSITIONS_WEBDIR . '/front/geoloc.php');
 }
 
 if (isset($locations_id) && !empty($locations_id)) {
-   $target        = $_SERVER['PHP_SELF'] . "?id=" . (int) $id;
+   $target        = PLUGIN_POSITIONS_WEBDIR . "/front/geoloc.php?id=" . (int) $id;
 
    $options = ['id'           => $id,
                     'locations_id' => $locations_id,

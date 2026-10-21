@@ -31,6 +31,9 @@ use Glpi\Exception\Http\BadRequestHttpException;
 use GlpiPlugin\Positions\Position;
 use GlpiPlugin\Positions\Menu;
 
+// The right of the cartography only: the configuration right does not stand in for it
+Session::checkRight('plugin_positions', READ);
+
 if (!isset($_GET["locations_id"])) {
    $_GET["locations_id"] = 0;
 }
@@ -55,20 +58,15 @@ if (Session::getCurrentInterface() == 'central') {
    Html::helpHeader(Position::getTypeName());
 }
 
-$pos = new Position();
-
-if ($pos->canView() || Session::haveRight("config", UPDATE)) {
-   if (!$_POST["locations_id"]) {
-       Position::showLocationForm($_POST["locations_id"]);
-       throw new BadRequestHttpException(__('No location selected', 'positions'));
-
-   } else {
-      $options = ['id'           => 0,
-                  'locations_id' => $_POST["locations_id"],
-                  'itemtype'     => $_POST['itemtype'],
-                  'target'       => $_SERVER['PHP_SELF'] . "?locations_id=" . (int) $_POST["locations_id"]];
-       Position::showMap($options);
-   }
+if (!$_POST["locations_id"]) {
+    Position::showLocationForm((int) $_POST["locations_id"]);
+    throw new BadRequestHttpException(__('No location selected', 'positions'));
+} else {
+   $options = ['id'           => 0,
+               'locations_id' => (int) $_POST["locations_id"],
+               'itemtype'     => $_POST['itemtype'],
+               'target'       => PLUGIN_POSITIONS_WEBDIR . "/front/map.php?locations_id=" . (int) $_POST["locations_id"]];
+    Position::showMap($options);
 }
 
 if (Session::getCurrentInterface() == 'central') {

@@ -153,7 +153,8 @@ $number = count($iterator);
 if ($number != 0 && $locations_id == -1) {
     $out[] = ['id' => $itemtype . ";-1", 'text' => __('All types', 'positions')];
 }
-if ($value2 > 0) {
+// The current value is named only when the user may read it (entity included)
+if ($value2 > 0 && $item->can($value2, READ)) {
     $output = Dropdown::getDropdownName($table, $value2);
     if (!empty($output) && $output != "&nbsp;") {
         $out[] = ['id' => $value2, 'text' => $output];

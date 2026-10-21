@@ -378,55 +378,53 @@ function plugin_positions_giveItem($type, $ID, $data, $num)
 
             switch ($table . '.' . $field) {
                 case "glpi_plugin_positions_positions.items_id":
-                    $query_device  = "SELECT DISTINCT `itemtype`
-                                 FROM `glpi_plugin_positions_positions`
-                                 WHERE `id` = '" . $data['id'] . "'
-                                 ORDER BY `itemtype`";
-                    $result_device = $DB->doQuery($query_device);
-                    $number_device = $DB->numrows($result_device);
-                    $y             = 0;
-                    $out           = '';
-                    $positions_id  = $data['id'];
-                    if ($number_device > 0) {
-                        $dbu = new DbUtils();
-                        for ($i = 0; $i < $number_device; $i++) {
-                            $column   = "name";
-                            $itemtype = $DB->result($result_device, $i, "itemtype");
-
-                            if (!class_exists($itemtype)) {
-                                continue;
-                            }
-                            $item = new $itemtype();
-                            if ($item->canView()) {
-                                $table_item = $dbu->getTableForItemType($itemtype);
-
-                                $query = "SELECT `" . $table_item . "`.*, `glpi_plugin_positions_positions`.`id` AS items_id, `glpi_entities`.`id` AS entity "
-                                        . "FROM `glpi_plugin_positions_positions`, `" . $table_item . "` "
-                                        . "LEFT JOIN `glpi_entities` ON (`glpi_entities`.`id` = `" . $table_item . "`.`entities_id`) "
-                                        . "WHERE `" . $table_item . "`.`id` = `glpi_plugin_positions_positions`.`items_id`
-                                  AND `glpi_plugin_positions_positions`.`itemtype` = '$itemtype'
-                                  AND `glpi_plugin_positions_positions`.`id` = '" . $positions_id . "' "
-                                        . $dbu->getEntitiesRestrictRequest(" AND ", $table_item, '', '', $item->maybeRecursive());
-
-                                if ($item->maybeTemplate()) {
-                                    $query .= " AND `" . $table_item . "`.`is_template` = '0'";
-                                }
-                                $query .= " ORDER BY `glpi_entities`.`completename`, `" . $table_item . "`.`$column`";
-
-                                if ($result_linked = $DB->doQuery($query)) {
-                                    if ($DB->numrows($result_linked)) {
-                                        $item = new $itemtype();
-                                        while ($val = $DB->fetchAssoc($result_linked)) {
-                                            if ($item->getFromDB($val['id'])) {
-                                                $out .= $item->getTypeName() . " - " . $item->getLink() . "<br>";
-                                            }
-                                        }
-                                    } else {
-                                        $out .= ' ';
-                                    }
-                                }
-                            } else {
-                                $out .= ' ';
+                    $out          = '';
+                    $positions_id = (int) $data['id'];
+                    $positions    = 'glpi_plugin_positions_positions';
+                    foreach ($DB->request([
+                        'SELECT'   => ['itemtype'],
+                        'DISTINCT' => true,
+                        'FROM'     => $positions,
+                        'WHERE'    => ['id' => $positions_id],
+                        'ORDER'    => 'itemtype',
+                    ]) as $device) {
+                        // The stored type is only trusted when it is one of the plugin
+                        $itemtype = $device['itemtype'];
+                        if (!in_array($itemtype, Position::getTypes(), true)
+                            || !($item = getItemForItemtype($itemtype))) {
+                            continue;
+                        }
+                        if (!$item->canView()) {
+                            $out .= ' ';
+                            continue;
+                        }
+                        $table_item = $item->getTable();
+                        $where      = [
+                            "$positions.itemtype" => $itemtype,
+                            "$positions.id"       => $positions_id,
+                        ] + getEntitiesRestrictCriteria($table_item, '', '', $item->maybeRecursive());
+                        if ($item->maybeTemplate()) {
+                            $where["$table_item.is_template"] = 0;
+                        }
+                        $linked = $DB->request([
+                            'SELECT'     => ["$table_item.id"],
+                            'FROM'       => $positions,
+                            'INNER JOIN' => [
+                                $table_item => ['ON' => [$table_item => 'id', $positions => 'items_id']],
+                            ],
+                            'LEFT JOIN'  => [
+                                'glpi_entities' => ['ON' => ['glpi_entities' => 'id', $table_item => 'entities_id']],
+                            ],
+                            'WHERE'      => $where,
+                            'ORDER'      => ['glpi_entities.completename', "$table_item.name"],
+                        ]);
+                        if (!count($linked)) {
+                            $out .= ' ';
+                            continue;
+                        }
+                        foreach ($linked as $val) {
+                            if ($item->getFromDB($val['id'])) {
+                                $out .= htmlescape($item->getTypeName()) . " - " . $item->getLink() . "<br>";
                             }
                         }
                     }

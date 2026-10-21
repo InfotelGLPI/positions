@@ -31,15 +31,10 @@ use GlpiPlugin\Positions\Info;
 use GlpiPlugin\Positions\Position;
 use GlpiPlugin\Positions\Menu;
 
+// The right of the cartography only: the configuration right does not stand in for it
+Session::checkRight('plugin_positions', READ);
+
 Html::header(Position::getTypeName(), '', "tools", Menu::class, "info");
-
-$config = new Info();
-if ($config->canView() || Session::haveRight("config", UPDATE)) {
-   Search::show(Info::class);
-
-} else {
-   Html::displayRightError();
-}
-
+Search::show(Info::class);
 Html::footer();
 

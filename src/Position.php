@@ -52,6 +52,7 @@ use Printer;
 use Rack;
 use Session;
 use Toolbox;
+use User;
 
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
@@ -157,28 +158,12 @@ class Position extends CommonDBTM
         // Only allowed types
         $types = self::$types;
 
-        //        $plugin = new Plugin();
-        //        if ($plugin->isActivated('genericobject') &&
-        //            method_exists('PluginGenericobjectType', 'getTypes')) {
-        //            foreach (array_keys(PluginGenericobjectType::getTypes()) as $go_itemtype) {
-        //                if (!class_exists($go_itemtype)) {
-        //                    continue;
-        //                }
-        //
-        //                $types[] = $go_itemtype;
-        //            }
-        //        }
-
         if ($all) {
             return $types;
         }
 
-        foreach ($types as $key => $type) {
-            if (!class_exists($type)) {
-                continue;
-            }
-        }
-        return $types;
+        // The types whose class is missing (a plugin disabled since) are left out
+        return array_values(array_filter($types, static fn(string $type): bool => class_exists($type)));
     }
 
     /**
@@ -345,7 +330,7 @@ class Position extends CommonDBTM
             'id' => '5',
             'table' => $this->getTable(),
             'field' => 'items_id',
-            'name' => __('Associated element'),
+            'name' => __('Associated element', 'positions'),
             'massiveaction' => false,
             'nosearch' => true,
         ];
@@ -467,7 +452,7 @@ class Position extends CommonDBTM
     }
 
     /**
-     * Affiche la carte en png pour la couper selon les différentes pièces
+     * Map of a location, to crop it into its sub-areas
      *
      */
     public static function showMapCreateLocation($options = [])
@@ -552,7 +537,7 @@ class Position extends CommonDBTM
                 || $extension == 'GIF') {
                 echo "<form action=\"crop.form.php\" method=\"post\" onsubmit=\"return checkCoords();\" >";
 
-                //Liste des lieux existants
+                // Existing locations
                 echo "<table class='tab_cadre_fixe'>";
                 echo "<tr class='tab_bg_1'><th colspan='2'>";
                 echo __('Creation of sub-areas on the map', 'positions');
@@ -583,7 +568,7 @@ class Position extends CommonDBTM
                 if (!empty($locations)) {
                     $condition = ['glpi_locations.id' => $locations];
 
-                    Dropdown::show('Location', ['value' => $locations_idParent,
+                    Dropdown::show(Location::class, ['value' => $locations_idParent,
                         'entity' => $_SESSION["glpiactive_entity"],
                         'condition' => $condition]);
                 } else {
@@ -622,7 +607,7 @@ class Position extends CommonDBTM
                 echo Html::hidden('entities_id', ['id' => 'entities_id', 'value' => $entities_id]);
 
 
-                //Case à cocher pour continuer l'ajout
+                // Checkbox to go on adding sub-areas
                 echo "<input type=\"checkbox\" id=\"continueAdd\" name=\"continueAdd\">&nbsp;";
                 echo __('Add and continue', 'positions');
                 echo Html::submit(_sx('button', 'Add'), ['name' => 'valid', 'class' => 'btn btn-primary']);
@@ -732,14 +717,14 @@ class Position extends CommonDBTM
             imagegif($newImg, $tmpfile . '.gif');
         }
 
-        //on test si l'utilisateur à cocher la case pour continuer l'ajout de sous lieu
-        //Si oui : on redirige vers la carte PNG
+        // Whether the user checked the box to go on adding sub-areas:
+        // if so, back to the map to crop another one;
         $checked = 'off';
         if (!empty($input['continueAdd'])) {
             $checked = $input['continueAdd'];
         }
 
-        //Si non : on envoie l'utilisateur vers la carte pour ajouter du matériel
+        // otherwise, to the map to place equipment on it
         $options = ["document_id" => $document_id,
             "name" => $name,
             "file_name" => $file_name,
@@ -754,7 +739,7 @@ class Position extends CommonDBTM
     }
 
     /**
-     * Résultat de la création du sous-lieu + ajout dans la base de données
+     * Creates the sub-area cropped from the map: its location, document and position
      */
     public static function showFormResCreateLocation($opt)
     {
@@ -781,13 +766,13 @@ class Position extends CommonDBTM
             "entities_id" => $opt["entities_id"],
             "locations_id" => $opt["locations_id"],
             "id" => $id,
-            "itemtype" => "Location",
+            "itemtype" => Location::class,
         ];
 
-        //FONCTION QUI PERMET D'AJOUTER LE LIEU DANS LA BASE DE DONNEES
+        // The location to create or reuse
         $dropdown = new Location();
 
-        //AJOUT DU LIEU
+        // Location
         if ($opt["test"] == 'newLocation') {
             if (!($newID = $dropdown->add($params))) {
                 // The same location exists already (same name, parent and entity): it is
@@ -808,7 +793,7 @@ class Position extends CommonDBTM
         }
 
         if ($opt["locations_id"] != $opt["locations_idParent"]) {
-            //AJOUT DU DOC ASSOCIE AU LIEU
+            // Document of the cropped map, linked to the location
             $doc = new Document();
             $documentitem = new Document_Item();
             $self = new self();
@@ -828,7 +813,7 @@ class Position extends CommonDBTM
             if ($opt["test"] == 'newLocation') {
                 // We check if the element already exists
                 $restrict = ["items_id" => $newID,
-                    "itemtype" => 'Location'];
+                    "itemtype" => Location::class];
                 $dbu = new DbUtils();
                 if ($dbu->countElementsInTable("glpi_plugin_positions_positions", $restrict) != 0) {
                     Session::addMessageAfterRedirect(__('This item is already bound to a location', 'positions'), false, ERROR);
@@ -838,14 +823,14 @@ class Position extends CommonDBTM
                     // If not we can add its position and picture
                 } else {
                     $documentitem->add(['documents_id' => $newdoc,
-                        'itemtype' => 'Location',
+                        'itemtype' => Location::class,
                         'items_id' => $newID,
                         'entities_id' => $opt["entities_id"]]);
                     $param = [
                         "items_id" => $newID,
                         "entities_id" => $opt["entities_id"],
                         "locations_id" => $opt["locations_idParent"],
-                        "itemtype" => "Location",
+                        "itemtype" => Location::class,
                         "x_coordinates" => -800,
                         "y_coordinates" => -150,
                     ];
@@ -863,14 +848,14 @@ class Position extends CommonDBTM
                 // Add existing location
             } elseif ($opt["test"] == 'existLocation') {
                 $documentitem->add(['documents_id' => $newdoc,
-                    'itemtype' => 'Location',
+                    'itemtype' => Location::class,
                     'items_id' => $id]);
 
                 $param = [
                     "items_id" => $id,
                     "entities_id" => $opt["entities_id"],
                     "locations_id" => $opt["locations_idParent"],
-                    "itemtype" => "Location",
+                    "itemtype" => Location::class,
                     "x_coordinates" => -800,
                     "y_coordinates" => -150,
                 ];
@@ -914,7 +899,7 @@ class Position extends CommonDBTM
 
         echo "<tr class='tab_bg_1'>";
 
-        echo "<td>" . __('Associated element') . ": </td>";
+        echo "<td>" . __s('Associated element', 'positions') . ": </td>";
         echo "<td>";
 
         if ($ID < 0
@@ -1034,7 +1019,7 @@ class Position extends CommonDBTM
     }
 
     /**
-     * @static function showMap : affiche tous les éléments de la carte (menus, onglets...)
+     * Map of a location, with its menus and tabs
      * @param $options
      */
     public static function showMap($options)
@@ -1081,8 +1066,7 @@ class Position extends CommonDBTM
                 $params['docid'] = $documents_id;
                 $path = GLPI_DOC_DIR . "/" . $Doc->fields["filepath"];
 
-                if ($handle = fopen($path, "r")) {
-                    $infos_image = @getImageSize($path);
+                if (is_readable($path) && ($infos_image = @getimagesize($path)) !== false) {
                     $params["largeur"] = $infos_image[0];
                     $params["hauteur"] = $infos_image[1];
 
@@ -1135,7 +1119,7 @@ class Position extends CommonDBTM
                         echo "<td colspan='2' class='center'>";
                         echo Html::submit(__s('Save the coordinates', 'positions'), ['name' => 'update', 'class' => 'btn btn-primary']);
                         echo "</td>";
-                        //création d'un nouveau bouton pour la création de nouvelles pièces
+                        // Button to create sub-areas
                         echo "<td colspan='2' class='center'>";
                         echo Html::submit(__s('Add a sub-area', 'positions'), ['name' => 'addLocation', 'class' => 'btn btn-primary']);
                         echo "</td>";
@@ -1185,8 +1169,8 @@ class Position extends CommonDBTM
     }
 
     /**
-     * @static function showLocationForm : affiche le formulaire contenant la liste des lieux
-     * @param $locations_id : id du lieu
+     * Form listing the locations that have a map
+     * @param $locations_id location selected
      */
     public static function showLocationForm($locations_id, $width = "30%", $display = false)
     {
@@ -1215,7 +1199,7 @@ class Position extends CommonDBTM
         if (!empty($locations)) {
             $condition = ['glpi_locations.id' => $locations];
 
-            Dropdown::show('Location', ['value' => $locations_id,
+            Dropdown::show(Location::class, ['value' => $locations_id,
                 'entity' => $_SESSION["glpiactiveentities"],
                 'condition' => $condition,
                 'width' => $width]);
@@ -1330,8 +1314,8 @@ class Position extends CommonDBTM
     }
 
     /**
-     * @static function displayMap : permet de récuperer tous les éléments de  la base de données pour pouvoir
-     * les afficher sur la carte
+     * Items of the location read from the database,
+     * to be drawn on the map
      * @param $items
      * @param $params
      */
@@ -1395,13 +1379,13 @@ class Position extends CommonDBTM
                                 $val['picture'] = $itemclass->fields['picture'];
                                 $options['img'] = $CFG_GLPI['url_base'] . PLUGIN_RESOURCES_WEBDIR . '/pics/nobody.png';
                                 if (!($val['picture'] == null)) {
-                                    $options['img'] = $CFG_GLPI['url_base'] . PLUGIN_RESOURCES_WEBDIR . '/front/picture.send.php?file=' . $val['picture'];
+                                    $options['img'] = $CFG_GLPI['url_base'] . PLUGIN_RESOURCES_WEBDIR . '/front/picture.send.php?file=' . rawurlencode(basename((string) $val['picture']));
                                 }
                                 $objects[$val['id']] = $options;
-                            } elseif (($val['itemtype'] == 'Location')) {
+                            } elseif (($val['itemtype'] == Location::class)) {
                                 $options['img'] = $CFG_GLPI['url_base'] . PLUGIN_POSITIONS_NOTFULL_DIR . '/pics/door.png';
                                 $objects[$val['id']] = $options;
-                            } elseif (($val['itemtype'] == 'Glpi\Socket')) {
+                            } elseif (($val['itemtype'] == Socket::class)) {
                                 $options['img'] = $CFG_GLPI['url_base'] . PLUGIN_POSITIONS_NOTFULL_DIR . '/pics/socket.png';
                                 $objects[$val['id']] = $options;
                             } else {
@@ -1450,7 +1434,7 @@ class Position extends CommonDBTM
 
 
     /**
-     * @static function drawCanvas : permet de dessiner le canvas avec les éléments récupérés en paramètre
+     * Draws the canvas of the map with the given items
      * @param $items
      * @param $params
      */
@@ -1459,13 +1443,13 @@ class Position extends CommonDBTM
         global $CFG_GLPI;
 
         $nodes = [];
-        //tests sur les droits
+        // Rights
         $eventless = false;
         if (!Session::haveRight('plugin_positions', UPDATE) || (isset($params['menuoff']) && $params['menuoff'] == 1)) {
             $eventless = true;
         }
 
-        //image de fond
+        // Background picture
         $input = [];
         $input['id'] = "Fond";
         $input['shape'] = 'image';
@@ -1482,7 +1466,7 @@ class Position extends CommonDBTM
 
         $highlight = [];
 
-        //création des noeuds
+        // Nodes
         foreach ($items as $node) {
             $node['imagePath'] = $node['img'];
             $node['x'] = $node['x_coordinates'] + 0;
@@ -1502,25 +1486,25 @@ class Position extends CommonDBTM
             $highlight[] = $params['id'];
         }
 
-        //configuration du canvas
+        // Canvas settings
         $canvas_config = ['graphType' => 'Network',
-            'backgroundGradient2Color' => 'white', //couleur du fond 1
-            'backgroundGradient1Color' => 'white', //couleur du fond 2
-            'gradient' => false, //dégradé
+            'backgroundGradient2Color' => 'white', // background color 1
+            'backgroundGradient1Color' => 'white', // background color 2
+            'gradient' => false, // gradient
             'networkFreezeOnLoad' => true,
-            'nodeFontColor' => 'rgb(29,34,43)', //couleur des Noeuds
+            'nodeFontColor' => 'rgb(29,34,43)', // color of the nodes
             'imageDir' => $CFG_GLPI['url_base'] . PLUGIN_POSITIONS_NOTFULL_DIR . "/lib/canvas/images/",
-            //'zoom'                   => 1.0, //zoom de depart
-            //'zoomStep'               => 0.5, //coefficient pour le zoom
+            //'zoom'                   => 1.0, // initial zoom
+            //'zoomStep'               => 0.5, // zoom step
             'calculateLayout' => false,
             'disableConfigurator' => true,
-            'showCode' => false, //affichage du code
+            'showCode' => false, // display of the code
             'nodeFontSize' => 6,
             'fontName' => 'Verdana',
             'resizable' => false,
         ];
 
-        //Création du canvas et des évènements
+        // Canvas and its events
         echo "<script>
          $(document).ready(function(){
             Ext.QuickTips.init();
@@ -1617,7 +1601,7 @@ class Position extends CommonDBTM
         return $text;
     }
 
-    /*Fonction qui permet de récupérer les informations à afficher dans le popup*/
+    /** Information shown in the pop-up of an item */
     public static function showOverlay($srcimg, $itemclass, $infos)
     {
         global $CFG_GLPI;
@@ -1645,7 +1629,7 @@ class Position extends CommonDBTM
             } elseif ($itemclass->getType() == Resource::class) {
                 $resID = $itemclass->fields['id'];
                 $restrict = ["plugin_resources_resources_id" => $resID,
-                    "itemtype" => 'User'];
+                    "itemtype" => User::class];
                 $dbu = new DbUtils();
                 $datas = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items', $restrict);
                 if (!empty($datas)) {
@@ -1679,8 +1663,8 @@ class Position extends CommonDBTM
         $width = 450;
 
         if ($itemclass->getType() != Resource::class
-            && $itemclass->getType() != 'Location'
-            && $itemclass->getType() != 'Glpi\Socket') {
+            && $itemclass->getType() != Location::class
+            && $itemclass->getType() != Socket::class) {
             $img = "<img src='" . PLUGIN_POSITIONS_WEBDIR . "/pics/nothing.png' width='30' height='30'>";
 
             // The picture comes from the request, as a file name or the URL of the canvas
@@ -1707,22 +1691,24 @@ class Position extends CommonDBTM
                 $img = "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/nobody.png' width='90' height='90'>";
                 $res = new Resource();
                 if ($res->getFromDB($itemclass->fields["id"])) {
-                    if (isset($res->fields["picture"])) {
-                        $path = GLPI_PLUGIN_DOC_DIR . "/resources/" . $res->fields["picture"];
-                        if (file_exists($path)) {
-                            $sizes = getimagesize($path);
-                            $largeur = $sizes[0];
-                            $hauteur = $sizes[1];
-                            $ext = pathinfo($srcimg, PATHINFO_EXTENSION);
-                            $img = "<object width='" . $largeur . "' height='" . $hauteur . "' data='" . PLUGIN_RESOURCES_WEBDIR . "/front/picture.send.php?file=" . $res->fields["picture"] . "' type='image/$ext'>
-                <param name='src' value='" . PLUGIN_RESOURCES_WEBDIR
-                                . "/front/picture.send.php?file=" . $res->fields["picture"] . "'>
+                    if (!empty($res->fields["picture"])) {
+                        // The picture of the resource, never the request: its file name is a bare
+                        // component, its type the one of the real image
+                        $picture = basename((string) $res->fields["picture"]);
+                        $path    = GLPI_PLUGIN_DOC_DIR . "/resources/" . $picture;
+                        if (is_file($path) && ($sizes = @getimagesize($path)) !== false) {
+                            $largeur = (int) $sizes[0];
+                            $hauteur = (int) $sizes[1];
+                            $mime    = htmlescape((string) $sizes['mime']);
+                            $src     = htmlescape(PLUGIN_RESOURCES_WEBDIR . "/front/picture.send.php?file=" . rawurlencode($picture));
+                            $img = "<object width='" . $largeur . "' height='" . $hauteur . "' data='" . $src . "' type='" . $mime . "'>
+                <param name='src' value='" . $src . "'>
                </object> ";
                         }
                     }
                 }
                 $width = $width - 75;
-            } //si c'est un lieu
+            } // a location
             else {
                 $img = '';
             }
@@ -1737,7 +1723,7 @@ class Position extends CommonDBTM
                 }
             }
         }
-        if (Session::getCurrentInterface() == 'central' || $itemclass->getType() == 'Location') {
+        if (Session::getCurrentInterface() == 'central' || $itemclass->getType() == Location::class) {
             Info::getDirectLink($itemclass);
         }
 
@@ -1872,10 +1858,10 @@ class Position extends CommonDBTM
                     echo "</td>";
                 }
                 if (Session::isMultiEntitiesMode()) {
-                    echo "<td class='center'>" . Dropdown::getDropdownName(
+                    echo "<td class='center'>" . htmlescape((string) Dropdown::getDropdownName(
                         "glpi_entities",
                         $data['entities_id']
-                    ) . "</td>";
+                    )) . "</td>";
                 }
                 echo "<td class='center'>" . htmlescape((string) $data["x_coordinates"]) . "</td>";
                 echo "<td class='center'>" . htmlescape((string) $data["y_coordinates"]) . "</td>";
@@ -1910,7 +1896,7 @@ class Position extends CommonDBTM
 
         $dbu = new DbUtils();
 
-        if ($itemtype != 'User'
+        if ($itemtype != User::class
             && $itemtype != Resource::class) {
             $item = new $itemtype();
             $item->getFromDB($id);
@@ -1928,11 +1914,11 @@ class Position extends CommonDBTM
             $locations_id = $item->fields['locations_id'];
         } else {
             if (Plugin::isPluginActive("resources")) {
-                //recherche de la ressource lie a ce user
+                // resource linked to the user
 
                 if ($itemtype != Resource::class) {
                     $condition = ["items_id" => $id,
-                        "itemtype" => 'User'];
+                        "itemtype" => User::class];
 
                     $infos = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items', $condition);
                     if (!empty($infos)) {
@@ -2001,7 +1987,7 @@ class Position extends CommonDBTM
         global $CFG_GLPI;
 
         $dbu = new DbUtils();
-        if ($itemtype != 'User'
+        if ($itemtype != User::class
             && $itemtype != Resource::class) {
             $position = new Position();
             $position->getFromDBByCrit(['itemtype' => $itemtype,
@@ -2009,13 +1995,13 @@ class Position extends CommonDBTM
             $documents_id = self::getDocument($position->fields['locations_id']);
             $locations_id = $position->fields['locations_id'];
         } else {
-            //si plugin ressource active
+            // Resources plugin enabled
             if (Plugin::isPluginActive("resources")) {
-                //recherche de la ressource lie a ce user
+                // resource linked to the user
 
                 if ($itemtype != Resource::class) {
                     $condition = ["items_id" => $id,
-                        "itemtype" => 'User'];
+                        "itemtype" => User::class];
 
                     $infos = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items', $condition);
                     if (!empty($infos)) {

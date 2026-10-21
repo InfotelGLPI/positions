@@ -30,6 +30,8 @@
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
-Session::checkLoginUser();
+// Fresh tokens for the forms of the map (public/lib/canvas/ext-canvasXpress.js); the route is
+// authenticated by GLPI, the right of the cartography is required on top of it
+Session::checkRight('plugin_positions', READ);
 
 echo Session::getNewCSRFToken();

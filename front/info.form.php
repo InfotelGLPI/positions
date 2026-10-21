@@ -48,12 +48,12 @@ if (isset($_POST["add"])) {
    }
 
 } else if (isset($_POST["update"])) {
-   $info->check($_POST['id'], UPDATE);
+   $info->check((int) $_POST['id'], UPDATE);
    $info->update($_POST);
    Html::back();
 
 } else if (isset($_POST["delete"])) {
-   $info->check($_POST['id'], DELETE);
+   $info->check((int) $_POST['id'], DELETE);
    $info->delete($_POST);
    $info->redirectToList();
 

@@ -27,19 +27,13 @@
  --------------------------------------------------------------------------
  */
 
-use Glpi\Exception\Http\BadRequestHttpException;
 use GlpiPlugin\Positions\Menu;
 use GlpiPlugin\Positions\Position;
 
+// The right of the cartography only: the configuration right does not stand in for it
+Session::checkRight('plugin_positions', READ);
+
 Html::header(Position::getTypeName(), '', "tools", Menu::class, "positions");
-
-$pos = new Position();
-
-if ($pos->canView() || Session::haveRight("config", UPDATE)) {
-   Search::show(Position::class);
-} else {
-    throw new BadRequestHttpException();
-}
-
+Search::show(Position::class);
 Html::footer();
 

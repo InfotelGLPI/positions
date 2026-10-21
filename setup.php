@@ -38,9 +38,10 @@ define('PLUGIN_POSITIONS_VERSION', '7.0.3');
 
 if (!defined("PLUGIN_POSITIONS_DIR")) {
     define("PLUGIN_POSITIONS_DIR", Plugin::getPhpDir("positions"));
-    define("PLUGIN_POSITIONS_NOTFULL_DIR", Plugin::getPhpDir("positions", false));
-    $root = $CFG_GLPI['root_doc'] . '/plugins/positions';
-    define("PLUGIN_POSITIONS_WEBDIR", $root);
+    // Web paths: GLPI 11 serves every plugin under /plugins/<key>, wherever it is installed
+    // (plugins/ or marketplace/), so they never derive from the PHP directory
+    define("PLUGIN_POSITIONS_NOTFULL_DIR", '/plugins/positions');
+    define("PLUGIN_POSITIONS_WEBDIR", $CFG_GLPI['root_doc'] . PLUGIN_POSITIONS_NOTFULL_DIR);
 }
 
 function plugin_init_positions()
@@ -58,7 +59,10 @@ function plugin_init_positions()
 
         if (Session::haveRight("plugin_positions", UPDATE)) {
             $PLUGIN_HOOKS['use_massive_action']['positions'] = 1;
-            $PLUGIN_HOOKS['config_page']['positions']        = 'front/config.form.php';
+        }
+        // The configuration page requires the configuration right: no link to a page refused
+        if (Session::haveRight("config", UPDATE)) {
+            $PLUGIN_HOOKS['config_page']['positions'] = 'front/config.form.php';
         }
 
         if (Session::haveRight("plugin_positions", READ)) {

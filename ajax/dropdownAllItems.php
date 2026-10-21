@@ -34,7 +34,7 @@ Html::header_nocache();
 Session::checkRight('plugin_positions', UPDATE);
 
 // Make a select box
-if (isset($_POST["type"]) && $_POST['action']) {
+if (isset($_POST["type"]) && !empty($_POST['action'])) {
    if (!in_array($_POST['type'], \GlpiPlugin\Positions\Position::getTypes(), true)) {
       throw new \Glpi\Exception\Http\BadRequestHttpException();
    }
