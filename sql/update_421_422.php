@@ -36,19 +36,23 @@ function update421to422() {
    global $DB;
    $migration = new Migration('422');
 
-   $query = "SELECT * FROM `glpi_plugin_positions_positions`";
-   $result_query = $DB->doQuery($query);
-   while ($data = $DB->fetchArray($result_query)) {
-      $dbu = new DbUtils();
-      if (!($itemclass = $dbu->getAllDataFromTable($dbu->getTableForItemType($data['itemtype']),
-                                                   ["id" => $data['items_id']]))) {
-         $query = "DELETE FROM `glpi_plugin_positions_positions` WHERE `items_id` =" . $data['items_id'] . " AND `itemtype` = '" . $data['itemtype'] . "'";
-         $DB->doQueryOrDie($query);
+   // Values read from the database: bound by the query builder, never concatenated. An item type
+   // which is no longer a class of GLPI (plugin removed, malformed value) is left as is.
+   foreach ($DB->request(['FROM' => 'glpi_plugin_positions_positions']) as $data) {
+      $item = getItemForItemtype((string) $data['itemtype']);
+      if (!($item instanceof CommonDBTM)) {
          continue;
       }
-      $itemclass = reset($itemclass);
-      $query = "UPDATE `glpi_plugin_positions_positions` SET `locations_id` = " . $itemclass['locations_id'] . " WHERE `items_id` =" . $data['items_id'] . " AND `itemtype` = '" . $data['itemtype'] . "'";
-      $DB->doQueryOrDie($query, "ADD fields locations_ids for glpi_plugin_positions_positions");
+      $where = ['items_id' => (int) $data['items_id'], 'itemtype' => (string) $data['itemtype']];
+      if (!$item->getFromDB((int) $data['items_id'])) {
+         $DB->delete('glpi_plugin_positions_positions', $where);
+         continue;
+      }
+      $DB->update(
+         'glpi_plugin_positions_positions',
+         ['locations_id' => (int) ($item->fields['locations_id'] ?? 0)],
+         $where
+      );
    }
 
    $migration->executeMigration();

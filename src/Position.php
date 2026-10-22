@@ -1470,11 +1470,22 @@ class Position extends CommonDBTM
     {
 
         $dbu = new DbUtils();
+        $id  = (int) $id;
+
+        // Called by the treeview hook with any item of the tree: only the types a position may
+        // be linked to (and users), and an item the user may read, as everywhere else
+        $itemtype = (string) $itemtype;
+        if ($itemtype !== User::class
+            && !in_array($itemtype, self::getTypes(), true)) {
+            return [];
+        }
+        $item = getItemForItemtype($itemtype);
+        if (!$item || !$item->can($id, READ)) {
+            return [];
+        }
 
         if ($itemtype != User::class
             && $itemtype != Resource::class) {
-            $item = new $itemtype();
-            $item->getFromDB($id);
 
             $restrict = ["items_id" => $id,
                 "is_deleted" => 0,
@@ -1498,8 +1509,11 @@ class Position extends CommonDBTM
                     $infos = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items', $condition);
                     if (!empty($infos)) {
                         foreach ($infos as $info) {
+                            // The resource of the user: also one the user may read
                             $ressource = new Resource();
-                            $ressource->getFromDB($info['plugin_resources_resources_id']);
+                            if (!$ressource->can((int) $info['plugin_resources_resources_id'], READ)) {
+                                continue;
+                            }
 
                             $restrict = ["items_id" => $ressource->getID(),
                                 "is_deleted" => 0,
@@ -1581,8 +1595,11 @@ class Position extends CommonDBTM
                     $infos = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items', $condition);
                     if (!empty($infos)) {
                         foreach ($infos as $info) {
+                            // The resource of the user: also one the user may read
                             $ressource = new Resource();
-                            $ressource->getFromDB($info['plugin_resources_resources_id']);
+                            if (!$ressource->can((int) $info['plugin_resources_resources_id'], READ)) {
+                                continue;
+                            }
 
                             $restrict = ["items_id" => $ressource->getID(),
                                 "is_deleted" => 0,
