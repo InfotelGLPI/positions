@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Positions plugin 4.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-22 11:33+0000\n"
+"POT-Creation-Date: 2026-10-22 11:59+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,7 +41,7 @@ msgstr ""
 msgid "No picture uploaded"
 msgstr ""
 
-#: front/map.php:63 src/Position.php:213 src/Position.php:1008
+#: front/map.php:63 src/Position.php:213 src/Position.php:1023
 msgid "No location selected"
 msgstr ""
 
@@ -71,38 +71,38 @@ msgstr ""
 msgid "It's mandatory to select a type and at least one field"
 msgstr ""
 
-#: src/Position.php:225 src/Position.php:237 src/Position.php:287
+#: src/Position.php:232 src/Position.php:244 src/Position.php:294
 msgid "No equipment associated"
 msgstr ""
 
-#: src/Position.php:332
+#: src/Position.php:339
 msgid "Coordinate x"
 msgstr ""
 
-#: src/Position.php:339
+#: src/Position.php:346
 msgid "Coordinate y"
 msgstr ""
 
-#: src/Position.php:346
+#: src/Position.php:353
 msgid "Associated element"
 msgstr ""
 
-#: src/Position.php:409
+#: src/Position.php:416
 msgid "See the map"
 msgstr ""
 
-#: src/Position.php:539
+#: src/Position.php:546
 msgid "Select an area and click on OK"
 msgstr ""
 
-#: src/Position.php:743 src/Position.php:797
+#: src/Position.php:758 src/Position.php:812
 msgid "This item is already bound to a location"
 msgstr ""
 
-#: src/Position.php:1002
+#: src/Position.php:1017
 msgid "No location has a configured map"
 msgstr ""
 
-#: src/Position.php:1005
+#: src/Position.php:1020
 msgid "The object location does not match a map"
 msgstr ""
