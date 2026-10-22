@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Positions plugin 4.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-21 16:23+0000\n"
+"POT-Creation-Date: 2026-10-22 08:30+0000\n"
 "PO-Revision-Date: 2020-11-02 16:14+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2026\n"
 "Language-Team: French (France) (https://app.transifex.com/infotelGLPI/teams/12367/fr_FR/)\n"
@@ -21,8 +21,8 @@ msgstr ""
 "Language: fr_FR\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
-#: hook.php:333 setup.php:109 src/Menu.php:50 src/Position.php:89
-#: src/Profile.php:180 src/Profile.php:188
+#: hook.php:337 setup.php:111 src/Menu.php:50 src/Position.php:90
+#: src/Profile.php:165 src/Profile.php:173
 msgid "Cartography"
 msgid_plural "Cartographies"
 msgstr[0] "Cartographie"
@@ -45,186 +45,80 @@ msgstr "L'objet sélectionné n'est pas localisé sur une carte"
 msgid "No picture uploaded"
 msgstr "Pas d'image fournie"
 
-#: front/map.php:63 src/Position.php:212 src/Position.php:1171
-#: src/Position.php:2131
+#: front/map.php:63 src/Position.php:213 src/Position.php:1000
 msgid "No location selected"
 msgstr "Aucun lieu sélectionné"
 
-#: src/Config.php:63
+#: src/Config.php:62
 msgid "Plugin Setup"
 msgstr "Configuration du plugin"
 
-#: src/Config.php:84
-msgid "Add sub-places on the map objects"
-msgstr "Ajouter des objets des lieux enfants sur la carte"
-
-#: src/Config.php:91
-msgid "Default width of images"
-msgstr "Largeur par défaut des images"
-
-#: src/Config.php:100
-msgid "Default height of images"
-msgstr "Hauteur par défaut des images"
-
-#: src/Config.php:125
-msgid "Association : picture / types of equipment"
-msgstr "Association images / types de matériels"
-
-#: src/Config.php:131 src/Position.php:1664
-msgid "Configuring the display materials"
-msgstr "Configuration de l'affichage des matériels"
-
-#: src/ImageItem.php:136
+#: src/ImageItem.php:137
 msgid "Types of materials should be created so that the association can exist"
 msgstr ""
 "Des types de matériels doivent être créés pour que l'association puisse "
 "exister"
 
-#: src/ImageItem.php:219
-msgid "No picture found"
-msgstr "Pas d'icone trouvé"
-
-#: src/ImageItem.php:222
-msgid "Upload directory doesn't exist"
-msgstr "Le répertoire de téléchargement n'existe pas"
-
-#: src/ImageItem.php:241
-msgid "Add pictures to use with plugin"
-msgstr "Ajout des images à utiliser avec le plugin"
-
-#: src/ImageItem.php:245
-msgid "Upload yours pics into files/_plugins/positions/pics/ folder"
-msgstr "Téléchargez vos images dans le dossier files/_plugins/positions/pics/"
-
-#: src/ImageItem.php:268
-msgid "Associate images with types of equipment"
-msgstr "Associer les images à des types de matériel"
-
-#: src/ImageItem.php:305
-msgid "List of associations"
-msgstr "Liste des associations"
-
-#: src/ImageItem.php:308 src/ImageItem.php:312 src/Info.php:125
-#: src/Info.php:235
-msgid "Equipment"
-msgstr "Matériel"
-
-#: src/ImageItem.php:309 src/ImageItem.php:313
-msgid "Equipment type"
-msgstr "Type de matériel"
-
-#: src/ImageItem.php:310 src/ImageItem.php:314
-msgid "Picture"
-msgstr "Image"
-
-#: src/ImageItem.php:346
-msgid "No associated picture"
-msgstr "Pas d'image associée"
-
-#: src/Info.php:80
+#: src/Info.php:81
 msgid "Display of equipment"
 msgid_plural "Display of equipments"
 msgstr[0] "Visualisation de l'équipement"
 msgstr[1] "Visualisation des équipements"
 msgstr[2] "Visualisation des équipements"
 
-#: src/Info.php:113 src/Info.php:227
+#: src/Info.php:114
 msgid "Displayed fields"
 msgstr "Champs affichés"
 
-#: src/Info.php:399
+#: src/Info.php:126
+msgid "Equipment"
+msgstr "Matériel"
+
+#: src/Info.php:346
 msgid "It's mandatory to select a type and at least one field"
 msgstr "Il est obligatoire de sélectionner un type et au moins un champ"
 
-#: src/Info.php:702 src/Info.php:716
-msgid "Direct link"
-msgstr "Lien direct"
-
-#: src/Position.php:224 src/Position.php:236
+#: src/Position.php:225 src/Position.php:237 src/Position.php:287
 msgid "No equipment associated"
 msgstr "Aucun matériel associé"
 
-#: src/Position.php:319 src/Position.php:896 src/Position.php:1832
+#: src/Position.php:332
 msgid "Coordinate x"
 msgstr "Coordonnée x"
 
-#: src/Position.php:326 src/Position.php:934 src/Position.php:1833
+#: src/Position.php:339
 msgid "Coordinate y"
 msgstr "Coordonnée y"
 
-#: src/Position.php:333 src/Position.php:907
+#: src/Position.php:346
 msgid "Associated element"
 msgstr "Eléments associés"
 
-#: src/Position.php:396 src/Position.php:1218
+#: src/Position.php:409
 msgid "See the map"
 msgstr "Voir la carte"
 
-#: src/Position.php:482
+#: src/Position.php:537
 msgid "Select an area and click on OK"
 msgstr "Selectionnez une zone puis cliquez sur Valider"
 
-#: src/Position.php:548
-msgid "Creation of sub-areas on the map"
-msgstr "Création de sous-lieux sur la carte"
-
-#: src/Position.php:555
-msgid "Choose an existing location"
-msgstr "Choisir un lieu existant"
-
-#: src/Position.php:580
-msgid "No sub-area found"
-msgstr "Aucun sous lieu n'a été trouvé"
-
-#: src/Position.php:590
-msgid "Create a new location"
-msgstr "Créer un nouveau lieu"
-
-#: src/Position.php:617
-msgid "Add and continue"
-msgstr "Ajouter et continuer"
-
-#: src/Position.php:824 src/Position.php:877
+#: src/Position.php:730 src/Position.php:784
 msgid "This item is already bound to a location"
 msgstr "Cet élément est déjà lié à un lieu"
 
-#: src/Position.php:957
-msgid "Change the coordinates"
-msgstr "Modifier les coordonnées"
-
-#: src/Position.php:1125
-msgid "Save the coordinates"
-msgstr "Sauver les coordonnées"
-
-#: src/Position.php:1129
-msgid "Add a sub-area"
-msgstr "Ajouter un sous-lieu"
-
-#: src/Position.php:1160 src/Position.php:1224
+#: src/Position.php:994
 msgid "No location has a configured map"
 msgstr "Aucun lieu n'a de carte de configuré"
 
-#: src/Position.php:1165
+#: src/Position.php:997
 msgid "The object location does not match a map"
 msgstr "Le lieu de l'objet sélectionné ne correspond à aucune carte"
 
-#: src/Position.php:1257 src/Position.php:2109
-msgid "Create coordinates"
-msgstr "Créer des coordonnées"
-
-#: src/Position.php:1286
-msgid "Limited view"
-msgstr "Vue limitée"
-
-#: src/Position.php:1827
-msgid "Associated coordinate"
-msgstr "Coordonnée associée"
-
-#: src/Position.php:2183
+#: src/Position.php:1854
 msgid "Please download a newer version of canvasXpress at"
 msgstr "Veuillez télécharger la nouvelle version de canvasXpress à"
 
-#: src/Position.php:2184
+#: src/Position.php:1855
 msgid ""
 "You are using an older version that do not support all the functionality of "
 "this panel"
@@ -232,288 +126,288 @@ msgstr ""
 "Vous utilisez une ancienne version qui ne supporte pas toutes les "
 "fonctionnalités de ce panneau"
 
-#: src/Position.php:2185
+#: src/Position.php:1856
 msgid "Delete selected objects"
 msgstr "Supprimer les objets sélectionnés"
 
-#: src/Position.php:2186
+#: src/Position.php:1857
 msgid "Informations about"
 msgstr "Informations sur"
 
-#: src/Position.php:2190
+#: src/Position.php:1861
 msgid "Hide"
 msgstr "Cacher"
 
-#: src/Position.php:2191
+#: src/Position.php:1862
 msgid "informations about selected items"
 msgstr "Informations sur les éléments sélectionnés"
 
-#: src/Position.php:2192
+#: src/Position.php:1863
 msgid "All hidden objects"
 msgstr "Tout les objets cachés"
 
-#: src/Position.php:2193
+#: src/Position.php:1864
 msgid "See all hidden objects"
 msgstr "Voir tout les objets cachés"
 
-#: src/Position.php:2194
+#: src/Position.php:1865
 msgid "cancel last change"
 msgstr "Annuler la dernière modification"
 
-#: src/Position.php:2195
+#: src/Position.php:1866
 msgid "Replay the last change"
 msgstr "Rejouer la dernière modification"
 
-#: src/Position.php:2196
+#: src/Position.php:1867
 msgid "Save as a new network"
 msgstr "Enregistrer comme un nouveau réseau"
 
-#: src/Position.php:2198
+#: src/Position.php:1869
 msgid "Save the network now"
 msgstr "Enregistrer le réseau maintenant"
 
-#: src/Position.php:2199
+#: src/Position.php:1870
 msgid "Simple search"
 msgstr "Recherche simple"
 
-#: src/Position.php:2200
+#: src/Position.php:1871
 msgid "Import JSON data"
 msgstr "Importer les données JSON"
 
-#: src/Position.php:2201
+#: src/Position.php:1872
 msgid "Export JSON data"
 msgstr "Exporter les données JSON"
 
-#: src/Position.php:2202
+#: src/Position.php:1873
 msgid "Import JSON movie"
 msgstr "Importer les vidéos JSON"
 
-#: src/Position.php:2203
+#: src/Position.php:1874
 msgid "Export JSON movie"
 msgstr "Exporter les vidéos JSON"
 
-#: src/Position.php:2204
+#: src/Position.php:1875
 msgid "Force save the entire network"
 msgstr "Forcer l'enregistrement du réseau entier"
 
-#: src/Position.php:2205
+#: src/Position.php:1876
 msgid "Advanced test"
 msgstr "Test avancé"
 
-#: src/Position.php:2206
+#: src/Position.php:1877
 msgid "Refresh the graph"
 msgstr "Rafraîchir le graphique"
 
-#: src/Position.php:2207
+#: src/Position.php:1878
 msgid "See as a picture"
 msgstr "Voir comme image"
 
-#: src/Position.php:2211 src/Position.php:2212
+#: src/Position.php:1882 src/Position.php:1883
 msgid "Color"
 msgid_plural "Colors"
 msgstr[0] "Couleur"
 msgstr[1] "Couleurs"
 msgstr[2] "Couleurs"
 
-#: src/Position.php:2213
+#: src/Position.php:1884
 msgid "Scale Factor"
 msgstr "Facteur d'échelle"
 
-#: src/Position.php:2214
+#: src/Position.php:1885
 msgid "Boxed"
 msgstr "Encadré"
 
-#: src/Position.php:2215
+#: src/Position.php:1886
 msgid "Transpose"
 msgstr "Transposer"
 
-#: src/Position.php:2216
+#: src/Position.php:1887
 msgid "Search on objects"
 msgstr "Recherche sur les objets"
 
-#: src/Position.php:2218
+#: src/Position.php:1889
 msgid "Advanced Options"
 msgstr "Options avancées"
 
-#: src/Position.php:2219
+#: src/Position.php:1890
 msgid "Search key"
 msgstr "Clé de recherche"
 
-#: src/Position.php:2220
+#: src/Position.php:1891
 msgid "Regex accepted"
 msgstr "Regex accepté"
 
-#: src/Position.php:2221
+#: src/Position.php:1892
 msgid "One line by object"
 msgstr "Une ligne par objet"
 
-#: src/Position.php:2222
+#: src/Position.php:1893
 msgid "Stop highlighting"
 msgstr "Arrêter la surbrillance"
 
-#: src/Position.php:2223
+#: src/Position.php:1894
 msgid "Highlight object"
 msgstr "Mettre l'objet en surbrillance"
 
-#: src/Position.php:2224
+#: src/Position.php:1895
 msgid "Edit selected object"
 msgstr "Modifier l'objet sélectionné"
 
-#: src/Position.php:2225
+#: src/Position.php:1896
 msgid "Selected object"
 msgstr "Objet sélectionné"
 
-#: src/Position.php:2226
+#: src/Position.php:1897
 msgid "This object"
 msgstr "Cet objet"
 
-#: src/Position.php:2227
+#: src/Position.php:1898
 msgid "Selected objects and all the"
 msgstr "Objets sélectionnés et tout les"
 
-#: src/Position.php:2228
+#: src/Position.php:1899
 msgid "This object and all its"
 msgstr "Cet objet et tous ses "
 
-#: src/Position.php:2229
+#: src/Position.php:1900
 msgid "Do you want to delete"
 msgstr "Voulez vous supprimer"
 
-#: src/Position.php:2230
+#: src/Position.php:1901
 msgid "Links will be deleted"
 msgstr "liens vont être supprimés"
 
-#: src/Position.php:2231
+#: src/Position.php:1902
 msgid "Tooltip"
 msgstr "Info-bulle"
 
-#: src/Position.php:2232
+#: src/Position.php:1903
 msgid "Object type"
 msgstr "Type d'objet"
 
-#: src/Position.php:2233
+#: src/Position.php:1904
 msgid "Required selection"
 msgstr "Sélection requise"
 
-#: src/Position.php:2234
+#: src/Position.php:1905
 msgid "Image path"
 msgstr "Chemin de l'image"
 
-#: src/Position.php:2235
+#: src/Position.php:1906
 msgid "The object is fixed"
 msgstr "L'objet est fixé"
 
-#: src/Position.php:2238
+#: src/Position.php:1909
 msgid "Object editor"
 msgstr "Editeur d'objet"
 
-#: src/Position.php:2239
+#: src/Position.php:1910
 msgid "Object id"
 msgstr "Id de l'objet"
 
-#: src/Position.php:2241
+#: src/Position.php:1912
 msgid "Pattern"
 msgstr "Modèle"
 
-#: src/Position.php:2242
+#: src/Position.php:1913
 msgid "Edge"
 msgstr "Bord"
 
-#: src/Position.php:2243 src/Position.php:2244
+#: src/Position.php:1914 src/Position.php:1915
 msgid "Object"
 msgid_plural "Objects"
 msgstr[0] "Objet"
 msgstr[1] "Objets"
 msgstr[2] "Objets"
 
-#: src/Position.php:2246
+#: src/Position.php:1917
 msgid "Axes"
 msgstr "Axes"
 
-#: src/Position.php:2248
+#: src/Position.php:1919
 msgid "Legend"
 msgstr "Légende"
 
-#: src/Position.php:2249
+#: src/Position.php:1920
 msgid "Indicators"
 msgstr "Indicateurs"
 
-#: src/Position.php:2250
+#: src/Position.php:1921
 msgid "Decorations"
 msgstr "Décorations"
 
-#: src/Position.php:2251
+#: src/Position.php:1922
 msgid "Data"
 msgstr "Données"
 
-#: src/Position.php:2252
+#: src/Position.php:1923
 msgid "Font weight"
 msgstr "Taille de la police"
 
-#: src/Position.php:2253
+#: src/Position.php:1924
 msgid "Properties"
 msgstr "Propriétés"
 
-#: src/Position.php:2254
+#: src/Position.php:1925
 msgid "Transform"
 msgstr "Transformer"
 
-#: src/Position.php:2255
+#: src/Position.php:1926
 msgid "Ticks"
 msgstr "Tiques"
 
-#: src/Position.php:2256
+#: src/Position.php:1927
 msgid "Font"
 msgstr "Police"
 
-#: src/Position.php:2257
+#: src/Position.php:1928
 msgid "Layout"
 msgstr "Mise en page"
 
-#: src/Position.php:2258
+#: src/Position.php:1929
 msgid "Orientation"
 msgstr "Orientation"
 
-#: src/Position.php:2259
+#: src/Position.php:1930
 msgid "Overlays"
 msgstr "Superpositions"
 
-#: src/Position.php:2260
+#: src/Position.php:1931
 msgid "Background"
 msgstr "Fond"
 
-#: src/Position.php:2261
+#: src/Position.php:1932
 msgid "Gradient"
 msgstr "Dégradé"
 
-#: src/Position.php:2262
+#: src/Position.php:1933
 msgid "Solid"
 msgstr "Plein"
 
-#: src/Position.php:2264
+#: src/Position.php:1935
 msgid "Width"
 msgstr "Largeur"
 
-#: src/Position.php:2265
+#: src/Position.php:1936
 msgid "Height"
 msgstr "Hauteur"
 
-#: src/Position.php:2266
+#: src/Position.php:1937
 msgid "Text"
 msgstr "Texte"
 
-#: src/Position.php:2268
+#: src/Position.php:1939
 msgid "Field searched"
 msgstr "Champ cherché"
 
-#: src/Position.php:2269
+#: src/Position.php:1940
 msgid "Value found"
 msgstr "Valeur trouvée"
 
-#: src/Position.php:2270
+#: src/Position.php:1941
 msgid "Menu"
 msgstr "Menu"
 
-#: src/Position.php:2272
+#: src/Position.php:1943
 msgid "Subtitle"
 msgstr "Sous-titre"
