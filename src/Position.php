@@ -215,6 +215,13 @@ class Position extends CommonDBTM
             }
         }
 
+        // Shared with the child entities (forms and massive update) only by who may reach all
+        // of them: check() only looks at the entity itself
+        if (!empty($input['is_recursive'])
+            && !Session::haveRecursiveAccessToEntity((int) ($input['entities_id'] ?? $this->fields['entities_id'] ?? -1))) {
+            $input['is_recursive'] = 0;
+        }
+
         return $input;
     }
 
@@ -594,6 +601,14 @@ class Position extends CommonDBTM
             $locations_id = (int) $input['locations_id'];
             if (!$loc->can($locations_id, UPDATE)) {
                 throw new \Glpi\Exception\Http\AccessDeniedHttpException();
+            }
+            // One of the sub-locations offered by the form (showMapCreateLocation()): a child of
+            // the parent, in the entity of the sub-area or shared down to it
+            $loc_entity = (int) $loc->fields['entities_id'];
+            if ((int) $loc->fields['locations_id'] !== $locations_idParent
+                || ($loc_entity !== $entities_id
+                    && !($loc->isRecursive() && in_array($entities_id, getSonsOf('glpi_entities', $loc_entity))))) {
+                throw new \Glpi\Exception\Http\BadRequestHttpException();
             }
             $name = $loc->fields['name'];
         } else {

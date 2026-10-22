@@ -387,6 +387,13 @@ class Info extends CommonDBTM
     **/
     function prepareInputForAdd($input)
     {
+        // Shared with the child entities only by who may reach all of them, as on update:
+        // check() only looks at the entity itself
+        if (!empty($input['is_recursive'])
+            && !Session::haveRecursiveAccessToEntity((int) ($input['entities_id'] ?? -1))) {
+            $input['is_recursive'] = 0;
+        }
+
         return self::checkBeforeInsert($input);
     }
 
