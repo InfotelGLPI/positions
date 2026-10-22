@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Positions plugin 4.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-22 08:30+0000\n"
+"POT-Creation-Date: 2026-10-22 09:55+0000\n"
 "PO-Revision-Date: 2020-11-02 16:14+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2026\n"
 "Language-Team: French (France) (https://app.transifex.com/infotelGLPI/teams/12367/fr_FR/)\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Language: fr_FR\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
-#: hook.php:337 setup.php:111 src/Menu.php:50 src/Position.php:90
+#: hook.php:337 setup.php:102 src/Menu.php:50 src/Position.php:90
 #: src/Profile.php:165 src/Profile.php:173
 msgid "Cartography"
 msgid_plural "Cartographies"
@@ -45,7 +45,7 @@ msgstr "L'objet sélectionné n'est pas localisé sur une carte"
 msgid "No picture uploaded"
 msgstr "Pas d'image fournie"
 
-#: front/map.php:63 src/Position.php:213 src/Position.php:1000
+#: front/map.php:63 src/Position.php:213 src/Position.php:1008
 msgid "No location selected"
 msgstr "Aucun lieu sélectionné"
 
@@ -98,316 +98,18 @@ msgstr "Eléments associés"
 msgid "See the map"
 msgstr "Voir la carte"
 
-#: src/Position.php:537
+#: src/Position.php:539
 msgid "Select an area and click on OK"
 msgstr "Selectionnez une zone puis cliquez sur Valider"
 
-#: src/Position.php:730 src/Position.php:784
+#: src/Position.php:743 src/Position.php:797
 msgid "This item is already bound to a location"
 msgstr "Cet élément est déjà lié à un lieu"
 
-#: src/Position.php:994
+#: src/Position.php:1002
 msgid "No location has a configured map"
 msgstr "Aucun lieu n'a de carte de configuré"
 
-#: src/Position.php:997
+#: src/Position.php:1005
 msgid "The object location does not match a map"
 msgstr "Le lieu de l'objet sélectionné ne correspond à aucune carte"
-
-#: src/Position.php:1854
-msgid "Please download a newer version of canvasXpress at"
-msgstr "Veuillez télécharger la nouvelle version de canvasXpress à"
-
-#: src/Position.php:1855
-msgid ""
-"You are using an older version that do not support all the functionality of "
-"this panel"
-msgstr ""
-"Vous utilisez une ancienne version qui ne supporte pas toutes les "
-"fonctionnalités de ce panneau"
-
-#: src/Position.php:1856
-msgid "Delete selected objects"
-msgstr "Supprimer les objets sélectionnés"
-
-#: src/Position.php:1857
-msgid "Informations about"
-msgstr "Informations sur"
-
-#: src/Position.php:1861
-msgid "Hide"
-msgstr "Cacher"
-
-#: src/Position.php:1862
-msgid "informations about selected items"
-msgstr "Informations sur les éléments sélectionnés"
-
-#: src/Position.php:1863
-msgid "All hidden objects"
-msgstr "Tout les objets cachés"
-
-#: src/Position.php:1864
-msgid "See all hidden objects"
-msgstr "Voir tout les objets cachés"
-
-#: src/Position.php:1865
-msgid "cancel last change"
-msgstr "Annuler la dernière modification"
-
-#: src/Position.php:1866
-msgid "Replay the last change"
-msgstr "Rejouer la dernière modification"
-
-#: src/Position.php:1867
-msgid "Save as a new network"
-msgstr "Enregistrer comme un nouveau réseau"
-
-#: src/Position.php:1869
-msgid "Save the network now"
-msgstr "Enregistrer le réseau maintenant"
-
-#: src/Position.php:1870
-msgid "Simple search"
-msgstr "Recherche simple"
-
-#: src/Position.php:1871
-msgid "Import JSON data"
-msgstr "Importer les données JSON"
-
-#: src/Position.php:1872
-msgid "Export JSON data"
-msgstr "Exporter les données JSON"
-
-#: src/Position.php:1873
-msgid "Import JSON movie"
-msgstr "Importer les vidéos JSON"
-
-#: src/Position.php:1874
-msgid "Export JSON movie"
-msgstr "Exporter les vidéos JSON"
-
-#: src/Position.php:1875
-msgid "Force save the entire network"
-msgstr "Forcer l'enregistrement du réseau entier"
-
-#: src/Position.php:1876
-msgid "Advanced test"
-msgstr "Test avancé"
-
-#: src/Position.php:1877
-msgid "Refresh the graph"
-msgstr "Rafraîchir le graphique"
-
-#: src/Position.php:1878
-msgid "See as a picture"
-msgstr "Voir comme image"
-
-#: src/Position.php:1882 src/Position.php:1883
-msgid "Color"
-msgid_plural "Colors"
-msgstr[0] "Couleur"
-msgstr[1] "Couleurs"
-msgstr[2] "Couleurs"
-
-#: src/Position.php:1884
-msgid "Scale Factor"
-msgstr "Facteur d'échelle"
-
-#: src/Position.php:1885
-msgid "Boxed"
-msgstr "Encadré"
-
-#: src/Position.php:1886
-msgid "Transpose"
-msgstr "Transposer"
-
-#: src/Position.php:1887
-msgid "Search on objects"
-msgstr "Recherche sur les objets"
-
-#: src/Position.php:1889
-msgid "Advanced Options"
-msgstr "Options avancées"
-
-#: src/Position.php:1890
-msgid "Search key"
-msgstr "Clé de recherche"
-
-#: src/Position.php:1891
-msgid "Regex accepted"
-msgstr "Regex accepté"
-
-#: src/Position.php:1892
-msgid "One line by object"
-msgstr "Une ligne par objet"
-
-#: src/Position.php:1893
-msgid "Stop highlighting"
-msgstr "Arrêter la surbrillance"
-
-#: src/Position.php:1894
-msgid "Highlight object"
-msgstr "Mettre l'objet en surbrillance"
-
-#: src/Position.php:1895
-msgid "Edit selected object"
-msgstr "Modifier l'objet sélectionné"
-
-#: src/Position.php:1896
-msgid "Selected object"
-msgstr "Objet sélectionné"
-
-#: src/Position.php:1897
-msgid "This object"
-msgstr "Cet objet"
-
-#: src/Position.php:1898
-msgid "Selected objects and all the"
-msgstr "Objets sélectionnés et tout les"
-
-#: src/Position.php:1899
-msgid "This object and all its"
-msgstr "Cet objet et tous ses "
-
-#: src/Position.php:1900
-msgid "Do you want to delete"
-msgstr "Voulez vous supprimer"
-
-#: src/Position.php:1901
-msgid "Links will be deleted"
-msgstr "liens vont être supprimés"
-
-#: src/Position.php:1902
-msgid "Tooltip"
-msgstr "Info-bulle"
-
-#: src/Position.php:1903
-msgid "Object type"
-msgstr "Type d'objet"
-
-#: src/Position.php:1904
-msgid "Required selection"
-msgstr "Sélection requise"
-
-#: src/Position.php:1905
-msgid "Image path"
-msgstr "Chemin de l'image"
-
-#: src/Position.php:1906
-msgid "The object is fixed"
-msgstr "L'objet est fixé"
-
-#: src/Position.php:1909
-msgid "Object editor"
-msgstr "Editeur d'objet"
-
-#: src/Position.php:1910
-msgid "Object id"
-msgstr "Id de l'objet"
-
-#: src/Position.php:1912
-msgid "Pattern"
-msgstr "Modèle"
-
-#: src/Position.php:1913
-msgid "Edge"
-msgstr "Bord"
-
-#: src/Position.php:1914 src/Position.php:1915
-msgid "Object"
-msgid_plural "Objects"
-msgstr[0] "Objet"
-msgstr[1] "Objets"
-msgstr[2] "Objets"
-
-#: src/Position.php:1917
-msgid "Axes"
-msgstr "Axes"
-
-#: src/Position.php:1919
-msgid "Legend"
-msgstr "Légende"
-
-#: src/Position.php:1920
-msgid "Indicators"
-msgstr "Indicateurs"
-
-#: src/Position.php:1921
-msgid "Decorations"
-msgstr "Décorations"
-
-#: src/Position.php:1922
-msgid "Data"
-msgstr "Données"
-
-#: src/Position.php:1923
-msgid "Font weight"
-msgstr "Taille de la police"
-
-#: src/Position.php:1924
-msgid "Properties"
-msgstr "Propriétés"
-
-#: src/Position.php:1925
-msgid "Transform"
-msgstr "Transformer"
-
-#: src/Position.php:1926
-msgid "Ticks"
-msgstr "Tiques"
-
-#: src/Position.php:1927
-msgid "Font"
-msgstr "Police"
-
-#: src/Position.php:1928
-msgid "Layout"
-msgstr "Mise en page"
-
-#: src/Position.php:1929
-msgid "Orientation"
-msgstr "Orientation"
-
-#: src/Position.php:1930
-msgid "Overlays"
-msgstr "Superpositions"
-
-#: src/Position.php:1931
-msgid "Background"
-msgstr "Fond"
-
-#: src/Position.php:1932
-msgid "Gradient"
-msgstr "Dégradé"
-
-#: src/Position.php:1933
-msgid "Solid"
-msgstr "Plein"
-
-#: src/Position.php:1935
-msgid "Width"
-msgstr "Largeur"
-
-#: src/Position.php:1936
-msgid "Height"
-msgstr "Hauteur"
-
-#: src/Position.php:1937
-msgid "Text"
-msgstr "Texte"
-
-#: src/Position.php:1939
-msgid "Field searched"
-msgstr "Champ cherché"
-
-#: src/Position.php:1940
-msgid "Value found"
-msgstr "Valeur trouvée"
-
-#: src/Position.php:1941
-msgid "Menu"
-msgstr "Menu"
-
-#: src/Position.php:1943
-msgid "Subtitle"
-msgstr "Sous-titre"
