@@ -32,7 +32,8 @@ use GlpiPlugin\Positions\Position;
 
 global $CFG_GLPI, $DB;
 
-header("Content-Type: text/html; charset=UTF-8");
+// A JSON answer for select2: never read as HTML, even opened as a page
+header("Content-Type: application/json; charset=UTF-8");
 Html::header_nocache();
 
 // Only caller: the add-coordinates and equipment type pictures forms
@@ -197,4 +198,4 @@ if ($number) {
 $ret['results'] = $out;
 $ret['count']   = count($out);
 
-echo json_encode($ret);
+echo json_encode($ret, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
