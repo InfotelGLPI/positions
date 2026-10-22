@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Positions plugin 4.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-22 10:42+0000\n"
+"POT-Creation-Date: 2026-10-22 11:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,7 +25,7 @@ msgid_plural "Cartographies"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ajax/dropdownValue.php:154
+#: ajax/dropdownValue.php:155
 msgid "All types"
 msgstr ""
 
