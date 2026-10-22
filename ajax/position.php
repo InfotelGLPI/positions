@@ -38,7 +38,7 @@ switch ($_POST['action'] ?? '') {
    case 'setConfig':
       if (isset($_POST['config']) && !empty($_POST['config'])) {
          $positions = new Position();
-         $config = json_decode(stripslashes($_POST['config']), true);
+         $config = json_decode((string) $_POST['config'], true);
          if (!is_array($config) || (int) ($config['id'] ?? 0) <= 0) {
             throw new \Glpi\Exception\Http\BadRequestHttpException();
          }

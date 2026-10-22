@@ -119,7 +119,7 @@ if (isset($locations_id) && !empty($locations_id)) {
 } else {
    echo "<div class='center'><br><br>";
    echo "<div class='alert alert-important alert-warning d-flex'>";
-   echo "<b'>" . __('The selected object is not located on a map', 'positions') . "</b></div>";
+   echo "<b>" . __('The selected object is not located on a map', 'positions') . "</b></div>";
 }
 
 if (isset($_GET['from_treeview']) && Plugin::isPluginActive("treeview")) {

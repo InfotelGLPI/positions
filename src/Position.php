@@ -168,9 +168,9 @@ class Position extends CommonDBTM
     }
 
     /**
-     * Display attributes of a position, whichever way they are posted (forms or canvas):
-     * canvasXpress renders them as HTML without escaping, so the texts lose their markup and
-     * the other attributes are kept to their own syntax. A value out of it is dropped.
+     * Display attributes of a position, whichever way they are posted (forms or map): the
+     * texts lose their markup and the other attributes are kept to their own syntax. A value
+     * out of it is dropped.
      */
     public function checkValues($input)
     {
@@ -520,7 +520,9 @@ class Position extends CommonDBTM
             $locations[] = $data['id'];
         }
 
-        // Jcrop draws the selection on the map; public/positions_crop.js fills the hidden fields
+        // Cropper.js (shipped by GLPI) draws the selection on the map; public/positions_crop.js
+        // fills the hidden fields
+        echo Html::script('lib/cropper.js');
         Html::requireJs('positions_crop');
 
         TemplateRenderer::getInstance()->display('@positions/crop_form.html.twig', [
@@ -567,10 +569,21 @@ class Position extends CommonDBTM
         if ($document_id !== (int) self::getDocument($locations_idParent)) {
             throw new \Glpi\Exception\Http\BadRequestHttpException();
         }
+        // A mismatch is refused, never replaced by the entity of the parent: a recursive parent is
+        // visible from a child entity, its own entity may be out of the reach of the user
         $parent_entity = (int) $parent->fields['entities_id'];
         if ($entities_id !== $parent_entity
             && !($parent->isRecursive() && in_array($entities_id, getSonsOf('glpi_entities', $parent_entity)))) {
-            $entities_id = $parent_entity;
+            throw new \Glpi\Exception\Http\BadRequestHttpException();
+        }
+        // The location, its document and its position are created in that entity
+        $new_location = new Location();
+        $new_document = new Document();
+        $new_position = new self();
+        if (!$new_location->can(-1, CREATE, ['entities_id' => $entities_id])
+            || !$new_document->can(-1, CREATE, ['entities_id' => $entities_id])
+            || !$new_position->can(-1, CREATE, ['entities_id' => $entities_id])) {
+            throw new \Glpi\Exception\Http\AccessDeniedHttpException();
         }
 
         if ($test == "newLocation") {
@@ -904,7 +917,7 @@ class Position extends CommonDBTM
      */
     public static function showMap($options)
     {
-        // Ext JS and canvasXpress, on the pages of the map only
+        // Leaflet (shipped by GLPI) and public/positions_map.js, on the pages of the map only
         Html::requireJs('positions_map');
 
         $options['id'] = (int) $options['id'];
@@ -972,11 +985,6 @@ class Position extends CommonDBTM
                         $params["menuoff"] = $options['menuoff'];
                     }
 
-                    // The canvas is drawn by inline scripts: rendered here, put in the template
-                    ob_start();
-                    self::displayMap($items, $params);
-                    $map_html = ob_get_clean();
-
                     TemplateRenderer::getInstance()->display('@positions/map.html.twig', [
                         'with_menu'        => $with_menu,
                         'canupdate'        => $canupdate,
@@ -988,7 +996,7 @@ class Position extends CommonDBTM
                         'locations_id'     => $options['locations_id'],
                         'id'               => $options['id'],
                         'map_name'         => (string) $Doc->fields["name"],
-                        'map_html'         => $map_html,
+                        'map_data'         => self::getMapData($items, $params),
                     ]);
                 } else {
                     self::displayMapMessage(__('No location has a configured map', 'positions'));
@@ -1115,276 +1123,110 @@ class Position extends CommonDBTM
     }
 
     /**
-     * Items of the location read from the database,
-     * to be drawn on the map
-     * @param $items
-     * @param $params
+     * Data of the map of a location, read by public/positions_map.js (Leaflet): the plan and
+     * the items of the location the user may read
+     *
+     * @param array $items  positions of the location, by itemtype (getMapItems())
+     * @param array $params locations_id, id, itemtype, docid, largeur, hauteur, menuoff
+     *
+     * @return array
      */
-    public static function displayMap($items, $params)
-    {
-        global $CFG_GLPI;
-
-        if (isset($params['itemtype'])
-            && is_array($params['itemtype'])) {
-            foreach ($items as $classe => $ids) {
-                if (!in_array($classe, $params['itemtype'])) {
-                    unset($items[$classe]);
-                }
-            }
-        }
-
-        $objects = [];
-        if (!empty($items)) {
-            foreach ($items as $classe => $ids) {
-                foreach ($ids as $key => $val) {
-                    if (($val['locations_id'] == $params['locations_id'])) {
-                        if ($val['itemtype'] == "Socket") {
-                            $itemclass = new Socket();
-                        } else {
-                            $itemclass = new $val['itemtype']();
-                        }
-
-                        // Only the items the user may read on their own (e.g. the Computer
-                        // right), not on the sole right of the cartography
-                        if ($itemclass->getFromDB($val['items_id'])
-                            && $itemclass->can($val['items_id'], READ)) {
-                            $val['picture'] = null;
-                            $val['img'] = null;
-
-                            $canvas_id = count($objects);
-
-                            // canvasXpress renders the label and the tooltip as HTML: escaped,
-                            // values saved by older versions included
-                            $options = ['canvas_id' => $canvas_id,
-                                'name' => htmlescape((string) self::displayItemTitle($itemclass)),
-                                'id' => $val['id'],
-                                'items_id' => $val['items_id'],
-                                'itemtype' => $val['itemtype'],
-                                'width' => $val['width'],
-                                'height' => $val['height'],
-                                'x_coordinates' => $val['x_coordinates'],
-                                'y_coordinates' => $val['y_coordinates'],
-                                "hideLabel" => $val['hideLabel'],
-                                "hideTooltip" => $val['hideTooltip'],
-                                "tooltip" => htmlescape((string) $val['tooltip']),
-                                "color" => $val['color'],
-                                "rotate" => $val['rotate'],
-                                "outline" => $val['outline'],
-                                "outlineWidth" => $val['outlineWidth'],
-                                "pattern" => $val['pattern'],
-                                "outlineWidth" => $val['outlineWidth'],
-                                "labelSize" => $val['labelSize'],
-                                "shape" => $val['shape']];
-
-                            if (Plugin::isPluginActive("resources") && ($val['itemtype'] == Resource::class)) {
-                                $val['picture'] = $itemclass->fields['picture'];
-                                $options['img'] = $CFG_GLPI['url_base'] . PLUGIN_RESOURCES_WEBDIR . '/pics/nobody.png';
-                                if (!($val['picture'] == null)) {
-                                    $options['img'] = $CFG_GLPI['url_base'] . PLUGIN_RESOURCES_WEBDIR . '/front/picture.send.php?file=' . rawurlencode(basename((string) $val['picture']));
-                                }
-                                $objects[$val['id']] = $options;
-                            } elseif (($val['itemtype'] == Location::class)) {
-                                $options['img'] = $CFG_GLPI['url_base'] . PLUGIN_POSITIONS_NOTFULL_DIR . '/pics/door.png';
-                                $objects[$val['id']] = $options;
-                            } elseif (($val['itemtype'] == Socket::class)) {
-                                $options['img'] = $CFG_GLPI['url_base'] . PLUGIN_POSITIONS_NOTFULL_DIR . '/pics/socket.png';
-                                $objects[$val['id']] = $options;
-                            } else {
-                                $itemtype = $val['itemtype'] . "Type";
-                                $dbu = new DbUtils();
-                                $typefield = $dbu->getForeignKeyFieldForTable($dbu->getTableForItemType($itemtype));
-                                $imgitem = new ImageItem();
-                                if (isset($itemclass->fields[$typefield])) {
-                                    $val['img'] = $imgitem->displayItemImage($itemclass->fields[$typefield], $classe);
-                                }
-                                $options['img'] = $CFG_GLPI['url_base'] . PLUGIN_POSITIONS_NOTFULL_DIR . '/pics/nothing.png';
-                                // canvasXpress puts the URL in HTML: a picture of the pics
-                                // directory only, its name encoded
-                                if (!empty($val['img']) && self::getPicturePath((string) $val['img']) !== null) {
-                                    $options['img'] = $CFG_GLPI['url_base'] . PLUGIN_POSITIONS_NOTFULL_DIR
-                                        . '/front/map.send.php?type=pics&file=' . rawurlencode((string) $val['img']);
-                                }
-
-                                $objects[$val['id']] = $options;
-                            }
-                            $canvas_id++;
-                        }
-                    }
-                }
-            }
-            self::drawCanvas($objects, $params);
-        } else {
-            // Tests sur les droits
-            $eventless = false;
-            if (!Session::haveRight('plugin_positions', UPDATE) || (isset($params['menuoff']) && $params['menuoff'] == 1)) {
-                $eventless = true;
-            }
-
-            $objects[] = ['canvas_id' => '0',
-                'name' => '',
-                'id' => '',
-                'items_id' => '',
-                'itemtype' => '',
-                'width' => 0.5,
-                'height' => 0.5,
-                'x_coordinates' => -300,
-                'y_coordinates' => 80,
-                'testEvent' => $eventless,
-                'hideLabel' => true,
-                'img' => $CFG_GLPI['url_base'] . PLUGIN_POSITIONS_NOTFULL_DIR . '/pics/nothing.png'];
-            self::drawCanvas($objects, $params);
-        }
-    }
-
-
-    /**
-     * Draws the canvas of the map with the given items
-     * @param $items
-     * @param $params
-     */
-    public static function drawCanvas($items, $params)
+    public static function getMapData($items, $params)
     {
         global $CFG_GLPI;
 
         $nodes = [];
-        // Rights
-        $eventless = false;
-        if (!Session::haveRight('plugin_positions', UPDATE) || (isset($params['menuoff']) && $params['menuoff'] == 1)) {
-            $eventless = true;
+        foreach ($items as $classe => $positions) {
+            if (isset($params['itemtype']) && is_array($params['itemtype'])
+                && !in_array($classe, $params['itemtype'])) {
+                continue;
+            }
+            foreach ($positions as $val) {
+                if ($val['locations_id'] != $params['locations_id']) {
+                    continue;
+                }
+                $itemclass = getItemForItemtype($val['itemtype'] == "Socket" ? Socket::class : $val['itemtype']);
+                // Only the items the user may read on their own (e.g. the Computer right), not
+                // on the sole right of the cartography
+                if (!$itemclass
+                    || !$itemclass->getFromDB($val['items_id'])
+                    || !$itemclass->can($val['items_id'], READ)) {
+                    continue;
+                }
+
+                // Texts are set through the DOM by the script: never escaped here
+                $node = ['id'           => (int) $val['id'],
+                    'items_id'     => (int) $val['items_id'],
+                    'itemtype'     => $val['itemtype'],
+                    'name'         => (string) self::displayItemTitle($itemclass),
+                    'width'        => max(1, (int) $val['width']),
+                    'height'       => max(1, (int) $val['height']),
+                    'x'            => (float) $val['x_coordinates'],
+                    'y'            => (float) $val['y_coordinates'],
+                    'hideLabel'    => !empty($val['hideLabel']),
+                    'hideTooltip'  => !empty($val['hideTooltip']),
+                    'tooltip'      => (string) $val['tooltip'],
+                    'color'        => (string) $val['color'],
+                    'rotate'       => (int) $val['rotate'],
+                    'outline'      => (string) $val['outline'],
+                    'outlineWidth' => (int) $val['outlineWidth'],
+                    'labelSize'    => (float) $val['labelSize'],
+                    'highlighted'  => !empty($params['id']) && (int) $val['id'] === (int) $params['id'],
+                ];
+
+                if (Plugin::isPluginActive("resources") && ($val['itemtype'] == Resource::class)) {
+                    $node['img'] = $CFG_GLPI['url_base'] . PLUGIN_RESOURCES_WEBDIR . '/pics/nobody.png';
+                    if (!empty($itemclass->fields['picture'])) {
+                        $node['img'] = $CFG_GLPI['url_base'] . PLUGIN_RESOURCES_WEBDIR . '/front/picture.send.php?file='
+                            . rawurlencode(basename((string) $itemclass->fields['picture']));
+                    }
+                } elseif ($val['itemtype'] == Location::class) {
+                    $node['img'] = $CFG_GLPI['url_base'] . PLUGIN_POSITIONS_NOTFULL_DIR . '/pics/door.png';
+                } elseif ($val['itemtype'] == Socket::class || $val['itemtype'] == "Socket") {
+                    $node['img'] = $CFG_GLPI['url_base'] . PLUGIN_POSITIONS_NOTFULL_DIR . '/pics/socket.png';
+                } else {
+                    $dbu = new DbUtils();
+                    $typefield = $dbu->getForeignKeyFieldForTable($dbu->getTableForItemType($val['itemtype'] . "Type"));
+                    $img = null;
+                    if (isset($itemclass->fields[$typefield])) {
+                        $img = (new ImageItem())->displayItemImage($itemclass->fields[$typefield], $classe);
+                    }
+                    $node['img'] = $CFG_GLPI['url_base'] . PLUGIN_POSITIONS_NOTFULL_DIR . '/pics/nothing.png';
+                    // A picture of the pics directory only, its name encoded
+                    if (!empty($img) && self::getPicturePath((string) $img) !== null) {
+                        $node['img'] = $CFG_GLPI['url_base'] . PLUGIN_POSITIONS_NOTFULL_DIR
+                            . '/front/map.send.php?type=pics&file=' . rawurlencode((string) $img);
+                    }
+                }
+                $nodes[] = $node;
+            }
         }
 
-        // Background picture
-        $input = [];
-        $input['id'] = "Fond";
-        $input['shape'] = 'image';
-        $input['eventless'] = true;
-        $input['width'] = $params['largeur'];
-        $input['height'] = $params['hauteur'];
-        $input['imagePath'] = $CFG_GLPI['url_base'] . PLUGIN_POSITIONS_NOTFULL_DIR . '/front/map.send.php?docid=' . $params['docid'];
-        $input['color'] = 'black';
-        $input['testEvent'] = $eventless;
-        $input['x'] = 250;
-        $input['y'] = 250;
-        $input['hideLabel'] = true;
-        $nodes['nodes'][] = $input;
+        $editable = Session::haveRight('plugin_positions', UPDATE)
+            && empty($params['menuoff']);
 
-        $highlight = [];
-
-        // Nodes
-        foreach ($items as $node) {
-            $node['imagePath'] = $node['img'];
-            $node['x'] = $node['x_coordinates'] + 0;
-            $node['y'] = $node['y_coordinates'] + 0;
-            if (empty($node['hideTooltip'])) {
-                unset($node['hideTooltip']);
-            }
-            if (empty($node['hideLabel'])) {
-                unset($node['hideLabel']);
-            }
-            $node['testEvent'] = $eventless;
-            $node['shape'] = 'image';
-            $nodes['nodes'][] = $node;
-
-            // The position the map was opened for
-            if (!empty($params['id']) && isset($node['id']) && (int) $node['id'] === (int) $params['id']) {
-                $highlight[] = (int) $params['id'];
-            }
-        }
-
-        // Canvas settings
-        $canvas_config = ['graphType' => 'Network',
-            'backgroundGradient2Color' => 'white', // background color 1
-            'backgroundGradient1Color' => 'white', // background color 2
-            'gradient' => false, // gradient
-            'networkFreezeOnLoad' => true,
-            'nodeFontColor' => 'rgb(29,34,43)', // color of the nodes
-            'imageDir' => $CFG_GLPI['url_base'] . PLUGIN_POSITIONS_NOTFULL_DIR . "/lib/canvas/images/",
-            //'zoom'                   => 1.0, // initial zoom
-            //'zoomStep'               => 0.5, // zoom step
-            'calculateLayout' => false,
-            'disableConfigurator' => true,
-            'showCode' => false, // display of the code
-            'nodeFontSize' => 6,
-            'fontName' => 'Verdana',
-            'resizable' => false,
+        return [
+            'locations_id' => (int) $params['locations_id'],
+            'editable'     => $editable,
+            'plan'         => [
+                'url'    => $CFG_GLPI['url_base'] . PLUGIN_POSITIONS_NOTFULL_DIR . '/front/map.send.php?docid=' . (int) $params['docid'],
+                'width'  => (int) $params['largeur'],
+                'height' => (int) $params['hauteur'],
+            ],
+            'nodes'        => $nodes,
+            'urls'         => [
+                'info' => PLUGIN_POSITIONS_WEBDIR . '/front/showinfos.php',
+                'map'  => PLUGIN_POSITIONS_WEBDIR . '/front/map.php',
+                'form' => PLUGIN_POSITIONS_WEBDIR . '/front/position.form.php',
+                'ajax' => PLUGIN_POSITIONS_WEBDIR . '/ajax/position.php',
+            ],
+            'labels'       => [
+                'information'   => __('Information'),
+                'edit'          => __('Edit'),
+                'delete'        => __('Delete the item'),
+                'confirmDelete' => __('Confirm the final deletion?'),
+            ],
         ];
-
-        // Canvas and its events
-        echo "<script>
-         $(document).ready(function(){
-            Ext.QuickTips.init();
-               var panel = new Ext.canvasXpress({
-               renderTo: 'Carte',
-               languages : " . json_encode(self::getJsLanguages()) . " ,
-               frame: false,
-               id: 'graph',
-               width: 1300,
-               height: 550,
-               highlightArray: " . json_encode($highlight) . ",
-               showExampleData: false,
-               imgDir: '../lib/canvas/images/',
-               data: " . json_encode($nodes) . ",
-               _glpi_csrf_token: " . json_encode(Session::getNewCSRFToken()) . ",
-               options:" . json_encode($canvas_config) . ",
-               events:{
-                  dblclick : function(obj){
-                     if (navigator.appName == 'Microsoft Internet Explorer')
-                          {
-                               var ua = navigator.userAgent;
-                               var re  = new RegExp(\"MSIE ([0-9]{1,}[\.0-9]{0,})\");
-                               if (re.exec(ua) != null){
-                                 rv = parseFloat( RegExp.$1 );
-                               }
-                               if ( rv == 9.0 ){
-                                 var n = obj.nodes[0];
-                                 var win = new Ext.Window({
-                                    id:n.id,
-                                    title:'Informations - '+Ext.util.Format.htmlEncode(n.name),
-                                    width:'600px',
-                                    height:'800px',
-                                    modal:false,
-                                    layout:'fit',
-                                    resizable:false,
-                                    autoLoad: function(n){
-                                                url: 'showinfos.php?items_id='+encodeURIComponent(n.items_id)+'&id='+encodeURIComponent(n.id)+
-                                            '&img='+encodeURIComponent(n.imagePath)+'&itemtype='+encodeURIComponent(n.itemtype)}
-
-                                 });
-                                 win.show();
-                                 if( n.itemtype =='Location'){
-                                    win.hide();
-                                 }
-                               }
-                               else{
-                                 alert('Download Internet Explorer v9.0');
-                               }
-                          }
-                  },
-                  click: function(obj) {
-                     var n = obj.nodes[0];
-                         var win = new Ext.Window({
-                            id:n.id,
-                            title:'Informations - '+Ext.util.Format.htmlEncode(n.name),
-                            width:'600px',
-                            height:'800px',
-                            modal:false,
-                            layout:'fit',
-                            resizable:false,
-                            autoLoad: {
-                            url: 'showinfos.php?items_id='+encodeURIComponent(n.items_id)+'&id='+encodeURIComponent(n.id)+
-                            '&img='+encodeURIComponent(n.imagePath)+'&itemtype='+encodeURIComponent(n.itemtype)}
-                         });
-                         win.show();
-                         if( n.itemtype =='Location'){
-                            win.hide();
-                         }
-                  }
-               }
-            });
-         });
-      </script>";
-
-        echo "<div id='Carte'></div>";
     }
 
     public static function displayItemTitle($itemclass)
@@ -1801,10 +1643,8 @@ class Position extends CommonDBTM
 
     public static function showGeolocLocation($id, $positions_id = 0)
     {
-        global $CFG_GLPI;
-
-        // Fragment loaded by the info window of the map (front/showinfos.php): Ext JS and
-        // geoloc.js (Position.openWindow()) are already on the page
+        // Fragment loaded in the info modal of the map (front/showinfos.php): the map of the
+        // sub-location in a frame
         $locations_id = (int) $id;
         $documents_id = self::getDocument($locations_id);
 
@@ -1813,9 +1653,8 @@ class Position extends CommonDBTM
             && $Doc->getFromDB($documents_id)) {
             $target = PLUGIN_POSITIONS_WEBDIR . "/front/geoloc.php?positions_id="
                 . (int) $positions_id . "&download=1&locations_id=" . $locations_id;
-            echo "<script type='text/javascript'>
-         Position.openWindow(" . json_encode($target) . ");
-         </script>";
+            echo "<iframe src='" . htmlescape($target) . "' class='w-100 border-0' style='height: 650px'"
+                . " title='" . htmlescape((string) $Doc->fields['name']) . "'></iframe>";
         }
     }
 
@@ -1841,107 +1680,5 @@ class Position extends CommonDBTM
         }
 
         return $params;
-    }
-
-    /**
-     * get all languages for js ext-canvas
-     *
-     * @return array $languages
-     */
-    public static function getJsLanguages()
-    {
-
-        $languages['alertVersion1'] = __('Please download a newer version of canvasXpress at', 'positions');
-        $languages['alertVersion2'] = __('You are using an older version that do not support all the functionality of this panel', 'positions');
-        $languages['deleteSelectedObjects'] = __('Delete selected objects', 'positions');
-        $languages['informationsAbout'] = __('Informations about', 'positions');
-        $languages['edit'] = __('Edit');
-        $languages['add'] = __('Add');
-        $languages['delete1'] = __('Delete the item');
-        $languages['hide'] = __('Hide', 'positions');
-        $languages['informationsAboutSelectedItems'] = __('informations about selected items', 'positions');
-        $languages['allHiddenObjects'] = __('All hidden objects', 'positions');
-        $languages['seeAllHiddenObjects'] = __('See all hidden objects', 'positions');
-        $languages['cancelModif'] = __('cancel last change', 'positions');
-        $languages['replayModif'] = __('Replay the last change', 'positions');
-        $languages['saveNetwork'] = __('Save as a new network', 'positions');
-        $languages['network'] = __('Network');
-        $languages['saveNetworkNow'] = __('Save the network now', 'positions');
-        $languages['simpleSearch'] = __('Simple search', 'positions');
-        $languages['importJsonData'] = __('Import JSON data', 'positions');
-        $languages['exportJsonData'] = __('Export JSON data', 'positions');
-        $languages['importJsonMovie'] = __('Import JSON movie', 'positions');
-        $languages['exportJsonMovie'] = __('Export JSON movie', 'positions');
-        $languages['forceSaveNetwork'] = __('Force save the entire network', 'positions');
-        $languages['advancedTest'] = __('Advanced test', 'positions');
-        $languages['refreshGraph'] = __('Refresh the graph', 'positions');
-        $languages['seeAsPicture'] = __('See as a picture', 'positions');
-        $languages['show'] = __('Show');
-        $languages['position'] = __('Position');
-        $languages['size'] = __('Size');
-        $languages['color'] = _n('Color', 'Colors', 1, 'positions');
-        $languages['colors'] = _n('Color', 'Colors', 2, 'positions');
-        $languages['scaleFactor'] = __('Scale Factor', 'positions');
-        $languages['boxed'] = __('Boxed', 'positions');
-        $languages['transpose'] = __('Transpose', 'positions');
-        $languages['searchOnObjects'] = __('Search on objects', 'positions');
-        $languages['search'] = __('Search');
-        $languages['advancedOptions'] = __('Advanced Options', 'positions');
-        $languages['searchKey'] = __('Search key', 'positions');
-        $languages['acceptedRegex'] = __('Regex accepted', 'positions');
-        $languages['oneLineByObject'] = __('One line by object', 'positions');
-        $languages['stopHighlighting'] = __('Stop highlighting', 'positions');
-        $languages['highlightObject'] = __('Highlight object', 'positions');
-        $languages['editSelectedObject'] = __('Edit selected object', 'positions');
-        $languages['selectedObject'] = __('Selected object', 'positions');
-        $languages['thisObject'] = __('This object', 'positions');
-        $languages['selectedObjectsAndAllThe'] = __('Selected objects and all the', 'positions');
-        $languages['thisObjectAndAllIts'] = __('This object and all its', 'positions');
-        $languages['doYouWantToDelete'] = __('Do you want to delete', 'positions');
-        $languages['linksWillBeDeleted'] = __('Links will be deleted', 'positions');
-        $languages['tooltip'] = __('Tooltip', 'positions');
-        $languages['objectType'] = __('Object type', 'positions');
-        $languages['requiredSelection'] = __('Required selection', 'positions');
-        $languages['imagePath'] = __('Image path', 'positions');
-        $languages['theObjectIsFixed'] = __('The object is fixed', 'positions');
-        $languages['cancel'] = _x('button', 'Cancel');
-        $languages['apply'] = _sx('button', 'Post');
-        $languages['objectEditor'] = __('Object editor', 'positions');
-        $languages['objectId'] = __('Object id', 'positions');
-        $languages['title'] = __('Title');
-        $languages['pattern'] = __('Pattern', 'positions');
-        $languages['edge'] = __('Edge', 'positions');
-        $languages['object'] = _n('Object', 'Objects', 1, 'positions');
-        $languages['objects'] = _n('Object', 'Objects', 2, 'positions');
-        $languages['general'] = __('General');
-        $languages['axes'] = __('Axes', 'positions');
-        $languages['labels'] = __('Label');
-        $languages['legend'] = __('Legend', 'positions');
-        $languages['indicators'] = __('Indicators', 'positions');
-        $languages['decorations'] = __('Decorations', 'positions');
-        $languages['data'] = __('Data', 'positions');
-        $languages['fontWeight'] = __('Font weight', 'positions');
-        $languages['properties'] = __('Properties', 'positions');
-        $languages['transform'] = __('Transform', 'positions');
-        $languages['ticks'] = __('Ticks', 'positions');
-        $languages['font'] = __('Font', 'positions');
-        $languages['layout'] = __('Layout', 'positions');
-        $languages['orientation'] = __('Orientation', 'positions');
-        $languages['overlays'] = __('Overlays', 'positions');
-        $languages['background'] = __('Background', 'positions');
-        $languages['gradient'] = __('Gradient', 'positions');
-        $languages['solid'] = __('Solid', 'positions');
-        $languages['name'] = __('Name');
-        $languages['width'] = __('Width', 'positions');
-        $languages['height'] = __('Height', 'positions');
-        $languages['text'] = __('Text', 'positions');
-        $languages['type'] = __('Type');
-        $languages['fieldsearched'] = __('Field searched', 'positions');
-        $languages['valuefound'] = __('Value found', 'positions');
-        $languages['menu'] = __('Menu', 'positions');
-        $languages['information'] = __('Information');
-        $languages['subtitle'] = __('Subtitle', 'positions');
-
-        return $languages;
     }
 }

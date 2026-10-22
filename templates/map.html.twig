@@ -25,8 +25,9 @@
  # --------------------------------------------------------------------------
  #}
 
-{# Map of a location, with its tools (Position::showMap()). The ids of the forms are read by
-   public/lib/canvas/ext-canvasXpress.js: locationform, addfromplugin, massiveaction_form, pointform #}
+{# Map of a location, with its tools (Position::showMap()). The map is drawn by
+   public/positions_map.js (Leaflet) from the data-positions-map attribute; the "multi" field of
+   pointform receives the coordinates of the markers moved #}
 
 {% if with_menu %}
     <div class="row g-3 mb-3">
@@ -69,12 +70,72 @@
             </div>
         {% endif %}
     </div>
-    <div class="card-body overflow-auto">
-        {# Inline scripts of canvasXpress, built by Position::displayMap() #}
-        {{ map_html|raw }}
+    <div class="card-body">
+        <div class="positions-map-wrapper">
+            <div id="positions-map" class="positions-map"
+                 data-positions-map="{{ map_data|json_encode }}"></div>
+            {% if map_data.editable %}
+                <div id="positions-context-menu" class="dropdown-menu positions-context-menu"></div>
+            {% endif %}
+        </div>
     </div>
 </div>
 
 {% if with_point_form %}
 </form>
+{% endif %}
+
+{% if map_data.editable %}
+<div class="modal fade" id="positions-edit-dialog" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <form class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ __('Edit') }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('Close') }}"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label" for="positions-edit-tooltip">{{ __('Tooltip', 'positions') }}</label>
+                    <input type="text" class="form-control" id="positions-edit-tooltip" name="tooltip" maxlength="255">
+                </div>
+                <div class="row g-3 mb-3">
+                    <div class="col-6">
+                        <label class="form-label" for="positions-edit-width">{{ __('Width', 'positions') }}</label>
+                        <input type="number" class="form-control" id="positions-edit-width" name="width" min="1" max="2000">
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" for="positions-edit-height">{{ __('Height', 'positions') }}</label>
+                        <input type="number" class="form-control" id="positions-edit-height" name="height" min="1" max="2000">
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" for="positions-edit-rotate">{{ __('Orientation', 'positions') }}</label>
+                        <input type="number" class="form-control" id="positions-edit-rotate" name="rotate" min="-360" max="360">
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" for="positions-edit-labelsize">{{ __('Size') }}</label>
+                        <input type="number" class="form-control" id="positions-edit-labelsize" name="labelSize" min="0.1" max="10" step="0.1">
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" for="positions-edit-color">{{ _n('Color', 'Colors', 1, 'positions') }}</label>
+                        <input type="color" class="form-control form-control-color" id="positions-edit-color" name="color">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-check">
+                            <input type="checkbox" class="form-check-input" name="hideLabel" value="1">
+                            <span class="form-check-label">{{ __('Hide', 'positions') }} - {{ __('Label') }}</span>
+                        </label>
+                        <label class="form-check">
+                            <input type="checkbox" class="form-check-input" name="hideTooltip" value="1">
+                            <span class="form-check-label">{{ __('Hide', 'positions') }} - {{ __('Tooltip', 'positions') }}</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ _x('button', 'Cancel') }}</button>
+                <button type="submit" class="btn btn-primary">{{ _x('button', 'Save') }}</button>
+            </div>
+        </form>
+    </div>
+</div>
 {% endif %}

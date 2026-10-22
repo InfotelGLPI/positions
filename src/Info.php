@@ -403,6 +403,14 @@ class Info extends CommonDBTM
         // The item type of a configuration is fixed once created
         unset($input['itemtype']);
 
+        // Its entity too: update() does not check the entity posted. It is only shared with the
+        // child entities by who may reach all of them
+        unset($input['entities_id']);
+        if (!empty($input['is_recursive'])
+            && !Session::haveRecursiveAccessToEntity((int) $this->fields['entities_id'])) {
+            unset($input['is_recursive']);
+        }
+
         if (isset($input['_fields']) && is_array($input['_fields'])) {
             $input['fields'] = implode(',', self::filterFields((string) $this->fields['itemtype'], $input['_fields']));
         }

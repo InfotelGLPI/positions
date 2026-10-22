@@ -26,42 +26,6 @@
  --------------------------------------------------------------------------
  */
 
-.x-window-mc {
-  background-color: #EAEEF1;
-}
-
-.x-window-tc,
-.x-window-bc {
-   background-image: url("../../lib/extjs/resources/images/default/window/top-bottom.png");
-}
-
-.x-window-ml,
-.x-window-mr  {
-   background-image: url("../../lib/extjs/resources/images/default/window/left-right.png");
-}
-
-.x-window-tl,
-.x-window-bl {
-   background-image: url("../../lib/extjs/resources/images/default/window/left-corners.png");
-}
-
-.x-window-tr,
-.x-window-br {
-   background-image: url("../../lib/extjs/resources/images/default/window/right-corners.png");
-}
-
-.x-panel-ghost {
-   background-color: #e6e6e6;
-}
-
-.x-panel-ghost ul {
-   border-color: #afafaf;
-}
-
-.x-panel-ghost .x-window-tl {
-   border-bottom-color: #afafaf;
-}
-
 .plugin_positions_tab_cadre_fixe {
    margin: 0 auto 10px auto;
     background-color: #ffffff;
@@ -104,10 +68,51 @@
     padding: 3px;
 }
 
-#Carte {
-   margin: 0 auto;
+/* Map of a location (public/positions_map.js, Leaflet) */
+.positions-map-wrapper {
    position: relative;
-   z-index:1;
+}
+
+.positions-map {
+   height: 70vh;
+   min-height: 400px;
+   background: #fff;
+   z-index: 1;
+}
+
+.positions-marker-icon {
+   background: none;
+   border: 0;
+}
+
+.positions-marker {
+   position: relative;
+   cursor: pointer;
+}
+
+.positions-marker img {
+   display: block;
+}
+
+.positions-marker-highlighted img {
+   outline: 3px solid #f59f00;
+   outline-offset: 2px;
+}
+
+.positions-marker-label {
+   position: absolute;
+   top: 100%;
+   left: 50%;
+   transform: translateX(-50%);
+   white-space: nowrap;
+   font-size: 10px;
+   color: rgb(29, 34, 43);
+   pointer-events: none;
+}
+
+.positions-context-menu {
+   position: absolute;
+   z-index: 1000;
 }
 
 .pics {
@@ -273,11 +278,6 @@
 
 area:hover {
    cursor: pointer;
-}
-
-div.x-window-ml object {
-    margin-left: 10px;
-    margin-top: 10px;
 }
 
 div.call img {
