@@ -34,6 +34,7 @@ use CommonDBTM;
 use CommonTreeDropdown;
 use DbUtils;
 use Dropdown;
+use Glpi\Application\View\TemplateRenderer;
 use GlpiPlugin\Resources\Resource;
 use Html;
 use Plugin;
@@ -200,159 +201,102 @@ class Info extends CommonDBTM
         }
 
         $this->initForm($ID, $options);
-        $this->showFormHeader($options);
 
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Name') . "&nbsp;:</td>";
-        echo "<td>";
-        echo Html::input('name', ['value' => $this->fields['name'], 'size' => 40]);
-        echo "</td>";
-        echo "<td rowspan='5'>" . __('Comments') . "&nbsp;:</td>";
-        echo "<td rowspan='5'>";
-        echo Html::textarea([
-                             'name'    => 'comment',
-                             'value' => $this->fields["comment"],
-                             'cols'    => '45',
-                             'rows'    => '8',
-                             'display' => false,
-                          ]);
-        echo "</td>";
-        echo "</tr>";
-
-        echo "<tr class='tab_bg_1'><td>" . __('Active') . "&nbsp;:</td>";
-        echo "<td>";
-        Dropdown::showYesNo('is_active', $this->fields['is_active']);
-        echo "</td></tr>";
-
-        echo "<tr class='tab_bg_1'><td>" . __('Displayed fields', 'positions') . "&nbsp;:</td>";
-        echo "<td>";
-
-        $this->showItemtype($ID, $this->fields['itemtype']);
-
-        echo "</td>";
-        echo "</tr>";
-
-        echo "<tr class='tab_bg_1'><td>" . __('Equipment', 'positions') . "&nbsp;:</td>";
-        echo "<td>";
-
-        self::selectCriterias($this);
-
-        echo "</td>";
-        echo "</tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td colspan='2'>";
-        $datestring = __('Last update') . ": ";
-        $date       = Html::convDateTime($this->fields["date_mod"]);
-        echo $datestring . $date;
-        echo "</td>";
-        echo "</tr>";
-
-        $this->showFormButtons($options);
+        TemplateRenderer::getInstance()->display('@positions/info_form.html.twig', [
+            'item'             => $this,
+            'params'           => $options,
+            'itemtype_field'   => $this->getItemtypeField($ID),
+            'criterias_field'  => self::getCriteriasField($this),
+        ]);
 
         return true;
     }
 
    /**
-    * Display a dropdown which contains all the available itemtypes
+    * The item type of the configuration: its name once saved, else a dropdown of the types
+    * without configuration yet, which reloads the list of their fields
     *
-    * @param ID the field widget item id
-    * @param value the selected value
+    * @param int $ID
     *
-    * @return nothing
+    * @return string HTML
     **/
-    function showItemtype($ID, $value = 0)
+    function getItemtypeField($ID)
     {
-        global $CFG_GLPI;
-
        //Criteria already added : only display the selected itemtype
         if ($ID > 0) {
             // Stored by an older version without check: the types of the plugin only
             if (!in_array($this->fields['itemtype'], Position::getTypes(), true)
                 || !($item = getItemForItemtype($this->fields['itemtype']))) {
-                return;
+                return '';
             }
-            echo htmlescape($item->getTypeName());
-            echo Html::hidden('itemtype', ['value' => $this->fields['itemtype']]);
-        } else {
-            $possible_types = Position::getTypes();
-            $dbu            = new DbUtils();
-            $restrict       = ["is_active"  => 1,
-                            "is_deleted" => 0]+$dbu->getEntitiesRestrictCriteria(
-                                "glpi_plugin_positions_infos",
-                                '',
-                                '',
-                                $this->maybeRecursive()
-                            );
-            $dbu   = new DbUtils();
-            $types = $dbu->getAllDataFromTable('glpi_plugin_positions_infos', $restrict);
-
-            if (!empty($types)) {
-                foreach ($types as $type) {
-                    foreach ($possible_types as $key => $val) {
-                        if ($type["itemtype"] == $val) {
-                             unset($possible_types[$key]);
-                        }
-                    }
-                }
-            }
-           //Add criteria : display dropdown
-            $options[0] = Dropdown::EMPTY_VALUE;
-            foreach ($possible_types as $itemtype) {
-                if (class_exists($itemtype)) {
-                    $item = new $itemtype();
-                    if ($item->can(-1, READ)) {
-                        $options[$itemtype] = $item->getTypeName($itemtype);
-                    }
-                }
-            }
-            asort($options);
-            $rand = Dropdown::showFromArray('itemtype', $options);
-
-            $params = ['itemtype' => '__VALUE__',
-                         'id'       => $ID];
-            Ajax::updateItemOnSelectEvent(
-                "dropdown_itemtype$rand",
-                "span_fields",
-                PLUGIN_POSITIONS_WEBDIR . "/ajax/dropdownInfoFields.php",
-                $params
-            );
+            return htmlescape($item->getTypeName())
+                . Html::hidden('itemtype', ['value' => $this->fields['itemtype']]);
         }
+
+        $possible_types = Position::getTypes();
+        $dbu            = new DbUtils();
+        $restrict       = ["is_active"  => 1,
+                        "is_deleted" => 0] + $dbu->getEntitiesRestrictCriteria(
+                            "glpi_plugin_positions_infos",
+                            '',
+                            '',
+                            $this->maybeRecursive()
+                        );
+        foreach ($dbu->getAllDataFromTable('glpi_plugin_positions_infos', $restrict) as $type) {
+            foreach ($possible_types as $key => $val) {
+                if ($type["itemtype"] == $val) {
+                    unset($possible_types[$key]);
+                }
+            }
+        }
+
+       //Add criteria : display dropdown
+        $options = [0 => Dropdown::EMPTY_VALUE];
+        foreach ($possible_types as $itemtype) {
+            $item = getItemForItemtype($itemtype);
+            if ($item && $item->can(-1, READ)) {
+                $options[$itemtype] = $item->getTypeName();
+            }
+        }
+        asort($options);
+
+        $rand = mt_rand();
+        $out  = Dropdown::showFromArray('itemtype', $options, ['rand' => $rand, 'display' => false]);
+        $out .= Ajax::updateItemOnSelectEvent(
+            "dropdown_itemtype$rand",
+            "span_fields",
+            PLUGIN_POSITIONS_WEBDIR . "/ajax/dropdownInfoFields.php",
+            ['itemtype' => '__VALUE__', 'id' => $ID],
+            false
+        );
+
+        return $out;
     }
 
    /**
-    * Display a list of available fields for widget fields
+    * List of the fields that may be displayed for the item type of the configuration
     *
-    * @param $widget CommonDBTM class
+    * @param CommonDBTM $config
     *
-    * @return
+    * @return string HTML of the multiple select, empty without a valid item type
     **/
-    static function selectCriterias(CommonDBTM $config)
+    static function getCriteriasField(CommonDBTM $config)
     {
         global $DB;
 
-        echo "<span id='span_fields' name='span_fields'>";
-
         // The item type may be posted: only the types of the plugin are instantiated
         if (!isset($config->fields['itemtype']) || !$config->fields['itemtype']
-            || !in_array($config->fields['itemtype'], Position::getTypes(), true)) {
-            echo "</span>";
-            return;
+            || !in_array($config->fields['itemtype'], Position::getTypes(), true)
+            || !($item = getItemForItemtype($config->fields['itemtype']))) {
+            return '';
         }
 
-        if (!isset($config->fields['entities_id'])) {
-            $config->fields['entities_id'] = $_SESSION['glpiactive_entity'];
-        }
+        $config_fields = explode(',', (string) ($config->fields['fields'] ?? ''));
+        $dbu           = new DbUtils();
+        $unallowed     = self::getUnallowedFields($config->fields['itemtype']);
+        $elements      = [];
+        $selected      = [];
 
-        $config_fields = explode(',', $config->fields['fields']);
-       //Search option for this type
-        $item = new $config->fields['itemtype']();
-
-       //Construct list
-        echo "<span id='span_fields' name='span_fields'>";
-        echo "<select name='_fields[]' multiple size='15' style='width:400px'>";
-
-        $dbu = new DbUtils();
         foreach ($DB->listFields($dbu->getTableForItemType($config->fields['itemtype'])) as $field) {
             $searchOption = $item->getSearchOptionByField(
                 'field',
@@ -371,17 +315,20 @@ class Info extends CommonDBTM
                 }
             }
 
-            if (!empty($searchOption)
-             && !in_array($field['Field'], self::getUnallowedFields($config->fields['itemtype']))) {
-                echo "<option value='" . htmlescape($field['Field']) . "'";
-                if (isset($config_fields) && in_array($field['Field'], $config_fields)) {
-                    echo " selected ";
+            if (!empty($searchOption) && !in_array($field['Field'], $unallowed)) {
+                $elements[$field['Field']] = (string) $searchOption['name'];
+                if (in_array($field['Field'], $config_fields)) {
+                    $selected[] = $field['Field'];
                 }
-                echo ">" . htmlescape((string) $searchOption['name']) . "</option>";
             }
         }
 
-        echo "</select></span>";
+        return Dropdown::showFromArray('_fields', $elements, [
+            'multiple' => true,
+            'values'   => $selected,
+            'width'    => '100%',
+            'display'  => false,
+        ]);
     }
 
    /**
@@ -568,49 +515,55 @@ class Info extends CommonDBTM
     }
 
    /**
-    * @param $item
-    * @param $itemclass
+    * Fields of the item shown in the information window of the map, as configured for its type
+    *
+    * @param array      $item      configuration (glpi_plugin_positions_infos)
+    * @param CommonDBTM $itemclass item clicked on the map
+    *
+    * @return array list of ['label' => string, 'value' => string, 'phone' => bool]
     */
-    static function showFields($item, $itemclass)
+    static function getFields($item, $itemclass)
     {
         global $DB;
 
-        if (isset($item["fields"])
-          && !empty($item["fields"])
-          && in_array($item['itemtype'], Position::getTypes(), true)
-          && ($target = getItemForItemtype($item['itemtype']))) {
-            $input  = explode(',', $item['fields']);
-            $dbu    = new DbUtils();
-            foreach ($DB->listFields($dbu->getTableForItemType($item['itemtype'])) as $field) {
-                if (in_array($field['Field'], $input)) {
-                    $searchOption = $target->getSearchOptionByField(
-                        'field',
-                        $field['Field'],
-                        $dbu->getTableForItemType($target->getType())
-                    );
+        $fields = [];
+        if (empty($item["fields"])
+          || !in_array($item['itemtype'], Position::getTypes(), true)
+          || !($target = getItemForItemtype($item['itemtype']))) {
+            return $fields;
+        }
 
-                    if (empty($searchOption)) {
-                        if ($table = $dbu->getTableNameForForeignKeyField($field['Field'])) {
-                            $crit = $dbu->getItemForItemtype($dbu->getItemTypeForTable($table));
-                            if ($crit instanceof CommonTreeDropdown) {
-                                 $searchOption = $target->getSearchOptionByField('field', 'completename', $table);
-                            } else {
-                                if (Plugin::isPluginActive('resources')) {
-                                    $searchOption = $target->getSearchOptionByField('field', 'name', $table);
-                                }
-                            }
-                        }
-                    }
+        $input = explode(',', $item['fields']);
+        $dbu   = new DbUtils();
+        foreach ($DB->listFields($dbu->getTableForItemType($item['itemtype'])) as $field) {
+            if (!in_array($field['Field'], $input)) {
+                continue;
+            }
+            $searchOption = $target->getSearchOptionByField(
+                'field',
+                $field['Field'],
+                $dbu->getTableForItemType($target->getType())
+            );
 
-                    if (!empty($searchOption)
-                     && isset($itemclass->fields[$field['Field']])
-                     && !empty($itemclass->fields[$field['Field']])
-                     && !in_array($field['Field'], self::getUnallowedFields($item['itemtype']))) {
-                        self::getFieldsValue($searchOption, $field, $itemclass);
+            if (empty($searchOption)) {
+                if ($table = $dbu->getTableNameForForeignKeyField($field['Field'])) {
+                    $crit = $dbu->getItemForItemtype($dbu->getItemTypeForTable($table));
+                    if ($crit instanceof CommonTreeDropdown) {
+                        $searchOption = $target->getSearchOptionByField('field', 'completename', $table);
+                    } elseif (Plugin::isPluginActive('resources')) {
+                        $searchOption = $target->getSearchOptionByField('field', 'name', $table);
                     }
                 }
             }
+
+            if (!empty($searchOption)
+             && !empty($itemclass->fields[$field['Field']])
+             && !in_array($field['Field'], self::getUnallowedFields($item['itemtype']))) {
+                $fields[] = self::getFieldsValue($searchOption, $field, $itemclass);
+            }
         }
+
+        return $fields;
     }
 
    /**
@@ -656,163 +609,139 @@ class Info extends CommonDBTM
     }
 
    /**
+    * Value of a field of the item, as text: escaped by the template
+    *
     * @param $searchOption
     * @param $field
     * @param $itemclass
+    *
+    * @return array ['label' => string, 'value' => string, 'phone' => bool]
     */
     static function getFieldsValue($searchOption, $field, $itemclass)
     {
-        global $CFG_GLPI;
-
         $display = (string) $itemclass->fields[$field['Field']];
-        echo "<h3><span class='title'>" . htmlescape((string) $searchOption['name']) . " : </span>";
+        $phone   = false;
 
-        // Values of the item, stored raw: escaped in every context
         $type = self::getTypeFields($searchOption);
         if ($type == 'dropdown') {
-            echo htmlescape((string) Dropdown::getDropdownName($searchOption['table'], $display));
+            $display = (string) Dropdown::getDropdownName($searchOption['table'], $display);
         } elseif (isset($searchOption['datatype'])
                  && $searchOption['datatype'] == 'decimal') {
-            echo htmlescape(Html::formatNumber($display, 2));
+            $display = Html::formatNumber($display, 2);
         } elseif ($searchOption['table'] == 'glpi_users') {
-            $dbu = new DbUtils();
-            echo htmlescape((string) $dbu->getUserName($display));
+            $dbu     = new DbUtils();
+            $display = (string) $dbu->getUserName($display);
         } elseif ($searchOption['field'] == 'contact_num' || $searchOption['field'] == 'number_line') {
-            echo "<img src='" . PLUGIN_POSITIONS_WEBDIR . "/pics/miniphones.png' title='" .
-              htmlescape($display) . "'>&nbsp;
-         <a href=\"tel:" . htmlescape(rawurlencode($display)) . "\">" .
-              htmlescape($display) . "</a>";
-        } else {
-            echo htmlescape($display);
+            $phone = true;
         }
 
-        echo "</h3></br>";
+        return [
+            'label' => (string) $searchOption['name'],
+            'value' => $display,
+            'phone' => $phone,
+        ];
     }
 
    /**
+    * Link to the item, or to the map of a location
+    *
     * @param $itemclass
+    *
+    * @return array ['url' => string, 'title' => string]
     */
     static function getDirectLink($itemclass)
     {
-        global $CFG_GLPI;
+        $title = (string) ($itemclass->fields["name"] ?? '');
 
-        if (isset($itemclass->fields["name"])
-          && !empty($itemclass->fields["name"])
-          && $itemclass->getType() != Location::class) {
-            echo "<h3>" . __('Direct link', 'positions') . " : ";
-
-            echo "<a href='" . Toolbox::getItemTypeFormURL($itemclass->getType()) .
-              "?id=" . (int) $itemclass->fields["id"] . "' target='_blank'>";
-            $title  = $itemclass->fields["name"];
+        if ($title !== '' && $itemclass->getType() != Location::class) {
             if (Plugin::isPluginActive("resources")
              && $itemclass->getType() == Resource::class) {
                 $title = $itemclass->fields["firstname"] . " " . $itemclass->fields["name"];
             }
-            echo htmlescape((string) $title);
-            echo "</a>";
-
-            echo "</h3></br>";
-        } else {
-            echo "<h3>" . __('Direct link', 'positions') . " : ";
-
-            echo "<a href='" . PLUGIN_POSITIONS_WEBDIR .
-              "/front/map.php?locations_id=" . (int) $itemclass->fields["id"] . "'
-         target='_blank'>";
-            $title = $itemclass->fields["name"];
-            echo htmlescape((string) $title);
-            echo "</a>";
-
-            echo "</h3></br>";
+            return [
+                'url'   => Toolbox::getItemTypeFormURL($itemclass->getType()) . "?id=" . (int) $itemclass->fields["id"],
+                'title' => $title,
+            ];
         }
+
+        return [
+            'url'   => PLUGIN_POSITIONS_WEBDIR . "/front/map.php?locations_id=" . (int) $itemclass->fields["id"],
+            'title' => $title,
+        ];
     }
 
    /**
-    * @param      $itemclass
-    * @param bool $export
+    * Phones of the user linked to a resource (plugin resources)
+    *
+    * @param CommonDBTM $itemclass
+    *
+    * @return array list of ['location' => string, 'contact_num' => ?string, 'number_line' => ?string]
+    */
+    static function getCallPhones($itemclass)
+    {
+        $phones_list = [];
+        if ($itemclass->getType() != Resource::class) {
+            return $phones_list;
+        }
+
+        $dbu   = new DbUtils();
+        $infos = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items', [
+            "plugin_resources_resources_id" => $itemclass->fields['id'],
+            "itemtype"                      => User::class,
+        ]);
+        foreach ($infos as $info) {
+            if (empty($info['items_id'])) {
+                continue;
+            }
+            $condition = ["users_id"    => $info['items_id'],
+                 "is_deleted"  => 0,
+                 "is_template" => 0,
+                 "entities_id" => $itemclass->fields['entities_id'],
+                 "NOT"         => ["contact_num" => 0]];
+
+            // Numbers and locations of the phones of the user: only the phones
+            // the viewer may read, not on the sole right of the cartography
+            $phone_item = new Phone();
+            $phones = array_filter(
+                $dbu->getAllDataFromTable('glpi_phones', $condition),
+                static fn(array $row): bool => $phone_item->can((int) $row['id'], READ),
+            );
+            foreach ($phones as $phone) {
+                $phones_list[] = [
+                    'location'    => count($phones) > 1
+                        ? (string) Dropdown::getDropdownName("glpi_locations", $phone["locations_id"])
+                        : '',
+                    'contact_num' => $phone['contact_num'] !== null ? (string) $phone['contact_num'] : null,
+                    'number_line' => $phone['number_line'] !== null ? (string) $phone['number_line'] : null,
+                ];
+            }
+        }
+
+        return $phones_list;
+    }
+
+   /**
+    * Phone numbers of the user linked to a resource, as plain text (tooltip of the map):
+    * the first phone, as the text export always did
+    *
+    * @param $itemclass
     *
     * @return string
     */
-    static function getCallValue($itemclass, $export = false)
+    static function getCallValue($itemclass)
     {
-        global $CFG_GLPI;
-
         $display = "";
-        switch ($itemclass->getType()) {
-            case Resource::class:
-                $resID      = $itemclass->fields['id'];
-                $entitiesID = $itemclass->fields['entities_id'];
-                $restrict   = ["plugin_resources_resources_id" => $resID,
-                           "itemtype" => User::class];
-                $dbu        = new DbUtils();
-                $infos      = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items', $restrict);
-                if (!empty($infos)) {
-                    foreach ($infos as $info) {
-                        if (isset($info['items_id']) && ($info['items_id'] > 0)) {
-                              $userid    = $info['items_id'];
-                              $condition = ["users_id"    => $userid,
-                                   "is_deleted"  => 0,
-                                   "is_template" => 0,
-                                   "entities_id" => $entitiesID,
-                                   "NOT"         => ["contact_num" => 0]];
-
-                              // Numbers and locations of the phones of the user: only the phones
-                              // the viewer may read, not on the sole right of the cartography
-                              $phone_item = new Phone();
-                              $phones = array_filter(
-                                  $dbu->getAllDataFromTable('glpi_phones', $condition),
-                                  static fn(array $row): bool => $phone_item->can((int) $row['id'], READ),
-                              );
-                              if (!empty($phones)) {
-                                  foreach ($phones as $phone) {
-                                      $contact_num = $phone['contact_num'];
-                                      $number_line = $phone['number_line'];
-
-                                      $location = Dropdown::getDropdownName(
-                                          "glpi_locations",
-                                          $phone["locations_id"]
-                                      );
-
-                                      if (!$export) {
-                                              echo "<h3>";
-                                      }
-                                      if (isset($contact_num) && $contact_num != null) {
-                                          if (!$export) {
-                                              if (count($phones) > 1) {
-                                                  echo htmlescape((string) $location) . " : <br>";
-                                              }
-                                              echo "<span class='title'>" . __s('Alternate username number') . " : </span>";
-                                              echo "<img src='" . PLUGIN_POSITIONS_WEBDIR . "/pics/miniphones.png' title='" .
-                                              htmlescape((string) $contact_num) . "'>&nbsp;
-                                 <a href=\"tel:" . htmlescape(rawurlencode((string) $contact_num)) . "\">" .
-                                              htmlescape((string) $contact_num) . "</a>&nbsp;&nbsp;&nbsp;&nbsp;";
-                                          } else {
-                                              $display .= "\n" . __('Alternate username number') . " : " . $contact_num;
-                                          }
-                                      }
-                                      if (isset($number_line) && $number_line != null) {
-                                          if (!$export) {
-                                              echo "<span class='title'>" . _sx('quantity', 'Number of lines') . " : </span>";
-                                              echo "<img src='" . PLUGIN_POSITIONS_WEBDIR . "/pics/miniphones.png' title='" .
-                                              htmlescape((string) $number_line) . "'>&nbsp;
-                                 <a href=\"tel:" . htmlescape(rawurlencode((string) $number_line)) . "\">" .
-                                              htmlescape((string) $number_line) . "</a>";
-                                          } else {
-                                              $display .= "\n" . _x('quantity', 'Number of lines') . " :\n" . $number_line;
-                                          }
-                                      }
-                                      if (!$export) {
-                                            echo "</h3>";
-                                      }
-
-                                      if ($export) {
-                                          return $display;
-                                      }
-                                  }
-                              }
-                        }
-                    }
-                }
-                break;
+        $phones  = self::getCallPhones($itemclass);
+        if (!empty($phones)) {
+            $phone = $phones[0];
+            if (!empty($phone['contact_num'])) {
+                $display .= "\n" . __('Alternate username number') . " : " . $phone['contact_num'];
+            }
+            if (!empty($phone['number_line'])) {
+                $display .= "\n" . _x('quantity', 'Number of lines') . " :\n" . $phone['number_line'];
+            }
         }
+
+        return $display;
     }
 }

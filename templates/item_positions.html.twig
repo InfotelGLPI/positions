@@ -1,0 +1,74 @@
+{#
+ # -------------------------------------------------------------------------
+ # positions plugin for GLPI
+ # Copyright (C) 2009-2022 by the positions Development Team.
+ #
+ # https://github.com/InfotelGLPI/positions
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of positions.
+ #
+ # positions is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # positions is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with positions. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+{# Tab "Cartographies" of an item: its positions on the maps (Position::showPluginFromItems()) #}
+
+<div class="card mb-3">
+    <div class="card-header d-flex align-items-center gap-2">
+        <i class="ti ti-map-pin"></i>
+        <strong>{{ __('Associated coordinate', 'positions') }}</strong>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover table-vcenter card-table">
+            <thead>
+                <tr>
+                    <th>{{ __('Name') }}</th>
+                    {% if multi_entity %}
+                        <th>{{ __('Entity') }}</th>
+                    {% endif %}
+                    <th class="text-end">{{ __('Coordinate x', 'positions') }}</th>
+                    <th class="text-end">{{ __('Coordinate y', 'positions') }}</th>
+                    {% if candelete %}
+                        <th class="w-1"></th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in rows %}
+                    <tr{{ row.is_deleted ? ' class="table-secondary"' : '' }}>
+                        <td>
+                            {% if row.url %}
+                                <a href="{{ row.url }}">{{ row.name }}</a>
+                                {{ row.geoloc_link|raw }}
+                            {% else %}
+                                {{ row.name }}
+                            {% endif %}
+                        </td>
+                        {% if multi_entity %}
+                            <td>{{ row.entity }}</td>
+                        {% endif %}
+                        <td class="text-end">{{ row.x }}</td>
+                        <td class="text-end">{{ row.y }}</td>
+                        {% if candelete %}
+                            <td>{{ row.delete_form|raw }}</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

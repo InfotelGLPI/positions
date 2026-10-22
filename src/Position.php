@@ -37,6 +37,7 @@ use DbUtils;
 use Document;
 use Document_Item;
 use Dropdown;
+use Glpi\Application\View\TemplateRenderer;
 use Glpi\Event;
 use Glpi\Socket;
 use GlpiPlugin\Resources\Resource;
@@ -277,6 +278,18 @@ class Position extends CommonDBTM
 
     public function prepareInputForUpdate($input)
     {
+        // An item linked by an update gets the same checks as on creation
+        if (isset($input['itemtype']) || isset($input['items_id'])) {
+            $itemtype = str_replace('\\\\', '\\', (string) ($input['itemtype'] ?? $this->fields['itemtype']));
+            $items_id = (int) ($input['items_id'] ?? $this->fields['items_id']);
+            $linked   = in_array($itemtype, self::getTypes(), true) ? getItemForItemtype($itemtype) : false;
+            if (!$linked || !$linked->can($items_id, READ)) {
+                Session::addMessageAfterRedirect(__s('No equipment associated', 'positions'), false, ERROR);
+                return false;
+            }
+            $input['itemtype'] = $itemtype;
+            $input['items_id'] = $items_id;
+        }
 
         $input = $this->checkValues($input);
 
@@ -411,11 +424,13 @@ class Position extends CommonDBTM
 
     public static function countForItem(CommonDBTM $item)
     {
+        // The positions the tab lists: of the entities of the user
         $dbu = new DbUtils();
         return $dbu->countElementsInTable(
             'glpi_plugin_positions_positions',
             ["itemtype" => $item->getType(),
                 "items_id" => $item->getID()]
+            + getEntitiesRestrictCriteria('glpi_plugin_positions_positions', '', '', true)
         );
     }
 
@@ -462,12 +477,10 @@ class Position extends CommonDBTM
      */
     public static function showMapCreateLocation($options = [])
     {
-        global $DB, $CFG_GLPI;
+        global $DB;
 
-        // Both end in the inline script below: integers, the message through json_encode()
         $document_id = (int) $options["document_id"];
         $locations_idParent = (int) $options["locations_id"];
-        $test = '';
 
         if (!Session::haveRight('plugin_positions', READ)) {
             return false;
@@ -477,169 +490,52 @@ class Position extends CommonDBTM
             throw new \Glpi\Exception\Http\AccessDeniedHttpException();
         }
 
-        Html::requireJs('positions');
-
-        $alert = json_encode(__('Select an area and click on OK', 'positions'));
-
-        echo Html::scriptBlock('$(document).ready(function() {
-         jQuery(function($){
-         $(\'#target\').Jcrop({
-            onChange:   showCoords,
-            onSelect:   showCoords,
-            onRelease:  clearCoords
-            });
-         });});');
-
-        echo "<script type='text/javascript'>
-         function showCoords(c) {
-         $('#x1').val(c.x);
-         $('#y1').val(c.y);
-         $('#x2').val(c.x2);
-         $('#y2').val(c.y2);
-         $('#w').val(c.w);
-         $('#h').val(c.h);
-         $('#document_id').val($document_id);
-      };
-         function clearCoords(){
-         $('coords input').val('');
-      };
-
-         function checkCoords()
-      {
-         if (parseInt(jQuery('#w').val())>0) return true;
-         if ('#name'=='') return true;
-         alert($alert);
-         return false;
-      }
-
-         function showlist(divName,etat)
-      {
-         if(divName == 'existLocation'){
-            document.getElementById(divName).style.visibility=etat;
-            document.getElementById('newLocation').style.visibility='hidden';
-            $('#test').val('existLocation');
-         }
-         else if(divName == 'newLocation'){
-            document.getElementById(divName).style.visibility=etat;
-            document.getElementById('existLocation').style.visibility='hidden';
-            $('#test').val('newLocation');
-            $('#locations_idParent').val($locations_idParent);
-         }
-      }
-      </script>";
-
         $Doc = new Document();
-        if ($Doc->getFromDB($document_id)) {
-            $entities_id = $Doc->fields["entities_id"];
-            $path = GLPI_DOC_DIR . "/" . $Doc->fields["filepath"];
-            $img = PLUGIN_POSITIONS_WEBDIR . "/front/map.send.php?docid=" . $document_id;
-            $dim = getimagesize($path);
-            $extension = pathinfo($path, PATHINFO_EXTENSION);
-
-            if ($extension == 'PNG'
-                || $extension == 'JPEG'
-                || $extension == 'JPG'
-                || $extension == 'GIF') {
-                echo "<form action=\"crop.form.php\" method=\"post\" onsubmit=\"return checkCoords();\" >";
-
-                // Existing locations
-                echo "<table class='tab_cadre_fixe'>";
-                echo "<tr class='tab_bg_1'><th colspan='2'>";
-                echo __('Creation of sub-areas on the map', 'positions');
-                echo "</th></tr>";
-
-                echo "<tr class='tab_bg_1'>";
-                echo "<td>";
-                echo "<input type=\"radio\" name=\"choice\" value=\"existLocation\"
-                     onclick=\"showlist('existLocation','visible')\">";
-                echo __('Choose an existing location', 'positions');
-                echo "</td>";
-
-                echo "<td id=\"existLocation\" class='left' style=\"visibility:hidden\">";
-                $locations = [];
-                foreach ($DB->request([
-                    'SELECT' => ['id'],
-                    'FROM'   => 'glpi_locations',
-                    'WHERE'  => [
-                        'locations_id' => (int) $locations_idParent,
-                        'NOT'          => ['name' => new \Glpi\DBAL\QuerySubQuery([
-                            'SELECT' => 'name',
-                            'FROM'   => 'glpi_documents',
-                        ])],
-                    ],
-                ]) as $data) {
-                    $locations[] = $data['id'];
-                }
-                if (!empty($locations)) {
-                    $condition = ['glpi_locations.id' => $locations];
-
-                    Dropdown::show(Location::class, ['value' => $locations_idParent,
-                        'entity' => $_SESSION["glpiactive_entity"],
-                        'condition' => $condition]);
-                } else {
-                    echo __('No sub-area found', 'positions');
-                }
-                echo "</td>";
-                echo "</tr>";
-
-                //Ajout d'un nouveau lieu
-                echo "<tr class='tab_bg_1'>";
-                echo "<td>";
-                echo "<input type=\"radio\" checked name=\"choice\" value=\"newLocation\"
-                     onclick=\"showlist('newLocation','visible')\">";
-                echo __('Create a new location', 'positions');
-                echo "</td>";
-
-                echo "<td id=\"newLocation\" class='left' style=\"visibility:hidden\">";
-                echo __('Name') . " : ";
-                echo Html::input('name', ['id' => 'name', 'size' => 40]);
-                echo "</td>";
-                echo "</tr>";
-
-                //Validation
-                echo "<tr class='tab_bg_2'>";
-                echo "<td class='center' colspan=2>";
-                echo Html::hidden('x1', ['id' => 'x1', 'value' => 'x1']);
-                echo Html::hidden('y1', ['id' => 'y1', 'value' => 'y1']);
-                echo Html::hidden('x2', ['id' => 'x2', 'value' => 'x2']);
-                echo Html::hidden('y2', ['id' => 'y2', 'value' => 'y2']);
-                echo Html::hidden('w', ['id' => 'w', 'value' => 'w']);
-                echo Html::hidden('h', ['id' => 'h', 'value' => 'h']);
-                echo Html::hidden('document_id', ['id' => 'document_id', 'value' => 'document_id']);
-                echo Html::hidden('extension', ['id' => 'extension', 'value' => $extension]);
-                echo Html::hidden('test', ['id' => 'test', 'value' => $test]);
-                echo Html::hidden('locations_idParent', ['id' => 'locations_idParent', 'value' => $locations_idParent]);
-                echo Html::hidden('entities_id', ['id' => 'entities_id', 'value' => $entities_id]);
-
-
-                // Checkbox to go on adding sub-areas
-                echo "<input type=\"checkbox\" id=\"continueAdd\" name=\"continueAdd\">&nbsp;";
-                echo __('Add and continue', 'positions');
-                echo Html::submit(_sx('button', 'Add'), ['name' => 'valid', 'class' => 'btn btn-primary']);
-                echo "</td>";
-                echo "</tr>";
-
-                echo "</table>";
-
-                echo "<table class='tab_cadre'>";
-                echo "<tr class='tab_bg_1'><th>";
-                echo htmlescape((string) $Doc->fields["name"]);
-                echo "<div id=\"imageCrop\"> ";
-                echo "<img src='" . $img . "' id=\"target\" alt=\"$document_id\" width=\"$dim[0]\" height=\"$dim[1]\" />";
-                echo "</div> ";
-                echo "</th></tr>";
-                echo "</table>";
-
-                echo "<script type='text/javascript'>";
-                echo "showlist('newLocation','visible');";
-                echo "</script>";
-
-                Html::closeForm();
-            }
-        } else {
+        if (!$Doc->getFromDB($document_id)) {
             Html::redirect(PLUGIN_POSITIONS_WEBDIR
                 . "/front/map.php?locations_id=" . $locations_idParent);
         }
+
+        $path = GLPI_DOC_DIR . "/" . $Doc->fields["filepath"];
+        // Upper case, as compared here and in cropPicture(): ".png" maps were refused
+        $extension = strtoupper(pathinfo($path, PATHINFO_EXTENSION));
+        if (!in_array($extension, ['PNG', 'JPEG', 'JPG', 'GIF'], true)) {
+            return false;
+        }
+        $dim = getimagesize($path);
+
+        // Sub-locations of the parent which have no map yet
+        $locations = [];
+        foreach ($DB->request([
+            'SELECT' => ['id'],
+            'FROM'   => 'glpi_locations',
+            'WHERE'  => [
+                'locations_id' => $locations_idParent,
+                'NOT'          => ['name' => new \Glpi\DBAL\QuerySubQuery([
+                    'SELECT' => 'name',
+                    'FROM'   => 'glpi_documents',
+                ])],
+            ],
+        ]) as $data) {
+            $locations[] = $data['id'];
+        }
+
+        // Jcrop draws the selection on the map; public/positions_crop.js fills the hidden fields
+        Html::requireJs('positions_crop');
+
+        TemplateRenderer::getInstance()->display('@positions/crop_form.html.twig', [
+            'form_url'           => PLUGIN_POSITIONS_WEBDIR . '/front/crop.form.php',
+            'document_id'        => $document_id,
+            'document_name'      => (string) $Doc->fields["name"],
+            'img_url'            => PLUGIN_POSITIONS_WEBDIR . "/front/map.send.php?docid=" . $document_id,
+            'width'              => (int) ($dim[0] ?? 0),
+            'height'             => (int) ($dim[1] ?? 0),
+            'extension'          => $extension,
+            'locations_idParent' => $locations_idParent,
+            'entities_id'        => (int) $Doc->fields["entities_id"],
+            'sub_locations'      => $locations,
+            'empty_area_message' => __('Select an area and click on OK', 'positions'),
+        ]);
     }
 
     public static function cropPicture($input)
@@ -665,6 +561,16 @@ class Position extends CommonDBTM
             || !$Doc->can($document_id, READ)
             || !$parent->can($locations_idParent, READ)) {
             throw new \Glpi\Exception\Http\AccessDeniedHttpException();
+        }
+        // They must also belong together: the source is the map of the parent location, and the
+        // sub-area is created in the entity of the parent (or one below it when it is recursive)
+        if ($document_id !== (int) self::getDocument($locations_idParent)) {
+            throw new \Glpi\Exception\Http\BadRequestHttpException();
+        }
+        $parent_entity = (int) $parent->fields['entities_id'];
+        if ($entities_id !== $parent_entity
+            && !($parent->isRecursive() && in_array($entities_id, getSonsOf('glpi_entities', $parent_entity)))) {
+            $entities_id = $parent_entity;
         }
 
         if ($test == "newLocation") {
@@ -854,7 +760,8 @@ class Position extends CommonDBTM
             } elseif ($opt["test"] == 'existLocation') {
                 $documentitem->add(['documents_id' => $newdoc,
                     'itemtype' => Location::class,
-                    'items_id' => $id]);
+                    'items_id' => $id,
+                    'entities_id' => $opt["entities_id"]]);
 
                 $param = [
                     "items_id" => $id,
@@ -882,82 +789,50 @@ class Position extends CommonDBTM
 
     public function showForm($ID, $options = [])
     {
-
         $this->initForm($ID, $options);
-        $this->showFormHeader($options);
 
-        echo "<tr class='tab_bg_1'>";
-
-        echo "<td>" . __('Name') . ": </td>";
-        echo "<td>";
-        echo Html::input('name', ['value' => $this->fields['name'], 'size' => 40]);
-        echo "</td>";
-
-        echo "<td>" . __('Coordinate x', 'positions') . ": </td>";
-        echo "<td>";
-        if ($ID > 0) {
-            echo Html::input('x_coordinates', ['value' => $this->fields['x_coordinates'], 'size' => 10]);
-        }
-        echo "</td>";
-
-        echo "</tr>";
-
-        echo "<tr class='tab_bg_1'>";
-
-        echo "<td>" . __s('Associated element', 'positions') . ": </td>";
-        echo "<td>";
-
+        $item_field = '';
         if ($ID < 0
             || (!$this->fields['itemtype']
                 && !$this->fields['items_id'])
         ) {
-            $types = self::getTypes();
-
-            Dropdown::showSelectItemFromItemtypes(['items_id_name' => "items_id",
+            $item_field = Dropdown::showSelectItemFromItemtypes(['items_id_name' => "items_id",
                 'entity_restrict' => ($this->fields['is_recursive'] ? -1 : $this->fields['entities_id']),
-                'itemtypes' => $types,
+                'itemtypes' => self::getTypes(),
+                'display' => false,
             ]);
-        } else {
-            if ($this->fields['itemtype']
-                && $this->fields['items_id']) {
-                if (class_exists($this->fields['itemtype'])) {
-                    $item = new $this->fields['itemtype']();
-                    $item->getFromDB($this->fields['items_id']);
-                    echo htmlescape($item->getTypeName()) . " - ";
-                    echo $item->getLink() . " - ";
-                    echo htmlescape((string) Dropdown::getDropdownName("glpi_locations", $item->fields['locations_id']));
-                }
+        } elseif ($this->fields['itemtype']
+            && $this->fields['items_id']
+            && in_array($this->fields['itemtype'], self::getTypes(), true)
+            && ($item = getItemForItemtype($this->fields['itemtype']))) {
+            $item_field = htmlescape($item->getTypeName()) . " - ";
+            // As on the map, the item itself is shown only to who may read it
+            if ($item->can((int) $this->fields['items_id'], READ)) {
+                $item_field .= $item->getLink() . " - "
+                    . htmlescape((string) Dropdown::getDropdownName("glpi_locations", $item->fields['locations_id']));
+            } else {
+                $item_field .= __s('Restricted item');
             }
         }
-        echo "</td>";
 
-        echo "<td>" . __('Coordinate y', 'positions') . ": </td>";
-        echo "<td>";
-        if ($ID > 0) {
-            echo Html::input('y_coordinates', ['value' => $this->fields['y_coordinates'], 'size' => 10]);
-        }
-        echo "</td>";
-
-        echo "</tr>";
-
-        $this->showFormButtons($options);
+        TemplateRenderer::getInstance()->display('@positions/position_form.html.twig', [
+            'item'       => $this,
+            'params'     => $options,
+            'item_field' => $item_field,
+            // Coordinates are set on the map, once the position exists
+            'show_coordinates' => $ID > 0,
+        ]);
 
         return true;
     }
 
     public static function showAddPosition($item)
     {
-
         if ($item->getField('id') > 0
             && Session::haveRight('plugin_positions', READ)) {
-            echo "<div class='center'><table class='tab_cadre_fixe'>";
-            echo "<tr class='tab_bg_1'>";
-            echo "<td colspan='4' class='center'>";
-            echo "<a class='submit btn btn-primary' href='./coordinates.form.php?id=" . $item->getField('id') . "'>"
-                . __('Change the coordinates', 'positions') . "</a>";
-            echo "</td>";
-            echo "</tr>";
-            echo "</table></div>";
+            TemplateRenderer::getInstance()->display('@positions/position_map_link.html.twig', [
+                'coordinates_url' => PLUGIN_POSITIONS_WEBDIR . '/front/coordinates.form.php?id=' . (int) $item->getField('id'),
+            ]);
         }
     }
 
@@ -1029,6 +904,8 @@ class Position extends CommonDBTM
      */
     public static function showMap($options)
     {
+        // Ext JS and canvasXpress, on the pages of the map only
+        Html::requireJs('positions_map');
 
         $options['id'] = (int) $options['id'];
         // Types displayed: posted as a list, or "0" when none is checked; a plain string made
@@ -1080,120 +957,83 @@ class Position extends CommonDBTM
                         $params["download"] = 0;
                     }
 
-                    echo "<div class='center'><table class='plugin_positions_tab_cadre_fixe'>";
-                    echo "<tr class='tab_bg_2' valign='top'>";
+                    $items     = self::getMapItems($params['locations_id']);
+                    $with_menu = !isset($options['menuoff']);
+                    $canupdate = Session::haveRight('plugin_positions', UPDATE);
 
-                    $items = self::getMapItems($params['locations_id']);
-
-                    if (!isset($options['menuoff'])) {
-                        echo "<td>";
-                        self::showLocationForm($params["locations_id"], "100%");
-                        echo "</td>";
+                    // Link to the position the map was opened for, when the user may read it
+                    $position_link = '';
+                    $position      = new self();
+                    if ($options['id'] && $position->can($options['id'], READ)) {
+                        $position_link = $position->getLink();
                     }
-                    if (Session::haveRight('plugin_positions', UPDATE)
-                        && !isset($options['menuoff'])) {
-                        echo "<td>";
-                        self::showAddFromPlugin($params['locations_id']);
-                        echo "</td>";
-                        echo "<td>";
-                        self::selectDisplay($params, $items);
-                        echo "</td>";
-                    }
-                    echo "</tr>";
-                    echo "</table></div>";
 
-                    if (isset($options['menuoff'])) {
+                    if (!$with_menu) {
                         $params["menuoff"] = $options['menuoff'];
                     }
 
-                    if (Session::haveRight('plugin_positions', UPDATE)
-                        && !isset($options['menuoff'])) {
-                        echo "<form method='post' name='pointform' id='pointform' action=\""
-                            . Toolbox::getItemTypeFormURL(self::getType()) . "\">";
-
-                        echo "<div class='center'>";
-                        echo "<table class='plugin_positions_tab_cadre_fixe' width='30%'>";
-
-                        if ($options['id']) {
-                            echo "<tr class='tab_bg_2'>";
-                            echo "<td colspan='4' class='center'>"
-                                . $self->getLink();
-                            echo "</td></tr>";
-                        }
-                        echo "<tr class='tab_bg_2'>";
-                        echo "<td colspan='2' class='center'>";
-                        echo Html::submit(__s('Save the coordinates', 'positions'), ['name' => 'update', 'class' => 'btn btn-primary']);
-                        echo "</td>";
-                        // Button to create sub-areas
-                        echo "<td colspan='2' class='center'>";
-                        echo Html::submit(__s('Add a sub-area', 'positions'), ['name' => 'addLocation', 'class' => 'btn btn-primary']);
-                        echo "</td>";
-
-                        echo Html::hidden('locations_id', ['value' => $options['locations_id']]);
-                        echo Html::hidden('id', ['value' => $options['id']]);
-                        echo Html::hidden('x_coordinates', ['value' => 0]);
-                        echo Html::hidden('y_coordinates', ['value' => 0]);
-                        echo Html::hidden('multi', ['value' => 0]);
-                        echo Html::hidden('referrer', ['value' => $options['id']]);
-                        echo "</tr>";
-                        echo "</table></div>";
-                    }
-
-                    echo "<div class='center'><table class='tab_cadre_fixe'>";
-
-                    echo "<tr class='tab_bg_1'><th>";
-                    echo htmlescape((string) $Doc->fields["name"]);
-                    echo "</th></tr>";
-
-                    echo "<tr class='tab_bg_1'><td>";
-
+                    // The canvas is drawn by inline scripts: rendered here, put in the template
+                    ob_start();
                     self::displayMap($items, $params);
-                    echo "</td></tr>";
-                    echo "</table>";
+                    $map_html = ob_get_clean();
 
-                    if (Session::haveRight('plugin_positions', UPDATE)
-                        && (!isset($options['menuoff']))) {
-                        Html::closeForm();
-                    }
+                    TemplateRenderer::getInstance()->display('@positions/map.html.twig', [
+                        'with_menu'        => $with_menu,
+                        'canupdate'        => $canupdate,
+                        'location_form'    => $with_menu ? self::getLocationForm($params["locations_id"]) : '',
+                        'add_form'         => $with_menu && $canupdate ? self::getAddFromPlugin($params['locations_id']) : '',
+                        'display_form'     => $with_menu && $canupdate ? self::getSelectDisplay($params, $items) : '',
+                        'point_form_url'   => Toolbox::getItemTypeFormURL(self::getType()),
+                        'position_link'    => $position_link,
+                        'locations_id'     => $options['locations_id'],
+                        'id'               => $options['id'],
+                        'map_name'         => (string) $Doc->fields["name"],
+                        'map_html'         => $map_html,
+                    ]);
                 } else {
-                    echo "<div class='alert alert-important alert-warning d-flex'>";
-                    echo __('No location has a configured map', 'positions');
-                    echo "</div>";
+                    self::displayMapMessage(__('No location has a configured map', 'positions'));
                 }
             } else {
-                echo "<div class='alert alert-important alert-warning d-flex'>";
-                echo __('The object location does not match a map', 'positions') . "<br><br>";
-                Html::displayBackLink();
-                echo "</div>";
+                self::displayMapMessage(__('The object location does not match a map', 'positions'), true);
             }
         } else {
-            echo "<div class='center'>";
-            echo __('No location selected', 'positions');
-            echo "</div>";
+            self::displayMapMessage(__('No location selected', 'positions'));
         }
+    }
+
+    /**
+     * Warning shown instead of a map
+     *
+     * @param string $message
+     * @param bool   $back_link
+     */
+    public static function displayMapMessage(string $message, bool $back_link = false)
+    {
+        TemplateRenderer::getInstance()->display('@positions/map_message.html.twig', [
+            'message'   => $message,
+            'back_link' => $back_link,
+        ]);
     }
 
     /**
      * Form listing the locations that have a map
      * @param $locations_id location selected
      */
-    public static function showLocationForm($locations_id, $width = "30%", $display = false)
+    public static function showLocationForm($locations_id)
     {
-        global $CFG_GLPI, $DB;
+        echo self::getLocationForm($locations_id);
+    }
+
+    /**
+     * @param int $locations_id location selected
+     *
+     * @return string HTML of the form listing the locations that have a map
+     */
+    public static function getLocationForm($locations_id)
+    {
+        global $DB;
 
         $locations = [];
-
-        $target = PLUGIN_POSITIONS_WEBDIR
-            . "/front/map.php";
-        echo "<form method='post' id='locationform' action='$target'>";
-        if ($display) {
-            echo "<table>";
-            echo "<tr><td class='center'>";
-        } else {
-            echo "<table class='tab_cadre_fixe'>";
-            echo "<tr class='tab_bg_2'><td class='center'>";
-        }
-
         foreach ($DB->request([
             'SELECT' => ['items_id'],
             'FROM'   => 'glpi_documents_items',
@@ -1201,47 +1041,28 @@ class Position extends CommonDBTM
         ]) as $data) {
             $locations[] = $data['items_id'];
         }
-        if (!empty($locations)) {
-            $condition = ['glpi_locations.id' => $locations];
 
-            Dropdown::show(Location::class, ['value' => $locations_id,
-                'entity' => $_SESSION["glpiactiveentities"],
-                'condition' => $condition,
-                'width' => $width]);
-            echo "</td></tr>";
-            if ($display) {
-                echo "<tr>";
-            } else {
-                echo "<tr class='tab_bg_1'>";
-            }
-            echo "<td class='center'>";
-            echo Html::submit(__s('See the map', 'positions'), ['name' => 'export', 'class' => 'btn btn-primary']);
-            echo "</td></tr>";
-            echo "</table>";
-            Html::closeForm();
-        } else {
-            echo "<div class='alert alert-important alert-warning d-flex'>";
-            echo __('No location has a configured map', 'positions');
-            echo "</div>";
-            echo "</td></tr>";
-            echo "</table>";
-            Html::closeForm();
-        }
+        return TemplateRenderer::getInstance()->render('@positions/map_location_form.html.twig', [
+            'form_url'     => PLUGIN_POSITIONS_WEBDIR . "/front/map.php",
+            'locations_id' => (int) $locations_id,
+            'has_maps'     => !empty($locations),
+            'condition'    => ['glpi_locations.id' => $locations ?: [0]],
+        ]);
     }
 
-    public static function showAddFromPlugin($locations_id)
+    /**
+     * @param int $locations_id
+     *
+     * @return string HTML of the form adding an item on the map of the location
+     */
+    public static function getAddFromPlugin($locations_id)
     {
-        global $CFG_GLPI;
-
         if (!Session::haveRight('plugin_positions', UPDATE)) {
-            return false;
+            return '';
         }
 
-        echo "<div class='center'>";
-        echo "<form method='post' action=\"" . PLUGIN_POSITIONS_WEBDIR
-            . "/front/position.form.php\" name='addfromplugin' id='addfromplugin'>";
-
-        $entity = $_SESSION["glpiactive_entity"];
+        $entity   = $_SESSION["glpiactive_entity"];
+        $entities = $entity;
         $loc = new Location();
         if ($loc->getFromDB($locations_id)) {
             $entity = $loc->fields["entities_id"];
@@ -1253,69 +1074,44 @@ class Position extends CommonDBTM
             }
         }
 
-        echo "<table class='tab_cadre' width='30%'>";
-        echo "<tr><th colspan='3'>" . __('Create coordinates', 'positions') . " :</th></tr>";
-
-        echo "<tr class='tab_bg_1'><td>";
-        echo _n('Associated item', 'Associated items', 2) . "</td>";
-        echo "<td>";
-        ImageItem::showAllItems("items_id", self::getTypes(), 0, 0, $entities, $locations_id);
-        echo "</td>";
-
-        echo "<td>";
-        echo Html::hidden('locations_id', ['value' => $locations_id]);
-        echo Html::hidden('entities_id', ['value' => $entity]);
-        echo Html::submit(_sx('button', 'Add'), ['name' => 'add', 'class' => 'btn btn-primary']);
-        echo "</td>";
-        echo "</tr>";
-        echo "</table>";
-        Html::closeForm();
-        echo "</div>";
+        return TemplateRenderer::getInstance()->render('@positions/map_add_form.html.twig', [
+            'form_url'       => PLUGIN_POSITIONS_WEBDIR . "/front/position.form.php",
+            'items_dropdown' => ImageItem::getAllItemsDropdown("items_id", self::getTypes(), 0, 0, $entities, $locations_id),
+            'locations_id'   => (int) $locations_id,
+            'entities_id'    => (int) $entity,
+        ]);
     }
 
-    public static function selectDisplay($params, $items)
+    /**
+     * @param array $params
+     * @param array $items  items on the map, by type
+     *
+     * @return string HTML of the form restricting the types shown on the map
+     */
+    public static function getSelectDisplay($params, $items)
     {
-
-        if (!empty($items)) {
-            $colspan = count($items);
-            $colspan = ($colspan * 2) + 1;
-            echo "<form method='post' name='massiveaction_form' id='massiveaction_form' action='" . htmlescape((string) $params["target"]) . "'>";
-            echo "<table class='tab_cadre' cellpadding='5'>";
-            echo "<tr class='tab_bg_1'>";
-            echo "<th colspan='" . $colspan . "'>";
-            echo __('Limited view', 'positions') . " : ";
-            echo "</th>";
-            echo "</tr>";
-            echo "<tr class='tab_bg_1'>";
-            foreach ($items as $classe => $ids) {
-                if ($classe) {
-                    if (!class_exists($classe)) {
-                        continue;
-                    }
-                    if ($classe == "Socket") {
-                        $item = new Socket();
-                    } else {
-                        $item = new $classe();
-                    }
-
-                    echo "<td>";
-                    echo "<input type='checkbox' ";
-                    if (!empty($params["itemtype"])) {
-                        if (in_array($classe, $params["itemtype"])) {
-                            echo "checked ";
-                        }
-                    }
-                    echo "name='itemtype[]' value='" . htmlescape($classe) . "'>";
-                    echo "</td>";
-                    echo "<td>" . htmlescape($item->getTypeName()) . "</td>";
-                }
+        $types = [];
+        foreach (array_keys($items) as $classe) {
+            // Positions saved before the namespace keep the short class name of the sockets
+            $type = $classe === 'Socket' ? Socket::class : $classe;
+            if (!$classe || !in_array($type, self::getTypes(), true)
+                || !($item = getItemForItemtype($type))) {
+                continue;
             }
-            echo "<td class='center'>";
-            echo Html::submit(_sx('button', 'Post'), ['name' => 'affich', 'class' => 'btn btn-primary']);
-            echo "</td></tr>";
-            echo "</table>";
-            Html::closeForm();
+            $types[] = [
+                'class'   => $classe,
+                'name'    => $item->getTypeName(),
+                'checked' => !empty($params["itemtype"]) && in_array($classe, $params["itemtype"]),
+            ];
         }
+        if (empty($types)) {
+            return '';
+        }
+
+        return TemplateRenderer::getInstance()->render('@positions/map_display_form.html.twig', [
+            'form_url' => (string) $params["target"],
+            'types'    => $types,
+        ]);
     }
 
     /**
@@ -1402,8 +1198,11 @@ class Position extends CommonDBTM
                                     $val['img'] = $imgitem->displayItemImage($itemclass->fields[$typefield], $classe);
                                 }
                                 $options['img'] = $CFG_GLPI['url_base'] . PLUGIN_POSITIONS_NOTFULL_DIR . '/pics/nothing.png';
-                                if (!($val['img'] == null)) {
-                                    $options['img'] = $CFG_GLPI['url_base'] . PLUGIN_POSITIONS_NOTFULL_DIR . '/front/map.send.php?type=pics&file=' . $val['img'];
+                                // canvasXpress puts the URL in HTML: a picture of the pics
+                                // directory only, its name encoded
+                                if (!empty($val['img']) && self::getPicturePath((string) $val['img']) !== null) {
+                                    $options['img'] = $CFG_GLPI['url_base'] . PLUGIN_POSITIONS_NOTFULL_DIR
+                                        . '/front/map.send.php?type=pics&file=' . rawurlencode((string) $val['img']);
                                 }
 
                                 $objects[$val['id']] = $options;
@@ -1485,10 +1284,11 @@ class Position extends CommonDBTM
             $node['testEvent'] = $eventless;
             $node['shape'] = 'image';
             $nodes['nodes'][] = $node;
-        }
 
-        if (isset($node['id']) == $params['id'] && isset($node['id']) != '') {
-            $highlight[] = $params['id'];
+            // The position the map was opened for
+            if (!empty($params['id']) && isset($node['id']) && (int) $node['id'] === (int) $params['id']) {
+                $highlight[] = (int) $params['id'];
+            }
         }
 
         // Canvas settings
@@ -1601,7 +1401,7 @@ class Position extends CommonDBTM
             }
         }
         if (Session::getCurrentInterface() != 'central') {
-            $text .= Info::getCallValue($itemclass, true);
+            $text .= Info::getCallValue($itemclass);
         }
         return $text;
     }
@@ -1609,137 +1409,70 @@ class Position extends CommonDBTM
     /** Information shown in the pop-up of an item */
     public static function showOverlay($srcimg, $itemclass, $infos)
     {
-        global $CFG_GLPI;
-
-        $defaultheight = 50;
-        $height = 0;
-        $addheight = 0;
-
-        if (!empty($infos)) {
-            foreach ($infos as $info) {
-                if ($itemclass->getType() == $info['itemtype']) {
-                    $fields = explode(',', $info['fields']);
-                    $nb = 0;
-                    for ($i = 0; $i < count($fields); $i++) {
-                        if (!empty($itemclass->fields[$fields[$i]])) {
-                            $nb++;
-                        }
-                    }
-                    $height = 30 * $nb;
-                }
-            }
-            $height = $defaultheight + $height;
-            if ($itemclass->getType() == 'Phone') {
-                $height = $height + 80;
-            } elseif ($itemclass->getType() == Resource::class) {
-                $resID = $itemclass->fields['id'];
-                $restrict = ["plugin_resources_resources_id" => $resID,
-                    "itemtype" => User::class];
-                $dbu = new DbUtils();
-                $datas = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items', $restrict);
-                if (!empty($datas)) {
-                    foreach ($datas as $data) {
-                        if (isset($data['items_id']) && ($data['items_id'] > 0)) {
-                            $userid = $data['items_id'];
-                            $entitiesID = $itemclass->fields['entities_id'];
-                            $condition = ["users_id" => $userid,
-                                "is_deleted" => 0,
-                                "is_template" => 0,
-                                "entities_id" => $entitiesID,
-                                "NOT" => ["contact_num" => 0]];
-                            $dbu = new DbUtils();
-                            if (($number = $dbu->countElementsInTable("glpi_phones", $condition)) > 1) {
-                                $addheight = 30 * $number;
-                            }
-                            $height = $height + $addheight;
-                        }
-                    }
-                }
-            }
-        } else {
-            $height = $defaultheight + 30;
-        }
-
-        if (Session::haveRight('plugin_positions', UPDATE) && $itemclass->canView()) {
-            echo "<a class='config' target='_blank' title=\"" . __('Configuring the display materials', 'positions') . "\"
-                              href='" . PLUGIN_POSITIONS_WEBDIR
-                . "/front/info.php'></a>";
-        }
-        $width = 450;
-
+        // Picture of the item: of its type (pics directory), of the resource, none for a location
+        $picture = null;
         if ($itemclass->getType() != Resource::class
             && $itemclass->getType() != Location::class
             && $itemclass->getType() != Socket::class) {
-            $img = "<img src='" . PLUGIN_POSITIONS_WEBDIR . "/pics/nothing.png' width='30' height='30'>";
+            $picture = ['url' => PLUGIN_POSITIONS_WEBDIR . '/pics/nothing.png', 'width' => 30, 'height' => 30, 'mime' => null];
 
             // The picture comes from the request, as a file name or the URL of the canvas
             // (map.send.php?type=pics&file=<name>): only a picture of the pics directory is shown
-            $picture = (string) $srcimg;
-            $query   = (string) parse_url($picture, PHP_URL_QUERY);
+            $name  = (string) $srcimg;
+            $query = (string) parse_url($name, PHP_URL_QUERY);
             if ($query !== '') {
                 parse_str($query, $params);
-                $picture = (string) ($params['file'] ?? '');
+                $name = (string) ($params['file'] ?? '');
             }
-            $path = self::getPicturePath($picture);
+            $path = self::getPicturePath($name);
             if ($path !== null && ($sizes = getimagesize($path)) !== false) {
-                $largeur = (int) $sizes[0];
-                $hauteur = (int) $sizes[1];
-                $ext = htmlescape(pathinfo($path, PATHINFO_EXTENSION));
-                $src = htmlescape(PLUGIN_POSITIONS_WEBDIR . "/front/map.send.php?file=" . rawurlencode($picture));
-                $img = "<object width='" . $largeur . "' height='" . $hauteur . "' data='" . $src . "' type='image/$ext'>
-             <param name='src' value='" . $src . "'>
-            </object> ";
+                $picture = [
+                    'url'    => PLUGIN_POSITIONS_WEBDIR . '/front/map.send.php?file=' . rawurlencode($name),
+                    'width'  => (int) $sizes[0],
+                    'height' => (int) $sizes[1],
+                    'mime'   => 'image/' . pathinfo($path, PATHINFO_EXTENSION),
+                ];
             }
-        } else {
-            if (Plugin::isPluginActive("resources")
-                && $itemclass->getType() == Resource::class) {
-                $img = "<img src='" . PLUGIN_RESOURCES_WEBDIR . "/pics/nobody.png' width='90' height='90'>";
-                $res = new Resource();
-                if ($res->getFromDB($itemclass->fields["id"])) {
-                    if (!empty($res->fields["picture"])) {
-                        // The picture of the resource, never the request: its file name is a bare
-                        // component, its type the one of the real image
-                        $picture = basename((string) $res->fields["picture"]);
-                        $path    = GLPI_PLUGIN_DOC_DIR . "/resources/" . $picture;
-                        if (is_file($path) && ($sizes = @getimagesize($path)) !== false) {
-                            $largeur = (int) $sizes[0];
-                            $hauteur = (int) $sizes[1];
-                            $mime    = htmlescape((string) $sizes['mime']);
-                            $src     = htmlescape(PLUGIN_RESOURCES_WEBDIR . "/front/picture.send.php?file=" . rawurlencode($picture));
-                            $img = "<object width='" . $largeur . "' height='" . $hauteur . "' data='" . $src . "' type='" . $mime . "'>
-                <param name='src' value='" . $src . "'>
-               </object> ";
-                        }
-                    }
-                }
-                $width = $width - 75;
-            } // a location
-            else {
-                $img = '';
-            }
-        }
-        echo "<table><tr><td>";
-        echo $img;
-        echo "</td><td><div class='details' style='width:480px;'>";
-        if (!empty($infos)) {
-            foreach ($infos as $info) {
-                if ($itemclass->getType() == $info['itemtype']) {
-                    Info::showFields($info, $itemclass);
+        } elseif (Plugin::isPluginActive("resources")
+            && $itemclass->getType() == Resource::class) {
+            $picture = ['url' => PLUGIN_RESOURCES_WEBDIR . '/pics/nobody.png', 'width' => 90, 'height' => 90, 'mime' => null];
+            $res = new Resource();
+            if ($res->getFromDB($itemclass->fields["id"]) && !empty($res->fields["picture"])) {
+                // The picture of the resource, never the request: its file name is a bare
+                // component, its type the one of the real image
+                $name = basename((string) $res->fields["picture"]);
+                $path = GLPI_PLUGIN_DOC_DIR . "/resources/" . $name;
+                if (is_file($path) && ($sizes = @getimagesize($path)) !== false) {
+                    $picture = [
+                        'url'    => PLUGIN_RESOURCES_WEBDIR . '/front/picture.send.php?file=' . rawurlencode($name),
+                        'width'  => (int) $sizes[0],
+                        'height' => (int) $sizes[1],
+                        'mime'   => (string) $sizes['mime'],
+                    ];
                 }
             }
         }
-        if (Session::getCurrentInterface() == 'central' || $itemclass->getType() == Location::class) {
-            Info::getDirectLink($itemclass);
+
+        // Fields configured for the type of the item
+        $fields = [];
+        foreach ($infos ?: [] as $info) {
+            if ($itemclass->getType() == $info['itemtype']) {
+                $fields = array_merge($fields, Info::getFields($info, $itemclass));
+            }
         }
 
-        //end details
-        echo "</div>";
-
-        echo "<div class='call' style='width:480px;'>";
-        Info::getCallValue($itemclass);
-        //end call
-        echo "</div>";
-        echo "</td></tr></table>";
+        TemplateRenderer::getInstance()->display('@positions/overlay.html.twig', [
+            'picture'     => $picture,
+            'fields'      => $fields,
+            'direct_link' => Session::getCurrentInterface() == 'central' || $itemclass->getType() == Location::class
+                ? Info::getDirectLink($itemclass)
+                : null,
+            'phones'      => Info::getCallPhones($itemclass),
+            'config_url'  => Session::haveRight('plugin_positions', UPDATE) && $itemclass->canView()
+                ? PLUGIN_POSITIONS_WEBDIR . '/front/info.php'
+                : null,
+            'phone_icon'  => PLUGIN_POSITIONS_WEBDIR . '/pics/miniphones.png',
+        ]);
     }
 
     /** Directory of the pictures of the equipment types (front/map.send.php?file=) */
@@ -1798,9 +1531,12 @@ class Position extends CommonDBTM
     //from items
     public static function showPluginFromItems($itemtype, $ID, $withtemplate = '')
     {
-        global $DB, $CFG_GLPI;
+        global $DB;
 
-        $item = new $itemtype();
+        $item = getItemForItemtype($itemtype);
+        if (!$item) {
+            return;
+        }
         $canread = $item->can($ID, READ);
 
         $self = new self();
@@ -1814,86 +1550,78 @@ class Position extends CommonDBTM
             ] + getEntitiesRestrictCriteria('glpi_plugin_positions_positions', '', '', $self->maybeRecursive()),
             'ORDER'  => 'glpi_plugin_positions_positions.name',
         ]);
-        $number = count($iterator);
 
-        $colsup = 0;
-        if (Session::isMultiEntitiesMode()) {
-            $colsup = 1;
-        }
-        if ($number) {
-            echo "<form method='post' action=\"" . PLUGIN_POSITIONS_WEBDIR
-                . "/front/position.form.php\" name='pointform' id='pointform'>";
-            echo "<div class='center'><table class='tab_cadre_fixe'>";
-            echo "<tr><th colspan='" . (4 + $colsup) . "'>" . __('Associated coordinate', 'positions') . ":</th></tr>";
-            echo "<tr><th>" . __('Name') . "</th>";
-            if (Session::isMultiEntitiesMode()) {
-                echo "<th>" . __('Entity') . "</th>";
-            }
-            echo "<th>" . __('Coordinate x', 'positions') . "</th>";
-            echo "<th>" . __('Coordinate y', 'positions') . "</th>";
-            if (Session::haveRight('plugin_positions', DELETE)) {
-                echo "<th>&nbsp;</th>";
-            }
-            echo "</tr>";
-            $used = [];
-
-            foreach ($iterator as $data) {
-                $positionsID = $data["id"];
-
-                $used[] = $positionsID;
-                echo "<tr class='tab_bg_1" . ($data["is_deleted"] == '1' ? "_2" : "") . "'>";
-
-                if ($withtemplate != 3 && $canread
-                    && (in_array($data['entities_id'], $_SESSION['glpiactiveentities'])
-                        || $data["is_recursive"])) {
-                    echo "<td class='center'><a href='" . PLUGIN_POSITIONS_WEBDIR
-                        . "/front/position.form.php?id=" . (int) $data["id"] . "'>" . htmlescape((string) $data["name"]);
-
-                    if (($_SESSION["glpiis_ids_visible"]) || (empty($data["name"]))) {
-                        echo " (" . $data["id"] . ")";
-                    }
-                    echo "</a>";
-                    echo self::showGeolocLink($itemtype, $ID, $data["id"]);
-                    echo "</td>";
-                } else {
-                    echo "<td class='center'>" . htmlescape((string) $data["name"]);
-                    if ($_SESSION["glpiis_ids_visible"]) {
-                        echo " (" . $data["id"] . ")";
-                    }
-                    echo "</td>";
-                }
-                if (Session::isMultiEntitiesMode()) {
-                    echo "<td class='center'>" . htmlescape((string) Dropdown::getDropdownName(
-                        "glpi_entities",
-                        $data['entities_id']
-                    )) . "</td>";
-                }
-                echo "<td class='center'>" . htmlescape((string) $data["x_coordinates"]) . "</td>";
-                echo "<td class='center'>" . htmlescape((string) $data["y_coordinates"]) . "</td>";
-
-                if (Session::haveRight('plugin_positions', DELETE)
-                    && $withtemplate < 2) {
-                    if ($data["is_deleted"] != 1) {
-                        echo "<td class='center tab_bg_2'>";
-                        Html::showSimpleForm(
-                            PLUGIN_POSITIONS_WEBDIR . '/front/position.form.php',
-                            'delete_item',
-                            _x('button', 'Delete permanently'),
-                            ['id' => $positionsID]
-                        );
-                        echo "</td>";
-                    } else {
-                        echo "<td class='tab_bg_2 center'></td>";
-                    }
-                }
-                echo "</tr>";
-            }
-
-            echo "</table></div>";
-            Html::closeForm();
-        } else {
+        if (!count($iterator)) {
             self::showAddFromItem($itemtype, $ID);
+            return;
         }
+
+        $candelete = Session::haveRight('plugin_positions', DELETE) && $withtemplate < 2;
+        $rows      = [];
+        foreach ($iterator as $data) {
+            $name = (string) $data["name"];
+            if ($_SESSION["glpiis_ids_visible"] || $name === '') {
+                $name .= " (" . (int) $data["id"] . ")";
+            }
+            $linked = $withtemplate != 3 && $canread
+                && (in_array($data['entities_id'], $_SESSION['glpiactiveentities']) || $data["is_recursive"]);
+
+            $rows[] = [
+                'name'         => $name,
+                'url'          => $linked ? PLUGIN_POSITIONS_WEBDIR . "/front/position.form.php?id=" . (int) $data["id"] : null,
+                // Link opening the map in a window, already escaped by showGeolocLink()
+                'geoloc_link'  => $linked ? self::showGeolocLink($itemtype, $ID, $data["id"]) : '',
+                'entity'       => Dropdown::getDropdownName("glpi_entities", $data['entities_id']),
+                'x'            => $data["x_coordinates"],
+                'y'            => $data["y_coordinates"],
+                'is_deleted'   => $data["is_deleted"] == 1,
+                'delete_form'  => $candelete && $data["is_deleted"] != 1
+                    ? Html::getSimpleForm(
+                        PLUGIN_POSITIONS_WEBDIR . '/front/position.form.php',
+                        'delete_item',
+                        _x('button', 'Delete permanently'),
+                        ['id' => (int) $data["id"]],
+                        'ti-trash',
+                        "class='btn btn-sm btn-ghost-danger' title='" . _sx('button', 'Delete permanently') . "'"
+                    )
+                    : '',
+            ];
+        }
+
+        TemplateRenderer::getInstance()->display('@positions/item_positions.html.twig', [
+            'rows'         => $rows,
+            'multi_entity' => Session::isMultiEntitiesMode(),
+            'candelete'    => $candelete,
+        ]);
+    }
+
+    public static function showAddFromItem($itemtype, $items_id)
+    {
+        if (!Session::haveRight('plugin_positions', READ)) {
+            return false;
+        }
+
+        $itemclass = getItemForItemtype($itemtype);
+        if (!$itemclass || !$itemclass->getFromDB($items_id)) {
+            return false;
+        }
+
+        $name = $itemclass->fields["name"] ?? '';
+        if (!empty($itemclass->fields["contact_num"])) {
+            $name = $itemclass->fields["contact_num"];
+        }
+        $locations_id = $itemclass->fields["locations_id"] ?? 0;
+
+        TemplateRenderer::getInstance()->display('@positions/item_add_position.html.twig', [
+            'form_url'      => PLUGIN_POSITIONS_WEBDIR . '/front/position.form.php',
+            'name'          => $name,
+            'locations_id'  => $locations_id,
+            'location_name' => $locations_id ? Dropdown::getDropdownName("glpi_locations", $locations_id) : '',
+            'items_id'      => (int) $items_id,
+            'itemtype'      => $itemtype,
+            'entities_id'   => $itemclass->fields["entities_id"] ?? 0,
+            'canupdate'     => Session::haveRight('plugin_positions', UPDATE),
+        ]);
     }
 
     public static function showGeolocInfos($itemtype, $id, $positions_id = 0)
@@ -2075,6 +1803,8 @@ class Position extends CommonDBTM
     {
         global $CFG_GLPI;
 
+        // Fragment loaded by the info window of the map (front/showinfos.php): Ext JS and
+        // geoloc.js (Position.openWindow()) are already on the page
         $locations_id = (int) $id;
         $documents_id = self::getDocument($locations_id);
 
@@ -2087,65 +1817,6 @@ class Position extends CommonDBTM
          Position.openWindow(" . json_encode($target) . ");
          </script>";
         }
-    }
-
-
-    public static function showAddFromItem($itemtype, $items_id)
-    {
-        global $CFG_GLPI;
-
-        if (!Session::haveRight('plugin_positions', READ)) {
-            return false;
-        }
-
-        $itemclass = new $itemtype();
-        $itemclass->getFromDB($items_id);
-
-        echo "<div class='center'>";
-        echo "<form method='post' action=\"" . PLUGIN_POSITIONS_WEBDIR
-            . "/front/position.form.php\" name='pointform' id='pointform'>";
-
-        echo "<table class='tab_cadre_fixe'>";
-        echo "<tr><th colspan='4'>" . __('Create coordinates', 'positions') . " :</th></tr>";
-
-        echo "<tr class='tab_bg_1'><td>";
-
-        echo __('Name') . "</td>";
-        echo "<td>";
-        $value = $itemclass->fields["name"];
-
-        if (isset($itemclass->fields["contact_num"])
-            && !empty($itemclass->fields["contact_num"])) {
-            $value = $itemclass->fields["contact_num"];
-        }
-        $entity = $itemclass->fields["entities_id"] ?? 0;
-        echo Html::input('name', ['value' => $value, 'size' => 40]);
-        echo "</td>";
-        echo "<td>";
-        $location = $itemclass->fields["locations_id"];
-        if (isset($location)
-            && !empty($location)) {
-            echo Html::hidden('locations_id', ['value' => $location]);
-            echo htmlescape((string) Dropdown::getDropdownName("glpi_locations", $location));
-        } else {
-            echo "<div class='red'>" . __('No location selected', 'positions') . "</div>";
-        }
-        echo "</td>";
-
-        if (empty($ID)) {
-            if (Session::haveRight('plugin_positions', UPDATE)) {
-                echo "<td>";
-                echo Html::hidden('items_id', ['value' => $items_id]);
-                echo Html::hidden('itemtype', ['value' => $itemtype]);
-                echo Html::hidden('entities_id', ['value' => $entity]);
-                echo Html::submit(_sx('button', 'Post'), ['name' => 'additem', 'class' => 'btn btn-primary']);
-                echo "</td>";
-            }
-        }
-        echo "</tr>";
-        echo "</table>";
-        Html::closeForm();
-        echo "</div>";
     }
 
 

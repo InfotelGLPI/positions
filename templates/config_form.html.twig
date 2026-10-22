@@ -1,0 +1,66 @@
+{#
+ # -------------------------------------------------------------------------
+ # positions plugin for GLPI
+ # Copyright (C) 2009-2022 by the positions Development Team.
+ #
+ # https://github.com/InfotelGLPI/positions
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of positions.
+ #
+ # positions is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # positions is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with positions. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+{% import 'components/form/fields_macros.html.twig' as fields %}
+
+{# Settings of the plugin (Config::showConfigForm()) #}
+
+<form method="post" action="{{ form_url }}">
+    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+    <input type="hidden" name="id" value="1">
+    <div class="card mb-3">
+        <div class="card-header d-flex align-items-center gap-2">
+            <i class="ti ti-adjustments"></i>
+            <strong>{{ __('General setup') }}</strong>
+        </div>
+        <div class="card-body">
+            {{ fields.dropdownYesNo('use_view_all_object', config.use_view_all_object, __('Add sub-places on the map objects', 'positions')) }}
+            {{ fields.dropdownNumberField('default_width', config.default_width, __('Default width of images', 'positions'), {'min': 1, 'max': 300}) }}
+            {{ fields.dropdownNumberField('default_height', config.default_height, __('Default height of images', 'positions'), {'min': 1, 'max': 300}) }}
+        </div>
+        <div class="card-footer text-center">
+            <button type="submit" name="update_config" value="1" class="btn btn-primary">
+                <i class="ti ti-device-floppy me-1"></i>{{ _x('button', 'Post') }}
+            </button>
+        </div>
+    </div>
+</form>
+
+<div class="card mb-3">
+    <div class="card-header d-flex align-items-center gap-2">
+        <i class="ti ti-settings"></i>
+        <strong>{{ __('Setup') }}</strong>
+    </div>
+    <div class="list-group list-group-flush">
+        <a class="list-group-item list-group-item-action d-flex align-items-center gap-2" href="{{ imageitem_url }}">
+            <i class="ti ti-photo"></i>{{ __('Association : picture / types of equipment', 'positions') }}
+        </a>
+        <a class="list-group-item list-group-item-action d-flex align-items-center gap-2" href="{{ info_url }}">
+            <i class="ti ti-info-circle"></i>{{ __('Configuring the display materials', 'positions') }}
+        </a>
+    </div>
+</div>

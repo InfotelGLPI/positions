@@ -55,18 +55,16 @@ function plugin_positions_install()
                 ADD `itemtype` varchar(100) collate utf8_unicode_ci NOT NULL COMMENT 'see .class.php file';";
         $DB->doQuery($query);
 
-        $query_ = "SELECT *
-                 FROM `glpi_plugin_positions_positions_items` ";
-        $result_ = $DB->doQuery($query_);
-        if ($DB->numrows($result_) > 0) {
-
-            while ($data = $DB->fetchArray($result_)) {
-                $query = "UPDATE `glpi_plugin_positions_positions`
-                      SET `items_id` = '" . $data["items_id"] . "',
-                          `itemtype` = '" . $data["itemtype"] . "'
-                      WHERE `id` = '" . $data["id"] . "';";
-                $DB->doQuery($query);
-            }
+        // The values come from the table of the old version: bound by the query builder
+        foreach ($DB->request(['FROM' => 'glpi_plugin_positions_positions_items']) as $data) {
+            $DB->update(
+                'glpi_plugin_positions_positions',
+                [
+                    'items_id' => (int) $data["items_id"],
+                    'itemtype' => (string) $data["itemtype"],
+                ],
+                ['id' => (int) $data["id"]]
+            );
         }
 
         $query = "DROP TABLE `glpi_plugin_positions_positions_items`;";
@@ -220,16 +218,22 @@ function plugin_positions_install()
         foreach ($notepad_tables as $t) {
             // Migrate data
             if ($DB->fieldExists($t, 'notepad')) {
-                $query = "SELECT id, notepad
-                      FROM `$t`
-                      WHERE notepad IS NOT NULL
-                            AND notepad <>'';";
-                foreach ($DB->request($query) as $data) {
-                    $iq = "INSERT INTO `glpi_notepads`
-                             (`itemtype`, `items_id`, `content`, `date`, `date_mod`)
-                      VALUES ('PluginPositionsPosition', '" . $data['id'] . "',
-                              '" . addslashes($data['notepad']) . "', NOW(), NOW())";
-                    $DB->doQueryOrDie($iq, "0.85 migrate notepad data");
+                foreach ($DB->request([
+                    'SELECT' => ['id', 'notepad'],
+                    'FROM'   => $t,
+                    'WHERE'  => [
+                        'NOT' => ['notepad' => null],
+                        ['notepad' => ['<>', '']],
+                    ],
+                ]) as $data) {
+                    // The notes of the old version: bound by the query builder
+                    $DB->insert('glpi_notepads', [
+                        'itemtype' => Position::class,
+                        'items_id' => (int) $data['id'],
+                        'content'  => (string) $data['notepad'],
+                        'date'     => $_SESSION['glpi_currenttime'] ?? date('Y-m-d H:i:s'),
+                        'date_mod' => $_SESSION['glpi_currenttime'] ?? date('Y-m-d H:i:s'),
+                    ]);
                 }
                 $query = "ALTER TABLE `glpi_plugin_positions_positions` DROP COLUMN `notepad`;";
                 $DB->doQuery($query);
@@ -437,13 +441,15 @@ function plugin_positions_giveItem($type, $ID, $data, $num)
     if (in_array($type, Position::getTypes(true))) {
         switch ($table . '.' . $field) {
             case "glpi_plugin_positions_positions.name":
+                // The search joins the positions of every entity: only the ones the user may read
                 $out = "";
                 $pos = new Position();
-                if (isset($data[$num][0]['id'])
-                      && !empty($data[$num][0]['id'])
-                      &&  $pos->getFromDB($data[$num][0]['id'])) {
+                foreach ($data[$num] as $key => $row) {
+                    if (!is_int($key) || empty($row['id']) || !$pos->can((int) $row['id'], READ)) {
+                        continue;
+                    }
                     $out .= $pos->getLink();
-                    $out .= Position::showGeolocLink($type, $data['id'], $data[$num][0]['id']);
+                    $out .= Position::showGeolocLink($type, $data['id'], (int) $row['id']);
                     $out .= "<br>";
                 }
                 return $out;

@@ -1,0 +1,50 @@
+{#
+ # -------------------------------------------------------------------------
+ # positions plugin for GLPI
+ # Copyright (C) 2009-2022 by the positions Development Team.
+ #
+ # https://github.com/InfotelGLPI/positions
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of positions.
+ #
+ # positions is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # positions is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with positions. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+{% import 'components/form/fields_macros.html.twig' as fields %}
+
+{# Addition of an item on the map of a location (Position::getAddFromPlugin()) #}
+
+<form method="post" action="{{ form_url }}" name="addfromplugin" id="addfromplugin">
+    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+    <input type="hidden" name="locations_id" value="{{ locations_id }}">
+    <input type="hidden" name="entities_id" value="{{ entities_id }}">
+    <div class="card h-100">
+        <div class="card-header d-flex align-items-center gap-2">
+            <i class="ti ti-map-pin-plus"></i>
+            <strong>{{ __('Create coordinates', 'positions') }}</strong>
+        </div>
+        <div class="card-body">
+            {{ fields.htmlField('items_id', items_dropdown, _n('Associated item', 'Associated items', 2), {'is_horizontal': false}) }}
+        </div>
+        <div class="card-footer text-center">
+            <button type="submit" name="add" value="1" class="btn btn-primary">
+                <i class="ti ti-plus me-1"></i>{{ _x('button', 'Add') }}
+            </button>
+        </div>
+    </div>
+</form>

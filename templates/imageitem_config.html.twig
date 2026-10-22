@@ -1,0 +1,115 @@
+{#
+ # -------------------------------------------------------------------------
+ # positions plugin for GLPI
+ # Copyright (C) 2009-2022 by the positions Development Team.
+ #
+ # https://github.com/InfotelGLPI/positions
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of positions.
+ #
+ # positions is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # positions is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with positions. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+{% import 'components/form/fields_macros.html.twig' as fields %}
+
+{# Pictures of the equipment types (ImageItem::showConfigForm()) #}
+
+<form method="post" action="{{ form_url }}" name="imageitemform">
+    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+    <div class="card mb-3">
+        <div class="card-header d-flex align-items-center gap-2">
+            <i class="ti ti-photo-plus"></i>
+            <strong>{{ __('Associate images with types of equipment', 'positions') }}</strong>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-info d-flex align-items-center gap-2 mb-3">
+                <i class="ti ti-info-circle"></i>
+                <span>{{ __('Add pictures to use with plugin', 'positions') }} : {{ __('Upload yours pics into files/_plugins/positions/pics/ folder', 'positions') }}</span>
+            </div>
+
+            {{ fields.htmlField('type', types_dropdown, __('Equipment type', 'positions')) }}
+
+            {% if not pics_exist %}
+                {{ fields.htmlField('img', __("Upload directory doesn't exist", 'positions')|e, __('Picture', 'positions')) }}
+            {% elseif pictures is empty %}
+                {{ fields.htmlField('img', __('No picture found', 'positions')|e, __('Picture', 'positions')) }}
+            {% else %}
+                {{ fields.dropdownArrayField('img', -1, pictures, __('Picture', 'positions'), {
+                    'rand': 'imageitem',
+                    'width': '200px',
+                    'add_field_html': '<div id="imageitemPreview" class="ms-2"></div>',
+                }) }}
+            {% endif %}
+        </div>
+        <div class="card-footer text-center">
+            <button type="submit" name="add" value="1" class="btn btn-primary">
+                <i class="ti ti-plus me-1"></i>{{ _x('button', 'Add') }}
+            </button>
+        </div>
+    </div>
+</form>
+
+{% if associations is not empty %}
+<form method="post" action="{{ form_url }}" name="imageitem_list" id="imageitem_list">
+    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+    <div class="card mb-3">
+        <div class="card-header d-flex align-items-center gap-2">
+            <i class="ti ti-list"></i>
+            <strong>{{ __('List of associations', 'positions') }}</strong>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover table-vcenter card-table">
+                <thead>
+                    <tr>
+                        <th class="w-1">
+                            <input type="checkbox" class="form-check-input" title="{{ __('Check all') }}"
+                                   onclick="document.querySelectorAll('#imageitem_list input[name^=item]').forEach(c => c.checked = this.checked);">
+                        </th>
+                        <th>{{ __('Equipment', 'positions') }}</th>
+                        <th>{{ __('Equipment type', 'positions') }}</th>
+                        <th>{{ __('Picture', 'positions') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for association in associations %}
+                        <tr>
+                            <td><input type="checkbox" class="form-check-input" name="item[{{ association.id }}]" value="1"></td>
+                            <td>{{ association.item_name }}</td>
+                            <td>{{ association.type_name }}</td>
+                            <td>
+                                {% if association.img is not empty %}
+                                    <object data="{{ association.img_url }}" type="image/{{ association.img_ext }}" width="60" height="60">
+                                        <param name="src" value="{{ association.img_url }}">
+                                    </object>
+                                {% else %}
+                                    {{ __('No associated picture', 'positions') }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer text-center">
+            <button type="submit" name="delete" value="1" class="btn btn-outline-danger">
+                <i class="ti ti-trash me-1"></i>{{ _x('button', 'Delete permanently') }}
+            </button>
+        </div>
+    </div>
+</form>
+{% endif %}

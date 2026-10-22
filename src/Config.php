@@ -31,8 +31,7 @@ namespace GlpiPlugin\Positions;
 
 use CommonDBTM;
 use CommonGLPI;
-use Dropdown;
-use Html;
+use Glpi\Application\View\TemplateRenderer;
 use Toolbox;
 
 if (!defined('GLPI_ROOT')) {
@@ -70,67 +69,14 @@ class Config extends CommonDBTM
 
     static function showConfigForm()
     {
-
         $config = new self();
         $config->getFromDB(1);
 
-        echo "<div class='center'>";
-        echo "<form method='post' action='" .
-           Toolbox::getItemTypeFormURL(Config::class) . "'>";
-        echo "<table class='tab_cadre_fixe'>";
-        echo "<tr class='tab_bg_1'><th colspan='2'>" . __('General setup') . "</th></tr>";
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>";
-        echo __('Add sub-places on the map objects', 'positions');
-        echo "</td>";
-        echo "<td>";
-        Dropdown::showYesNo('use_view_all_object', $config->fields['use_view_all_object']);
-        echo "</td></tr>";
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>";
-        echo __('Default width of images', 'positions');
-        echo "</td>";
-        echo "<td>";
-        Dropdown::showNumber('default_width', ['min'   => 1,
-                                             'max'   => 300,
-                                             'value' => $config->fields['default_width']]);
-        echo "</td></tr>";
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>";
-        echo __('Default height of images', 'positions');
-        echo "</td>";
-        echo "<td>";
-        Dropdown::showNumber('default_height', ['min'   => 1,
-                                              'max'   => 300,
-                                              'value' => $config->fields['default_height']]);
-        echo "</td></tr>";
-
-        echo "<tr><th colspan='2'>";
-        echo Html::hidden('id', ['value' => 1]);
-        echo "<div class='center'>";
-        echo Html::submit(_sx('button', 'Post'), ['name' => 'update_config', 'class' => 'btn btn-primary']);
-        echo "</div></th></tr>";
-        echo "</table></div>";
-        Html::closeForm();
-
-        echo "<div class='center'><table class='tab_cadre_fixe'>";
-        echo "<tr class='tab_bg_1'>";
-        echo "<th>";
-        echo __('Setup');
-        echo "</th>";
-        echo "</tr>";
-        echo "<tr class='tab_bg_1'>";
-        echo "<td class='center'>";
-        echo "<a href='./imageitem.form.php'>" .
-           __('Association : picture / types of equipment', 'positions') . "</a>";
-        echo "</td>";
-        echo "</tr>";
-        echo "<tr class='tab_bg_1'>";
-        echo "<td class='center'>";
-        echo "<a href='./info.php'>" .
-           __('Configuring the display materials', 'positions') . "</a>";
-        echo "</td>";
-        echo "</tr>";
-        echo "</table></div>";
+        TemplateRenderer::getInstance()->display('@positions/config_form.html.twig', [
+            'config'        => $config->fields,
+            'form_url'      => Toolbox::getItemTypeFormURL(Config::class),
+            'imageitem_url' => PLUGIN_POSITIONS_WEBDIR . '/front/imageitem.form.php',
+            'info_url'      => PLUGIN_POSITIONS_WEBDIR . '/front/info.php',
+        ]);
     }
 }

@@ -1,0 +1,51 @@
+{#
+ # -------------------------------------------------------------------------
+ # positions plugin for GLPI
+ # Copyright (C) 2009-2022 by the positions Development Team.
+ #
+ # https://github.com/InfotelGLPI/positions
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of positions.
+ #
+ # positions is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # positions is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with positions. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+{# Types of items shown on the map (Position::getSelectDisplay()) #}
+
+<form method="post" name="massiveaction_form" id="massiveaction_form" action="{{ form_url }}">
+    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+    <div class="card h-100">
+        <div class="card-header d-flex align-items-center gap-2">
+            <i class="ti ti-filter"></i>
+            <strong>{{ __('Limited view', 'positions') }}</strong>
+        </div>
+        <div class="card-body">
+            {% for type in types %}
+                <label class="form-check form-check-inline">
+                    <input type="checkbox" class="form-check-input" name="itemtype[]" value="{{ type.class }}"{{ type.checked ? ' checked' : '' }}>
+                    <span class="form-check-label">{{ type.name }}</span>
+                </label>
+            {% endfor %}
+        </div>
+        <div class="card-footer text-center">
+            <button type="submit" name="affich" value="1" class="btn btn-primary">
+                <i class="ti ti-eye me-1"></i>{{ _x('button', 'Post') }}
+            </button>
+        </div>
+    </div>
+</form>

@@ -31,7 +31,7 @@ namespace GlpiPlugin\Positions;
 
 use CommonGLPI;
 use DbUtils;
-use Html;
+use Glpi\Application\View\TemplateRenderer;
 use ProfileRight;
 use Session;
 
@@ -138,33 +138,18 @@ class Profile extends \Profile {
     **/
    function showForm($profiles_id = 0, $openform = true, $closeform = true) {
 
-      echo "<div class='firstbloc'>";
-      if (($canedit = Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE]))
-          && $openform) {
-         $profile = new \Profile();
-         echo "<form method='post' action='".$profile->getFormURL()."'>";
-      }
-
       $profile = new \Profile();
       $profile->getFromDB($profiles_id);
-      if ($profile->fields['interface'] == 'central') {
-         $rights = $this->getAllRights();
-      } else {
-         $rights = $this->getAllRights(false);
-      }
-      $profile->displayRightsChoiceMatrix($rights, ['canedit'       => $canedit,
-                                                      'default_class' => 'tab_bg_2',
-                                                      'title'         => __('General')]);
 
-      if ($canedit
-          && $closeform) {
-         echo "<div class='center'>";
-         echo Html::hidden('id', ['value' => $profiles_id]);
-         echo Html::submit(_sx('button', 'Save'), ['name' => 'update', 'class' => 'btn btn-primary']);
-         echo "</div>\n";
-         Html::closeForm();
-      }
-      echo "</div>";
+      TemplateRenderer::getInstance()->display('@positions/profile.html.twig', [
+         'profile'     => $profile,
+         'profiles_id' => (int) $profiles_id,
+         // Central interface: the rights with their labels, as before
+         'rights'      => $profile->fields['interface'] == 'central' ? $this->getAllRights() : $this->getAllRights(false),
+         'canedit'     => Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE]),
+         'openform'    => $openform,
+         'closeform'   => $closeform,
+      ]);
    }
 
    /**

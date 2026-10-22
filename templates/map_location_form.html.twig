@@ -1,0 +1,58 @@
+{#
+ # -------------------------------------------------------------------------
+ # positions plugin for GLPI
+ # Copyright (C) 2009-2022 by the positions Development Team.
+ #
+ # https://github.com/InfotelGLPI/positions
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of positions.
+ #
+ # positions is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # positions is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with positions. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+{% import 'components/form/fields_macros.html.twig' as fields %}
+
+{# Choice of the location whose map is shown (Position::getLocationForm()) #}
+
+<form method="post" id="locationform" action="{{ form_url }}">
+    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+    <div class="card h-100">
+        <div class="card-header d-flex align-items-center gap-2">
+            <i class="ti ti-map-search"></i>
+            <strong>{{ __('See the map', 'positions') }}</strong>
+        </div>
+        <div class="card-body">
+            {% if has_maps %}
+                {{ fields.dropdownField('Location', 'locations_id', locations_id, __('Location'), {
+                    'entity': session('glpiactiveentities'),
+                    'condition': condition,
+                    'is_horizontal': false,
+                }) }}
+            {% else %}
+                <div class="alert alert-warning mb-0">{{ __('No location has a configured map', 'positions') }}</div>
+            {% endif %}
+        </div>
+        {% if has_maps %}
+            <div class="card-footer text-center">
+                <button type="submit" name="export" value="1" class="btn btn-primary">
+                    <i class="ti ti-map me-1"></i>{{ __('See the map', 'positions') }}
+                </button>
+            </div>
+        {% endif %}
+    </div>
+</form>

@@ -33,6 +33,7 @@ use Ajax;
 use CommonDBTM;
 use DbUtils;
 use Dropdown;
+use Glpi\Application\View\TemplateRenderer;
 use GlpiPlugin\Resources\Resource;
 use Html;
 use Plugin;
@@ -85,22 +86,20 @@ class ImageItem extends CommonDBTM
     }
 
    /**
+    * Dropdown of the item types, then of the items of the chosen type (ajax/dropdownAllItems.php)
+    *
     * @param        $myname
+    * @param        $types
     * @param int    $value_type
     * @param int    $value
     * @param int    $entity_restrict
-    * @param        $types
     * @param int    $locations_id
     * @param string $action
     *
-    * @return \nothing
+    * @return string HTML of the widget
     */
-    static function showAllItems($myname, $types, $value_type = 0, $value = 0, $entity_restrict = -1, $locations_id = -1, $action = 'showItem')
+    static function getAllItemsDropdown($myname, $types, $value_type = 0, $value = 0, $entity_restrict = -1, $locations_id = -1, $action = 'showItem')
     {
-        global $CFG_GLPI;
-
-        echo "<table border='0'><tr><td>\n";
-
         if ($myname == 'type') {
             $newtypes = array_flip($types);
             unset($newtypes['Location']);
@@ -111,10 +110,11 @@ class ImageItem extends CommonDBTM
             $types = array_flip($newtypes);
         }
 
-        $rand = Dropdown::showItemTypes(
+        $rand = mt_rand();
+        $out  = Dropdown::showItemTypes(
             $myname,
             $types,
-            ['emptylabel' => Dropdown::EMPTY_VALUE, 'width' => 150]
+            ['emptylabel' => Dropdown::EMPTY_VALUE, 'width' => 150, 'rand' => $rand, 'display' => false]
         );
 
         $params = ['type'            => '__VALUE__',
@@ -124,29 +124,35 @@ class ImageItem extends CommonDBTM
                  'entity_restrict' => $entity_restrict,
                  'locations_id'    => $locations_id];
 
-        Ajax::updateItemOnSelectEvent(
+        $out .= Ajax::updateItemOnSelectEvent(
             "dropdown_$myname$rand",
             "show_$myname$rand",
             PLUGIN_POSITIONS_WEBDIR . "/ajax/dropdownAllItems.php",
-            $params
+            $params,
+            false
         );
 
-        echo "</td><td>\n";
-        echo "<span id='show_$myname$rand'>&nbsp;</span>\n";
-        Html::showToolTip(nl2br(__('Types of materials should be created so that the association can exist', 'positions')));
-        echo "</td></tr></table>\n";
+        $out .= "<span id='show_$myname$rand'></span>";
+        $out .= Html::showToolTip(
+            nl2br(__s('Types of materials should be created so that the association can exist', 'positions')),
+            ['display' => false]
+        );
 
         if ($value > 0) {
-            echo "<script type='text/javascript' >\n";
-            echo "document.getElementById('item_type$rand').value='" . $value_type . "';";
-            echo "</script>\n";
-
             $params["typetable"] = $value_type;
-            Ajax::updateItem("show_$myname$rand", PLUGIN_POSITIONS_WEBDIR .
-                                               "/ajax/dropdownAllItems.php", $params);
+            $out .= Html::scriptBlock(
+                "document.getElementById('dropdown_$myname$rand').value=" . json_encode((string) $value_type) . ";"
+            );
+            $out .= Ajax::updateItem(
+                "show_$myname$rand",
+                PLUGIN_POSITIONS_WEBDIR . "/ajax/dropdownAllItems.php",
+                $params,
+                '',
+                false
+            );
         }
 
-        return $rand;
+        return "<div class='d-flex align-items-center gap-2 flex-wrap'>" . $out . "</div>";
     }
 
    /**
@@ -187,202 +193,76 @@ class ImageItem extends CommonDBTM
     }
 
    /**
-    * Show dropdown of uploaded files
+    * Pictures uploaded in the pics directory of the plugin
     *
-    * @param $myname dropdown name
+    * @return array|null file names, null when the directory does not exist
     **/
-    static function showUploadedFilesDropdown($myname)
+    static function getUploadedFiles()
     {
-
-        if (is_dir(GLPI_PLUGIN_DOC_DIR . "/positions/pics")) {
-            $uploaded_files = [];
-
-            if ($handle = opendir(GLPI_PLUGIN_DOC_DIR . "/positions/pics")) {
-                while (false !== ($file = readdir($handle))) {
-                    if ($file != "." && $file != "..") {
-                        $uploaded_files[] = $file;
-                    }
-                }
-                closedir($handle);
-            }
-
-            if (count($uploaded_files)) {
-                $elements     = [];
-                $elements[-1] = Dropdown::EMPTY_VALUE;
-                asort($uploaded_files);
-                foreach ($uploaded_files as $key => $val) {
-                    $elements[$val] = $val;
-                }
-                // public/positions.js previews the chosen picture in #imageitemPreview
-                Dropdown::showFromArray($myname, $elements, ['rand' => 'imageitem', 'width' => '200px']);
-            } else {
-                echo __s('No picture found', 'positions');
-            }
-        } else {
-            echo __s("Upload directory doesn't exist", 'positions');
+        $dir = GLPI_PLUGIN_DOC_DIR . "/positions/pics";
+        if (!is_dir($dir)) {
+            return null;
         }
+
+        $uploaded_files = [];
+        if ($handle = opendir($dir)) {
+            while (false !== ($file = readdir($handle))) {
+                if ($file != "." && $file != "..") {
+                    $uploaded_files[] = $file;
+                }
+            }
+            closedir($handle);
+        }
+        natcasesort($uploaded_files);
+
+        return array_values($uploaded_files);
     }
 
     function showConfigForm()
     {
-        global $DB, $CFG_GLPI;
+        global $DB;
 
+        // public/positions.js previews the chosen picture in #imageitemPreview
         Html::requireJs('positions');
 
-        echo "<form method='post' action='./imageitem.form.php' name='imageitemform'>";
+        $files = self::getUploadedFiles();
+        $pictures = [];
+        if (!empty($files)) {
+            $pictures = [-1 => Dropdown::EMPTY_VALUE] + array_combine($files, $files);
+        }
 
-        echo "<table class='tab_cadre_fixe' cellpadding='5'>";
-        echo "<tr>";
-        echo "<th colspan='5'>";
-        echo __('Setup') . " : </th>";
-        echo "</tr>";
-
-        echo "<tr class='tab_bg_2'><th colspan='5'>";
-        echo __('Add pictures to use with plugin', 'positions');
-        echo "</th></tr>";
-
-        echo "<tr class='tab_bg_1'><td colspan='2'>";
-        echo __('Upload yours pics into files/_plugins/positions/pics/ folder', 'positions');
-       //      echo "<span class='upload' id='plugin_position_container'></span>";
-       //
-       //      echo "<img src='../pics/select.png' id='pickfiles'
-       //            title=\"" . __('Select pictures to upload (gif, jpg, png)', 'positions') . "\">&nbsp;";
-       //      echo __('Select pictures to upload (gif, jpg, png)', 'positions');
-       //      echo "</td><td>";
-       //      echo "<span class='upload' id='filelist'></span>";
-       //      echo "<img src='../pics/upload.png' id='uploadfiles'
-       //            title=\"" . __('upload pictures to the server', 'positions') . "\">&nbsp;";
-       //      echo __('Then', 'positions') . "&nbsp;";
-       //      echo __('upload pictures to the server', 'positions');
-       //      echo "</td><td colspan='2'>";
-       //
-       //      echo "<a href='" . $_SERVER['PHP_SELF'] . "'><img src='../pics/refresh.png'
-       //            title=\"" . __s('refresh this form', 'positions') . "\"></a>&nbsp;";
-       //      echo __('Then', 'positions') . "&nbsp;";
-       //      echo __('refresh this form', 'positions');
-       //      echo "</span>";
-
-        echo "</td></tr>";
-
-        echo "<tr class='tab_bg_2'><th colspan='5'>";
-        echo __('Associate images with types of equipment', 'positions');
-        echo "</th></tr>";
-
-        echo "<tr class='tab_bg_1'><td>";
-        $types = Position::getTypes();
-        self::showAllItems("type", $types, 0, 0, $_SESSION["glpiactive_entity"], -1, 'showType');
-        echo "</td><td>";
-
-       //      echo Html::hidden('_glpi_csrf_token', ['value' => '']);
-        echo "</td><td>";
-        self::showUploadedFilesDropdown("img");
-        echo "</td><td>";
-        echo "<div id=\"imageitemPreview\"></div>";
-        echo "</td><td>";
-        echo "<div class='center'>";
-        echo Html::submit(_sx('button', 'Add'), ['name' => 'add', 'class' => 'btn btn-primary']);
-        echo "</div></td></tr>";
-        echo "</table>";
-        Html::closeForm();
-
-        $iterator = $DB->request([
+        // Associations already saved, of the types of the plugin only
+        $associations = [];
+        foreach ($DB->request([
             'FROM'  => $this->getTable(),
             'ORDER' => ['itemtype', 'type'],
-        ]);
-        $i = 0;
-        if ($iterator) {
-            $number = count($iterator);
-            if ($number != 0) {
-                echo "<form method='post' name='massiveaction_form' id='massiveaction_form' action='" .
-                 "./imageitem.form.php'>";
-                echo "<div id='liste'>";
-                echo "<table class='tab_cadre_fixe' cellpadding='5'>";
-                $colspan = 4;
-                if ($number > 1) {
-                    $colspan = 8;
-                }
-                echo "<tr class='tab_bg_2'><th colspan='$colspan'>";
-                echo __('List of associations', 'positions');
-                echo "</th></tr>";
-                echo "<tr>";
-                echo "<th class='left'>" . __('Equipment', 'positions') . "</th>";
-                echo "<th class='left'>" . __('Equipment type', 'positions') . "</th>";
-                echo "<th class='left'>" . __('Picture', 'positions') . "</th><th></th>";
-                if ($number > 1) {
-                    echo "<th class='left'>" . __('Equipment', 'positions') . "</th>";
-                    echo "<th class='left'>" . __('Equipment type', 'positions') . "</th>";
-                    echo "<th class='left'>" . __('Picture', 'positions') . "</th><th></th>";
-                }
-                echo "</tr>";
-
-                foreach ($iterator as $ligne) {
-                    $ID = (int) $ligne["id"];
-                    if ($i % 2 == 0 && $number > 1) {
-                        echo "<tr class='tab_bg_1'>";
-                    }
-                    if ($number == 1) {
-                        echo "<tr class='tab_bg_1'>";
-                    }
-                    // Types of the plugin only, as when they are saved
-                    if (!in_array($ligne["itemtype"], Position::getTypes(), true)
-                        || !($item = getItemForItemtype($ligne["itemtype"]))) {
-                        continue;
-                    }
-                    echo "<td>" . htmlescape($item->getTypeName()) . "</td>";
-                    $name = $ligne["type"];
-                    $typeclass = getItemForItemtype($ligne["itemtype"] . "Type");
-                    if ($typeclass && $typeclass->getFromDB((int) $ligne["type"]) && isset($typeclass->fields["name"])) {
-                          $name = $typeclass->fields["name"];
-                    }
-                    echo "<td>" . htmlescape((string) $name) . "</td>";
-                    echo "<td>";
-                    if (!empty($ligne["img"])) {
-                        $ext = htmlescape(pathinfo($ligne["img"], PATHINFO_EXTENSION));
-                        $src = htmlescape(PLUGIN_POSITIONS_WEBDIR . "/front/map.send.php?file=" . rawurlencode($ligne["img"]));
-                        echo "<object data='$src' type='image/$ext'>
-                      <param name='src' value='$src'>
-                     </object> ";
-                    } else {
-                        echo __('No associated picture', 'positions');
-                    }
-                    echo "</td>";
-
-                    echo "<td>";
-                    echo Html::hidden('id', ['value' => $ID]);
-                    echo "<input type='checkbox' name='item[$ID]' value='1'>";
-                    echo "</td>";
-
-                    $i++;
-                    if (($i == $number)
-                    && ($number % 2 != 0)
-                    && $number > 1
-                    ) {
-                        echo "<td>&nbsp;</td>";
-                        echo "<td>&nbsp;</td>";
-                        echo "<td>&nbsp;</td>";
-                        echo "<td>&nbsp;</td>";
-                        echo "</tr>";
-                    }
-                }
-
-                echo "<tr class='tab_bg_1'>";
-
-                if ($number > 1) {
-                    echo "<td colspan='8' class='center'>";
-                } else {
-                    echo "<td colspan='4' class='center'>";
-                }
-                echo "<a onclick= \"if (markCheckboxes ('massiveaction_form')) return false;\"
-                  href='#'>" . __('Check all') . "</a>";
-                echo " - <a onclick= \"if ( unMarkCheckboxes ('massiveaction_form') ) return false;\"
-                  href='#'>" . __('Uncheck all') . "</a> ";
-                echo Html::submit(_sx('button', 'Delete permanently'), ['name' => 'delete', 'class' => 'btn btn-primary']);
-                echo "</td></tr>";
-                echo "</table>";
-                echo "</div>";
-                Html::closeForm();
+        ]) as $ligne) {
+            if (!in_array($ligne["itemtype"], Position::getTypes(), true)
+                || !($item = getItemForItemtype($ligne["itemtype"]))) {
+                continue;
             }
+            $type_name = $ligne["type"];
+            $typeclass = getItemForItemtype($ligne["itemtype"] . "Type");
+            if ($typeclass && $typeclass->getFromDB((int) $ligne["type"]) && isset($typeclass->fields["name"])) {
+                $type_name = $typeclass->fields["name"];
+            }
+            $associations[] = [
+                'id'        => (int) $ligne["id"],
+                'item_name' => $item->getTypeName(),
+                'type_name' => (string) $type_name,
+                'img'       => (string) $ligne["img"],
+                'img_ext'   => pathinfo((string) $ligne["img"], PATHINFO_EXTENSION),
+                'img_url'   => PLUGIN_POSITIONS_WEBDIR . "/front/map.send.php?file=" . rawurlencode((string) $ligne["img"]),
+            ];
         }
+
+        TemplateRenderer::getInstance()->display('@positions/imageitem_config.html.twig', [
+            'form_url'       => PLUGIN_POSITIONS_WEBDIR . '/front/imageitem.form.php',
+            'types_dropdown' => self::getAllItemsDropdown("type", Position::getTypes(), 0, 0, $_SESSION["glpiactive_entity"], -1, 'showType'),
+            'pics_exist'     => $files !== null,
+            'pictures'       => $pictures,
+            'associations'   => $associations,
+        ]);
     }
 
 

@@ -1,0 +1,40 @@
+{#
+ # -------------------------------------------------------------------------
+ # positions plugin for GLPI
+ # Copyright (C) 2009-2022 by the positions Development Team.
+ #
+ # https://github.com/InfotelGLPI/positions
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of positions.
+ #
+ # positions is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # positions is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with positions. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+{% extends 'generic_show_form.html.twig' %}
+{% import 'components/form/fields_macros.html.twig' as fields %}
+
+{# Fields displayed in the information window of an item type on the map (Info::showForm()) #}
+
+{% block form_fields %}
+    {{ fields.textField('name', item.fields['name'], __('Name')) }}
+    {{ fields.dropdownYesNo('is_active', item.fields['is_active'], __('Active')) }}
+    {{ fields.htmlField('itemtype', itemtype_field, __('Equipment', 'positions')) }}
+    {# Reloaded by ajax/dropdownInfoFields.php when another item type is chosen #}
+    {{ fields.ajaxField('span_fields', criterias_field, __('Displayed fields', 'positions')) }}
+    {{ fields.textareaField('comment', item.fields['comment'], __('Comments')) }}
+{% endblock %}

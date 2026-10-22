@@ -1,0 +1,98 @@
+{#
+ # -------------------------------------------------------------------------
+ # positions plugin for GLPI
+ # Copyright (C) 2009-2022 by the positions Development Team.
+ #
+ # https://github.com/InfotelGLPI/positions
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of positions.
+ #
+ # positions is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 2 of the License, or
+ # (at your option) any later version.
+ #
+ # positions is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with positions. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+{# Information window of an item clicked on the map (Position::showOverlay()), loaded by
+   front/showinfos.php into an Ext JS window. Every value is plain text, escaped here. #}
+
+{% macro phone_link(number, icon) %}
+    <img src="{{ icon }}" alt="" title="{{ number }}">
+    <a href="tel:{{ number|url_encode }}">{{ number }}</a>
+{% endmacro %}
+
+<div class="d-flex gap-3 p-2">
+    {% if picture %}
+        <div class="flex-shrink-0">
+            {% if picture.mime %}
+                <object data="{{ picture.url }}" type="{{ picture.mime }}" width="{{ picture.width }}" height="{{ picture.height }}">
+                    <param name="src" value="{{ picture.url }}">
+                </object>
+            {% else %}
+                <img src="{{ picture.url }}" alt="" width="{{ picture.width }}" height="{{ picture.height }}">
+            {% endif %}
+        </div>
+    {% endif %}
+
+    <div class="flex-grow-1">
+        <div class="details">
+            <dl class="row mb-0">
+                {% for field in fields %}
+                    <dt class="col-5 title">{{ field.label }}</dt>
+                    <dd class="col-7">
+                        {% if field.phone %}
+                            {{ _self.phone_link(field.value, phone_icon) }}
+                        {% else %}
+                            {{ field.value }}
+                        {% endif %}
+                    </dd>
+                {% endfor %}
+                {% if direct_link %}
+                    <dt class="col-5 title">{{ __('Direct link', 'positions') }}</dt>
+                    <dd class="col-7"><a href="{{ direct_link.url }}" target="_blank">{{ direct_link.title }}</a></dd>
+                {% endif %}
+            </dl>
+        </div>
+
+        {% if phones is not empty %}
+            <div class="call">
+                {% for phone in phones %}
+                    <h3>
+                        {% if phone.location is not empty %}
+                            {{ phone.location }} :<br>
+                        {% endif %}
+                        {% if phone.contact_num is not empty %}
+                            <span class="title">{{ __('Alternate username number') }} :</span>
+                            {{ _self.phone_link(phone.contact_num, phone_icon) }}
+                        {% endif %}
+                        {% if phone.number_line is not empty %}
+                            <span class="title ms-3">{{ _x('quantity', 'Number of lines') }} :</span>
+                            {{ _self.phone_link(phone.number_line, phone_icon) }}
+                        {% endif %}
+                    </h3>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% if config_url %}
+            <div class="text-end mt-2">
+                <a href="{{ config_url }}" target="_blank" class="btn btn-sm btn-ghost-secondary"
+                   title="{{ __('Configuring the display materials', 'positions') }}">
+                    <i class="ti ti-settings"></i>
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>

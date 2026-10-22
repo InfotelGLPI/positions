@@ -44,4 +44,4 @@ if ((int) ($_POST['id'] ?? 0) > 0) {
     $config->fields['itemtype'] = (string) ($_POST['itemtype'] ?? '');
 }
 
-Info::selectCriterias($config);
+echo Info::getCriteriasField($config);

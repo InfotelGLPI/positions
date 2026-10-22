@@ -71,20 +71,22 @@ function plugin_init_positions()
             $PLUGIN_HOOKS['menu_toadd']['positions']          = ['tools' => Menu::class];
         }
 
-       // Add specific files to add to the header : javascript or css
-        $PLUGIN_HOOKS['add_javascript']['positions'] = [
-         "lib/extjs/adapter/ext/ext-base.js",
-         "lib/extjs/ext-all.js",
-         "positions.js",
-         "geoloc.js",
-         "lib/canvas/canvasXpress.min.js",
-         "lib/canvas/ext-canvasXpress.js",
-         "lib/canvas/color-field.js",
+        // The old libraries of the map (Ext JS 3, canvasXpress, Jcrop) are loaded on demand, by
+        // Html::requireJs(), on the pages of the plugin only: never on every page of GLPI
+        $PLUGIN_HOOKS['javascript']['positions'] = [
+         PLUGIN_POSITIONS_NOTFULL_DIR . "/positions.js",
         ];
-        $PLUGIN_HOOKS["javascript"]['positions']     = [
-         PLUGIN_POSITIONS_NOTFULL_DIR."/positions.js",
-       //         PLUGIN_POSITIONS_NOTFULL_DIR."/geoloc.js",
-         PLUGIN_POSITIONS_NOTFULL_DIR."/lib/Jcrop/jquery.Jcrop.js",
+        $PLUGIN_HOOKS['javascript']['positions_map'] = [
+         PLUGIN_POSITIONS_NOTFULL_DIR . "/lib/extjs/adapter/ext/ext-base.js",
+         PLUGIN_POSITIONS_NOTFULL_DIR . "/lib/extjs/ext-all.js",
+         PLUGIN_POSITIONS_NOTFULL_DIR . "/geoloc.js",
+         PLUGIN_POSITIONS_NOTFULL_DIR . "/lib/canvas/canvasXpress.min.js",
+         PLUGIN_POSITIONS_NOTFULL_DIR . "/lib/canvas/ext-canvasXpress.js",
+         PLUGIN_POSITIONS_NOTFULL_DIR . "/lib/canvas/color-field.js",
+        ];
+        $PLUGIN_HOOKS['javascript']['positions_crop'] = [
+         PLUGIN_POSITIONS_NOTFULL_DIR . "/lib/Jcrop/jquery.Jcrop.js",
+         PLUGIN_POSITIONS_NOTFULL_DIR . "/positions_crop.js",
         ];
        //css
         $PLUGIN_HOOKS['add_css']['positions'] = ["positions.css",

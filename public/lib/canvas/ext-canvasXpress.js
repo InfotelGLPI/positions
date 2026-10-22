@@ -3276,35 +3276,19 @@ Ext.canvasXpress = Ext.extend(Ext.Panel, {
             this.canvas.removeNode(n[i]);
             //emgi =>>>>> fonction qui permet de supprimer dans la base de données l'élément selectionné
 
-            //set new crsf token for main form
+            // An AJAX POST: GLPI checks the token of the page in the X-Glpi-Csrf-Token header,
+            // and keeps it, so the forms of the page stay valid
+            var csrf_meta = document.querySelector('meta[property="glpi:csrf_token"]');
             Ext.Ajax.request({
-               url: '../ajax/get_new_crsf_token.php',
-               success: function(response, opts) {
-                  var token = response.responseText;
-                  Ext.select('#locationform input[name=_glpi_csrf_token]')
-                     .set({'value': token});
-                  Ext.select('#addfromplugin input[name=_glpi_csrf_token]')
-                     .set({'value': token});
-                  Ext.select('#massiveaction_form input[name=_glpi_csrf_token]')
-                     .set({'value': token});
-                  Ext.select('#pointform input[name=_glpi_csrf_token]')
-                     .set({'value': token});
-               },
-               failure: function(response, opts) {
-                  console.log('server-side failure with status code '+response.status);
-               }
+                url: 'position.form.php',
+                method: 'POST',
+                headers: { 'X-Glpi-Csrf-Token': csrf_meta ? csrf_meta.getAttribute('content') : '' },
+                params: {
+                    deletepos: "deletepos",
+                    id: n[i].id,
+                    locations_id: n[i].locations_id
+                }
             });
-              var tokentest = document.getElementsByName("_glpi_csrf_token").item(4).value;
-              Ext.Ajax.request({
-                  url: 'position.form.php',
-                  method: 'POST',
-                  params: {
-                      deletepos: "deletepos",
-                      id: n[i].id,
-                      locations_id: n[i].locations_id,
-                      _glpi_csrf_token:tokentest
-                  }
-              });
           }
           this.canvas.draw();
           this.updateOrder(); // change of # of node causes nodeIndices to change, it has to be consistent!!
