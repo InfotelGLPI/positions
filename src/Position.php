@@ -1662,12 +1662,19 @@ class Position extends CommonDBTM
         $out = "";
         $Doc = new Document();
         if (isset($documents_id) && $Doc->getFromDB($documents_id)) {
-            $out .= "&nbsp;<a href='#' onClick=\"var w = window.open('" . PLUGIN_POSITIONS_WEBDIR
-                . "/front/geoloc.php?positions_id="
-                . $positions_id . "&amp;download=1&amp;locations_id=" . $locations_id
-                . "' ,'glpipopup',
-            'height=650, width=1400, top=100, left=100, scrollbars=yes' );
-            w.focus();\" ><i class='fa-1x fas fa-map-location-dot'></i></a>&nbsp;";
+            // The window is opened by a script bound to the link, not by an inline handler
+            // (Content Security Policy): the link may be shown several times on a page (search
+            // results), hence one id per link
+            $rand = mt_rand();
+            $url  = PLUGIN_POSITIONS_WEBDIR . "/front/geoloc.php?positions_id="
+                . $positions_id . "&download=1&locations_id=" . $locations_id;
+            $out .= "&nbsp;<a href='#' id='positions_geoloc$rand' data-positions-popup='" . htmlescape($url) . "'>"
+                . "<i class='fa-1x fas fa-map-location-dot'></i></a>&nbsp;";
+            $out .= Html::scriptBlock("$('#positions_geoloc$rand').on('click', function () {
+                var w = window.open(this.dataset.positionsPopup, 'glpipopup',
+                    'height=650, width=1400, top=100, left=100, scrollbars=yes');
+                w.focus();
+            });");
         }
 
         return $out;

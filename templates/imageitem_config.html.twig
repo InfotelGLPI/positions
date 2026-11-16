@@ -77,8 +77,14 @@
                 <thead>
                     <tr>
                         <th class="w-1">
-                            <input type="checkbox" class="form-check-input" title="{{ __('Check all') }}"
-                                   onclick="document.querySelectorAll('#imageitem_list input[name^=item]').forEach(c => c.checked = this.checked);">
+                            {% set checkall_id = 'imageitem_checkall' ~ random() %}
+                            <input type="checkbox" class="form-check-input" title="{{ __('Check all') }}" id="{{ checkall_id }}">
+                            {# Bound here rather than through an inline handler (Content Security Policy) #}
+                            <script>
+                                document.getElementById('{{ checkall_id }}').addEventListener('click', function () {
+                                    document.querySelectorAll('#imageitem_list input[name^=item]').forEach(c => c.checked = this.checked);
+                                });
+                            </script>
                         </th>
                         <th>{{ __('Equipment', 'positions') }}</th>
                         <th>{{ __('Equipment type', 'positions') }}</th>

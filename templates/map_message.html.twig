@@ -33,9 +33,16 @@
         {{ message }}
         {% if back_link %}
             <div class="mt-2">
-                <a href="javascript:history.back()" class="btn btn-sm btn-outline-secondary">
+                {% set back_id = 'positions_back' ~ random() %}
+                <button type="button" id="{{ back_id }}" class="btn btn-sm btn-outline-secondary">
                     <i class="ti ti-arrow-left me-1"></i>{{ __('Back') }}
-                </a>
+                </button>
+                {# Formerly a javascript: URL, blocked by the Content Security Policy #}
+                <script>
+                    document.getElementById('{{ back_id }}').addEventListener('click', () => {
+                        history.back();
+                    });
+                </script>
             </div>
         {% endif %}
     </div>

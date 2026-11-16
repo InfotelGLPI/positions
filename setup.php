@@ -34,7 +34,7 @@ use GlpiPlugin\Positions\Profile;
 // Init the hooks of the plugins -Needed
 global $CFG_GLPI;
 
-define('PLUGIN_POSITIONS_VERSION', '7.0.4');
+define('PLUGIN_POSITIONS_VERSION', '7.0.5');
 
 if (!defined("PLUGIN_POSITIONS_DIR")) {
     define("PLUGIN_POSITIONS_DIR", Plugin::getPhpDir("positions"));
@@ -104,6 +104,9 @@ function plugin_version_positions()
       'license'        => 'GPLv2+',
       'author'         => "<a href='https://blogglpi.infotel.com'>Infotel</a>",
       'homepage'       => 'https://github.com/InfotelGLPI/positions',
+      // No inline event handler, javascript: URL nor script without nonce: the plugin works
+      // under the Content Security Policy of GLPI
+      'csp_compliant'  => true,
       'requirements'   => [
          'glpi' => [
             'min' => '11.0',
